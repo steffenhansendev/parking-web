@@ -1,0 +1,462 @@
+[
+  {
+    "id": "02e71643-9263-4ac9-9b9d-efe634811bd0",
+    "name": "Ole Rømers Gade 38-50",
+    "longitude": 10.196721076965332,
+    "latitude": 56.1470947265625,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 25
+      },
+      {
+        "spaceType": "Handicap",
+        "capacity": 1
+      }
+    ]
+  },
+  {
+    "id": "10a7085b-e70d-4a98-9f13-624324ebed0e",
+    "name": "Ingerslev Boulevard Parkeringsplads Øst",
+    "longitude": 10.197933197021484,
+    "latitude": 56.14479064941406,
+    "spaces": [
+      {
+        "spaceType": "Default",
+        "capacity": 57
+      }
+    ]
+  },
+  {
+    "id": "147d53da-ca58-4f2d-85c1-fa4c78145c9f",
+    "name": "Sankt Anna Gade 24-41",
+    "longitude": 10.19867992401123,
+    "latitude": 56.14670181274414,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 28
+      }
+    ]
+  },
+  {
+    "id": "18f4f0e6-d797-41bb-803a-a6f1d29ad833",
+    "name": "Montanagade 43-57",
+    "longitude": 10.199911117553711,
+    "latitude": 56.14564895629883,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 36
+      }
+    ]
+  },
+  {
+    "id": "21f9f0d5-4710-4b9b-b51a-0477f77c8ff4",
+    "name": "Ingerslevs Boulevard 15-31",
+    "longitude": 10.192473411560059,
+    "latitude": 56.144187927246094,
+    "spaces": [
+      {
+        "spaceType": "Default",
+        "capacity": 53
+      },
+      {
+        "spaceType": "Curb",
+        "capacity": 29
+      }
+    ]
+  },
+  {
+    "id": "25ae8e2d-1319-4f67-b6ff-c079ed94cb46",
+    "name": "Ole Rømers Gade 62A-76A",
+    "longitude": 10.19922924041748,
+    "latitude": 56.14704895019531,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 14
+      }
+    ]
+  },
+  {
+    "id": "274efa7f-7e8a-4ea1-9f17-5c9cc7083620",
+    "name": "Vejlegade 3-11",
+    "longitude": 10.192529678344727,
+    "latitude": 56.14504623413086,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 23
+      },
+      {
+        "spaceType": "Handicap",
+        "capacity": 1
+      }
+    ]
+  },
+  {
+    "id": "2f7902e8-b6c3-4b5d-88e2-5ecf3a948dc3",
+    "name": "Dannebrogsgade 19-35",
+    "longitude": 10.195859909057617,
+    "latitude": 56.145843505859375,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 8
+      }
+    ]
+  },
+  {
+    "id": "2fa95c45-03c2-47d5-8022-0b76656cc684",
+    "name": "Ole Rømers Gade 56-60",
+    "longitude": 10.198034286499023,
+    "latitude": 56.147064208984375,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 15
+      }
+    ]
+  },
+  {
+    "id": "33159993-e9a8-4086-a96a-e0dc138bde6c",
+    "name": "Ingerslev Boulevard 14-24",
+    "longitude": 10.192026138305664,
+    "latitude": 56.14448165893555,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 25
+      },
+      {
+        "spaceType": "Default",
+        "capacity": 45
+      }
+    ]
+  },
+  {
+    "id": "3b4bf823-798a-4191-87f0-11d6831b664c",
+    "name": "Ingerslev Boulevard Parkeringsplads Vest",
+    "longitude": 10.196091651916504,
+    "latitude": 56.144630432128906,
+    "spaces": [
+      {
+        "spaceType": "Default",
+        "capacity": 70
+      }
+    ]
+  },
+  {
+    "id": "47ba44a4-2674-4948-8e2d-9113afa7e767",
+    "name": "Ingerslev Boulevard (Sankt Lukas Kirke)",
+    "longitude": 10.194250106811523,
+    "latitude": 56.1446533203125,
+    "spaces": [
+      {
+        "spaceType": "Default",
+        "capacity": 15
+      },
+      {
+        "spaceType": "Handicap",
+        "capacity": 2
+      }
+    ]
+  },
+  {
+    "id": "583d7761-6de8-481b-9fc3-5d9e504e80d0",
+    "name": "Sankt Lucas Kirkeplads",
+    "longitude": 10.193582534790039,
+    "latitude": 56.144981384277344,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 17
+      },
+      {
+        "spaceType": "Default",
+        "capacity": 7
+      }
+    ]
+  },
+  {
+    "id": "5d5b3c79-e63a-4b4f-8211-2736096903be",
+    "name": "Godthåbsgade 25-39",
+    "longitude": 10.197563171386719,
+    "latitude": 56.14679718017578,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 16
+      }
+    ]
+  },
+  {
+    "id": "5ecfe6b4-6df0-43ae-9732-d57e67764dae",
+    "name": "Montanagade 1-19",
+    "longitude": 10.19992446899414,
+    "latitude": 56.147640228271484,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 15
+      },
+      {
+        "spaceType": "Handicap",
+        "capacity": 1
+      }
+    ]
+  },
+  {
+    "id": "5f36bdf7-a8f6-4e8d-a73c-51c49aa74b4c",
+    "name": "Sankt Pauls Gade 19-37",
+    "longitude": 10.201024055480957,
+    "latitude": 56.146240234375,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 40
+      }
+    ]
+  },
+  {
+    "id": "6097de1e-fd7e-43a9-bcdc-f49546258c3f",
+    "name": "Godthåbsgade 2-24",
+    "longitude": 10.197561264038086,
+    "latitude": 56.14764404296875,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 22
+      },
+      {
+        "spaceType": "Handicap",
+        "capacity": 1
+      }
+    ]
+  },
+  {
+    "id": "62c4c17b-e314-4833-8af5-5dd84c782dee",
+    "name": "Lundingsgade 20-28",
+    "longitude": 10.19512939453125,
+    "latitude": 56.14545440673828,
+    "spaces": [
+      {
+        "spaceType": "Default",
+        "capacity": 19
+      },
+      {
+        "spaceType": "Handicap",
+        "capacity": 1
+      }
+    ]
+  },
+  {
+    "id": "6c2100be-3bb9-4b8b-bedf-1fdc16eb956d",
+    "name": "Sankt Pauls Gade 41-51",
+    "longitude": 10.19921588897705,
+    "latitude": 56.14617156982422,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 24
+      }
+    ]
+  },
+  {
+    "id": "72aefa6b-e225-4a4b-9681-b130e904e3b7",
+    "name": "Ole Rømers Gade 63-93",
+    "longitude": 10.201082229614258,
+    "latitude": 56.1471061706543,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 40
+      },
+      {
+        "spaceType": "Handicap",
+        "capacity": 2
+      }
+    ]
+  },
+  {
+    "id": "73098079-69d8-4cd8-b112-05faa19ad7c1",
+    "name": "Odensegade 22-42",
+    "longitude": 10.201154708862305,
+    "latitude": 56.14525604248047,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 39
+      }
+    ]
+  },
+  {
+    "id": "761aebca-5045-4957-85f6-f883dfd36a46",
+    "name": "Sankt Anna Gade 2-22",
+    "longitude": 10.198578834533691,
+    "latitude": 56.14761734008789,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 21
+      }
+    ]
+  },
+  {
+    "id": "8351b66c-87dd-49e9-a781-360de3126335",
+    "name": "Lundingsgade 2-19",
+    "longitude": 10.195233345031738,
+    "latitude": 56.146453857421875,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 23
+      },
+      {
+        "spaceType": "Default",
+        "capacity": 8
+      }
+    ]
+  },
+  {
+    "id": "83622dc7-7d2b-4144-9747-3ffe64539c32",
+    "name": "Ingerslev Boulevard 7-11",
+    "longitude": 10.194499015808105,
+    "latitude": 56.14432907104492,
+    "spaces": [
+      {
+        "spaceType": "Default",
+        "capacity": 14
+      }
+    ]
+  },
+  {
+    "id": "8382f63b-028d-46a0-a8db-b363ce7b20ed",
+    "name": "Ingerslevs Boulevard 1",
+    "longitude": 10.19792366027832,
+    "latitude": 56.14463424682617,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 37
+      }
+    ]
+  },
+  {
+    "id": "83b1bca3-cdfa-4b8e-b9b0-0ae0f43cb3ac",
+    "name": "Ingerslevs Boulevard 3",
+    "longitude": 10.19594955444336,
+    "latitude": 56.14446258544922,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 26
+      }
+    ]
+  },
+  {
+    "id": "9616e462-9cb1-4590-a215-99038176ebc2",
+    "name": "Montanagade 25-41",
+    "longitude": 10.199904441833496,
+    "latitude": 56.1466064453125,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 21
+      }
+    ]
+  },
+  {
+    "id": "a2cc606e-bc02-4486-a82c-e8ed7bd4d66b",
+    "name": "Sankt Anna Gade 45A-55",
+    "longitude": 10.198949813842773,
+    "latitude": 56.14567947387695,
+    "spaces": [
+      {
+        "spaceType": "Default",
+        "capacity": 32
+      },
+      {
+        "spaceType": "Handicap",
+        "capacity": 2
+      },
+      {
+        "spaceType": "Curb",
+        "capacity": 15
+      }
+    ]
+  },
+  {
+    "id": "d9073e45-5bab-4bfb-8ff8-c3f29bc849dc",
+    "name": "Dannebrogsgade 3-17",
+    "longitude": 10.194402694702148,
+    "latitude": 56.146026611328125,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 11
+      }
+    ]
+  },
+  {
+    "id": "e872afab-1300-4aa9-885f-cab2d98a6a94",
+    "name": "Horsensgade 2-19",
+    "longitude": 10.19377326965332,
+    "latitude": 56.145362854003906,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 32
+      }
+    ]
+  },
+  {
+    "id": "e96d3d35-7512-4e5a-9b19-427770e2ac7d",
+    "name": "Kroghsgade 4-18",
+    "longitude": 10.196352005004883,
+    "latitude": 56.14545822143555,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 11
+      },
+      {
+        "spaceType": "Handicap",
+        "capacity": 1
+      }
+    ]
+  },
+  {
+    "id": "ec9ebd0b-023e-4bda-ac1a-fdd4ad5ac2ce",
+    "name": "Ingerslevs Boulevard 2",
+    "longitude": 10.197718620300293,
+    "latitude": 56.14495849609375,
+    "spaces": [
+      {
+        "spaceType": "Forbidden",
+        "capacity": 19
+      },
+      {
+        "spaceType": "Curb",
+        "capacity": 14
+      }
+    ]
+  },
+  {
+    "id": "efd399e7-0ac3-429b-af5b-a76de728b9c9",
+    "name": "Ingerslevs Boulevard 2-10",
+    "longitude": 10.195796012878418,
+    "latitude": 56.14479064941406,
+    "spaces": [
+      {
+        "spaceType": "Curb",
+        "capacity": 26
+      },
+      {
+        "spaceType": "Delivery",
+        "capacity": 3
+      }
+    ]
+  }
+]
