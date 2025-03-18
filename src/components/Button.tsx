@@ -9,7 +9,7 @@ function Button({title, handleOnClick}: Props): JSX.Element {
     return (
         <>
             <div>
-                <button onClick={handleOnClick}>
+                <button onClick={handleOnClick} type="button" className="btn btn-primary">
                     {title}
                 </button>
             </div>

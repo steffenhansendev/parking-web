@@ -6,15 +6,15 @@ interface Props {
     handleOnChange: () => void;
 }
 
-function RadioButton({label, isChecked = false, handleOnChange}: Props): JSX.Element {
+function Checkbox({label, isChecked = false, handleOnChange}: Props): JSX.Element {
     return (
         <>
-            <div>
-                <input type="checkbox" checked={isChecked} onChange={handleOnChange}/>
-                <label>{label}</label>
+            <div className="form-check">
+                <input type="checkbox" checked={isChecked} onChange={handleOnChange} className="form-check-input"/>
+                <label className="form-check-label">{label}</label>
             </div>
         </>
     );
 }
 
-export default RadioButton;
+export default Checkbox;
