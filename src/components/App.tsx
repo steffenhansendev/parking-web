@@ -84,7 +84,9 @@ function App(): JSX.Element {
                                                 return (
                                                     <>
                                                         <h2>{recommendation.parkingLot?.name ?? recommendation.parkingLot?.id}</h2>
-                                                        <h4>{`This lot had ${recommendation.numberOfAvailableStalls} available stalls as of ${recommendation.asOf?.toString()}.`}</h4>
+                                                        <h4>{`This lot had `}<span
+                                                            className="fw-bold">{recommendation.numberOfAvailableStalls}</span>{` available stalls as of ${recommendation.asOf?.toString()}.`}
+                                                        </h4>
                                                     </>
                                                 );
                                             })
