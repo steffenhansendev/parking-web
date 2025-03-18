@@ -37,7 +37,7 @@ function App(): JSX.Element {
                     </div>
                     : <>
                         <div className="row m-3">
-                            <div className="col-md">
+                            <div className="col-md m-md-0 m-3">
                                 <h4>{"Lots included"}</h4>
                                 {parkingLotInclusions.map((lot: ParkingLot, i: number): JSX.Element => {
                                     return <Checkbox key={lot.id} label={lot.name} isChecked={lot.isIncluded}
@@ -46,7 +46,7 @@ function App(): JSX.Element {
                                                      }}/>;
                                 })}
                             </div>
-                            <div className="col-md">
+                            <div className="col-md m-md-0 m-3">
                                 <h4>{"Stall types included"}</h4>
                                 {stallTypeInclusions.map((stallType: StallType, i: number): JSX.Element => {
                                     return <Checkbox key={stallType.value} label={stallType.value}
