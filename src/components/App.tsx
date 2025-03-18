@@ -22,15 +22,15 @@ function App(): JSX.Element {
     const recommend: (lots: ParkingLot[], stallTypes: StallType[]) => void = useRecommendations(setRecommendations, setIsFetchingRecommendations, apiUrlFactory);
 
     return (
-        <div className={styles.flexColumn}>
-            <div className={styles.flexRow}>
-                <h1 className={styles.flexGrow}>{"Parking at Frederiksbjerg"}</h1>
+        <div>
+            <div>
+                <h1>{"Parking at Frederiksbjerg"}</h1>
             </div>
             {
                 isFetchingInclusions
-                    ? <div className={styles.flexRow}><h2>{"Fetching metadata ..."}</h2></div>
+                    ? <div><h2>{"Fetching metadata ..."}</h2></div>
                     : <>
-                        <div className={styles.flexRow}>
+                        <div>
                             <div>
                                 <h3>{"Lots included"}</h3>
                                 {parkingLotInclusions.map((lot: ParkingLot, i: number): JSX.Element => {
@@ -51,17 +51,17 @@ function App(): JSX.Element {
                                 })}
                             </div>
                         </div>
-                        <div className={styles.flexColumn}>{
+                        <div>{
                             isFetchingRecommendations
-                                ? <div className={styles.flexRow}><h3>{"Fetching recommendation ..."}</h3></div>
-                                : <div className={styles.flexColumn}>
-                                    <div className={styles.flexRow}><Button
+                                ? <div><h3>{"Fetching recommendation ..."}</h3></div>
+                                : <div>
+                                    <div><Button
                                         title={"Recommend lot of maximum availability now!"}
                                         handleOnClick={(): void => {
                                             recommend(parkingLotInclusions, stallTypeInclusions);
                                         }}></Button></div>
                                     {
-                                        <div className={styles.flexRow}>{
+                                        <div>{
                                             recommendations.map((recommendation: Recommendation): JSX.Element => {
                                                 if (!(recommendation.numberOfAvailableStalls > 0)) {
                                                     return <h3>{"Currently, there are no available stalls given the criteria."}</h3>
