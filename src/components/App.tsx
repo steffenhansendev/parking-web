@@ -22,17 +22,23 @@ function App(): JSX.Element {
     const recommend: (lots: ParkingLot[], stallTypes: StallType[]) => void = useRecommendations(setRecommendations, setIsFetchingRecommendations, apiUrlFactory);
 
     return (
-        <div>
-            <div>
-                <h1>{"Parking at Frederiksbjerg"}</h1>
+        <div className="container">
+            <div className="row m-3">
+                <div className="col justify-content-center text-center">
+                    <h1>{"Parking at Frederiksbjerg"}</h1>
+                </div>
             </div>
             {
                 isFetchingInclusions
-                    ? <div><h2>{"Fetching metadata ..."}</h2></div>
+                    ? <div className="row m-3">
+                        <div className="col justify-content-center text-center">
+                            <h5>{"Fetching metadata ..."}</h5>
+                        </div>
+                    </div>
                     : <>
-                        <div>
-                            <div>
-                                <h3>{"Lots included"}</h3>
+                        <div className="row m-3">
+                            <div className="col-md">
+                                <h4>{"Lots included"}</h4>
                                 {parkingLotInclusions.map((lot: ParkingLot, i: number): JSX.Element => {
                                     return <Checkbox key={lot.id} label={lot.name} isChecked={lot.isIncluded}
                                                      handleOnChange={(): void => {
@@ -40,8 +46,8 @@ function App(): JSX.Element {
                                                      }}/>;
                                 })}
                             </div>
-                            <div>
-                                <h3>{"Stall types included"}</h3>
+                            <div className="col-md">
+                                <h4>{"Stall types included"}</h4>
                                 {stallTypeInclusions.map((stallType: StallType, i: number): JSX.Element => {
                                     return <Checkbox key={stallType.value} label={stallType.value}
                                                      isChecked={stallType.isIncluded}
@@ -51,30 +57,42 @@ function App(): JSX.Element {
                                 })}
                             </div>
                         </div>
-                        <div>{
-                            isFetchingRecommendations
-                                ? <div><h3>{"Fetching recommendation ..."}</h3></div>
-                                : <div>
-                                    <div><Button
-                                        title={"Recommend lot of maximum availability now!"}
-                                        handleOnClick={(): void => {
-                                            recommend(parkingLotInclusions, stallTypeInclusions);
-                                        }}></Button></div>
-                                    {
-                                        <div>{
+                        {isFetchingRecommendations
+                            ?
+                            <div className="row m-3">
+                                <div className="col justify-content-center text-center">
+                                    <h5>{"Fetching recommendation ..."}</h5>
+                                </div>
+                            </div>
+                            : <>
+                                <div className="row m-3">
+                                    <div className="col justify-content-center text-center">
+                                        <Button
+                                            title={"Recommend lot of maximum availability now!"}
+                                            handleOnClick={(): void => {
+                                                recommend(parkingLotInclusions, stallTypeInclusions);
+                                            }}></Button>
+                                    </div>
+                                </div>
+                                <div className="row m-5">
+                                    <div className="col justify-content-center text-center">
+                                        {
                                             recommendations.map((recommendation: Recommendation): JSX.Element => {
                                                 if (!(recommendation.numberOfAvailableStalls > 0)) {
-                                                    return <h3>{"Currently, there are no available stalls given the criteria."}</h3>
+                                                    return <h4>{"Currently, there are no available stalls given the criteria."}</h4>
                                                 }
-                                                return <div>
-                                                    <h3>{recommendation.parkingLot?.name ?? recommendation.parkingLot?.id}</h3>
-                                                    <h4>{`This lot had ${recommendation.numberOfAvailableStalls} available stalls as of ${recommendation.asOf?.toString()}.`}</h4>
-                                                </div>
+                                                return (
+                                                    <>
+                                                        <h2>{recommendation.parkingLot?.name ?? recommendation.parkingLot?.id}</h2>
+                                                        <h4>{`This lot had ${recommendation.numberOfAvailableStalls} available stalls as of ${recommendation.asOf?.toString()}.`}</h4>
+                                                    </>
+                                                );
                                             })
-                                        }</div>
-                                    }</div>
+                                        }
+                                    </div>
+                                </div>
+                            </>
                         }
-                        </div>
                     </>
             }
         </div>
