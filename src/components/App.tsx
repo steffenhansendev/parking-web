@@ -9,8 +9,10 @@ import {ParkingApiUrlFactory} from "../integration/ParkingApiUrlFactory";
 import {Recommendation} from "../recommendation/Recommendation";
 import {Inclusion, ParkingLot, StallType} from "../recommendation/Inclusion";
 import EllipsisSpinnerSpans from "./EllipsisSpinnerSpans";
+import geodesic from "geographiclib-geodesic";
 
 const apiUrlFactory: ParkingApiUrlFactory = parkingApiUrlFactory();
+
 
 function App(): JSX.Element {
     const [parkingLotInclusions, setParkingLotInclusions] = useState<ParkingLot[]>([]);
@@ -21,11 +23,28 @@ function App(): JSX.Element {
     useInclusions(setParkingLotInclusions, setStallTypeInclusions, setIsFetchingInclusions, apiUrlFactory);
     const recommend: (lots: ParkingLot[], stallTypes: StallType[]) => void = useRecommendations(setRecommendations, setIsFetchingRecommendations, apiUrlFactory);
 
+    useEffect(() => {
 
-    navigator.geolocation.getCurrentPosition((location: GeolocationPosition): void => {
-        console.log("location:");
-        console.log(location);
-    });
+        navigator.geolocation.getCurrentPosition((location: GeolocationPosition): void => {
+            console.log("location:");
+            console.log(location);
+
+            var geod = geodesic.Geodesic.WGS84;
+
+            // Find the distance from Wellington, NZ (41.32S, 174.81E) to
+            // Salamanca, Spain (40.96N, 5.50W)...
+            let r = geod.Inverse(-41.32, 174.81, 40.96, -5.50);
+            console.log("The distance is " + r.s12.toFixed(3) + " m.");
+
+            let currentCoordinates: GeolocationCoordinates = location.coords;
+
+            let lot1: ParkingLot = parkingLotInclusions[0];
+            let distance = geod.Inverse(location.coords.latitude, location.coords.longitude)
+
+        });
+
+    }, [parkingLotInclusions]);
+
 
     return (
         <div className="container">

@@ -6,13 +6,19 @@ export interface StallType extends Inclusion {
     value: string
 }
 
-export interface StallCount {
-    stallType: string,
-    count: number
-}
-
 export interface ParkingLot extends Inclusion {
     id: string;
     name: string | undefined;
     capacities: StallCount[];
+    location?: Coordinates;
+}
+
+export interface Coordinates {
+    longitude: number;
+    latitude: number;
+}
+
+export interface StallCount {
+    stallType: string,
+    count: number
 }

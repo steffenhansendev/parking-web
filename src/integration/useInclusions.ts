@@ -36,7 +36,8 @@ export function useInclusions(setParkingLots: (value: ParkingLot[]) => void, set
                                     count: spaceDto.capacity
                                 })
                             ),
-                        isIncluded: false
+                        isIncluded: false,
+                        location: {latitude: lotDto.latitude, longitude: lotDto.longitude}
                     }
                 }))
                 const distinctTypes: string[] = [];
