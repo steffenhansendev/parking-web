@@ -37,7 +37,10 @@ export function useInclusions(setParkingLots: (value: ParkingLot[]) => void, set
                                 })
                             ),
                         isIncluded: false,
-                        location: {latitude: lotDto.latitude, longitude: lotDto.longitude}
+                        location: lotDto.latitude && lotDto.longitude ? {
+                            latitude: lotDto.latitude,
+                            longitude: lotDto.longitude
+                        } : undefined
                     }
                 }))
                 const distinctTypes: string[] = [];
