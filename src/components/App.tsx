@@ -21,6 +21,12 @@ function App(): JSX.Element {
     useInclusions(setParkingLotInclusions, setStallTypeInclusions, setIsFetchingInclusions, apiUrlFactory);
     const recommend: (lots: ParkingLot[], stallTypes: StallType[]) => void = useRecommendations(setRecommendations, setIsFetchingRecommendations, apiUrlFactory);
 
+
+    navigator.geolocation.getCurrentPosition((location: GeolocationPosition): void => {
+        console.log("location:");
+        console.log(location);
+    });
+
     return (
         <div className="container">
             <div className="row my-3">
