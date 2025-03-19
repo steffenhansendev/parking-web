@@ -19,8 +19,8 @@ function EllipsisSpinnerSpans({numberOfDots, intervalInMilliseconds}: Props): JS
     }, []);
 
     return <>{
-        dotVisibilities.map((isVisible: boolean): JSX.Element => {
-            return <span style={isVisible ? {visibility: "visible"} : {visibility: "hidden"}}>.</span>
+        dotVisibilities.map((isVisible: boolean, i: number): JSX.Element => {
+            return <span key={i} style={isVisible ? {visibility: "visible"} : {visibility: "hidden"}}>.</span>
         })
     }</>
 }
