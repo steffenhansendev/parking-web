@@ -4,11 +4,11 @@ import Checkbox from "./Checkbox";
 import Button from "./Button";
 import {useInclusions} from "../integration/useInclusions";
 import {useRecommendations} from "../integration/useRecommendations";
-import styles from "../styles.module.css";
 import {parkingApiUrlFactory} from "../integration/parking-api-url-factory";
 import {ParkingApiUrlFactory} from "../integration/ParkingApiUrlFactory";
 import {Recommendation} from "../recommendation/Recommendation";
 import {Inclusion, ParkingLot, StallType} from "../recommendation/Inclusion";
+import EllipsisSpinnerSpans from "./EllipsisSpinnerSpans";
 
 const apiUrlFactory: ParkingApiUrlFactory = parkingApiUrlFactory();
 
@@ -32,7 +32,7 @@ function App(): JSX.Element {
                 isFetchingInclusions
                     ? <div className="row m-3">
                         <div className="col justify-content-center text-center">
-                            <h5>{"Fetching metadata ..."}</h5>
+                            <h5>{"Fetching metadata "}<EllipsisSpinnerSpans/></h5>
                         </div>
                     </div>
                     : <>
@@ -61,7 +61,7 @@ function App(): JSX.Element {
                             ?
                             <div className="row m-3">
                                 <div className="col justify-content-center text-center">
-                                    <h5>{"Fetching recommendation ..."}</h5>
+                                    <h5>{"Fetching recommendation "}<EllipsisSpinnerSpans/></h5>
                                 </div>
                             </div>
                             : <>
