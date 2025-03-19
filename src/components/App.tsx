@@ -23,21 +23,21 @@ function App(): JSX.Element {
 
     return (
         <div className="container">
-            <div className="row m-3">
+            <div className="row my-3">
                 <div className="col justify-content-center text-center">
                     <h1>{"Parking at Frederiksbjerg"}</h1>
                 </div>
             </div>
             {
                 isFetchingInclusions
-                    ? <div className="row m-3">
+                    ? <div className="row my-3">
                         <div className="col justify-content-center text-center">
                             <h5>{"Fetching metadata "}<EllipsisSpinnerSpans/></h5>
                         </div>
                     </div>
                     : <>
-                        <div className="row m-3">
-                            <div className="col-md m-md-0 m-3">
+                        <div className="row my-3">
+                            <div className="col-md m-md-0 my-3">
                                 <h4>{"Lots included"}</h4>
                                 {parkingLotInclusions.map((lot: ParkingLot, i: number): JSX.Element => {
                                     return <Checkbox key={lot.id} label={lot.name} isChecked={lot.isIncluded}
@@ -46,7 +46,7 @@ function App(): JSX.Element {
                                                      }}/>;
                                 })}
                             </div>
-                            <div className="col-md m-md-0 m-3">
+                            <div className="col-md m-md-0 my-3">
                                 <h4>{"Stall types included"}</h4>
                                 {stallTypeInclusions.map((stallType: StallType, i: number): JSX.Element => {
                                     return <Checkbox key={stallType.value} label={stallType.value}
@@ -59,13 +59,13 @@ function App(): JSX.Element {
                         </div>
                         {isFetchingRecommendations
                             ?
-                            <div className="row m-3">
+                            <div className="row my-3">
                                 <div className="col justify-content-center text-center">
                                     <h5>{"Fetching recommendation "}<EllipsisSpinnerSpans/></h5>
                                 </div>
                             </div>
                             : <>
-                                <div className="row m-3">
+                                <div className="row my-3">
                                     <div className="col justify-content-center text-center">
                                         <Button
                                             title={"Recommend lot of maximum availability now!"}
@@ -74,7 +74,7 @@ function App(): JSX.Element {
                                             }}></Button>
                                     </div>
                                 </div>
-                                <div className="row m-5">
+                                <div className="row my-5">
                                     <div className="col justify-content-center text-center">
                                         {
                                             recommendations.map((recommendation: Recommendation): JSX.Element => {
