@@ -74,7 +74,7 @@ function App(): JSX.Element {
                                             }}></Button>
                                     </div>
                                 </div>
-                                <div className="row my-5">
+                                <div className="row my-3">
                                     <div className="col justify-content-center text-center">
                                         {
                                             recommendations.map((recommendation: Recommendation): JSX.Element => {
