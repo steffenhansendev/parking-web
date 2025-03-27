@@ -110,7 +110,8 @@ function App(): JSX.Element {
                             <div className="col-md m-md-0 my-3">
                                 <h5>{"Stall types included"}</h5>
                                 {stallTypeInclusions.map((stallType: StallType, i: number): JSX.Element => {
-                                    const label: string = stallType.value.substring(0, 1).toUpperCase() + stallType.value.substring(1);
+                                    let label: string = stallType.value === "handicap" ? "Disability" : stallType.value;
+                                    label = label.substring(0, 1).toUpperCase() + label.substring(1);
                                     return <Checkbox key={stallType.value} label={label}
                                                      isChecked={stallType.isIncluded}
                                                      handleOnChange={(): void => {
