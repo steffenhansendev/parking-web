@@ -1,7 +1,7 @@
-import {OccupancyDataDto} from "./OccupancyDataDto";
-import {Time} from "../time/time";
-import {Recommendation} from "../recommendation/Recommendation";
-import {ParkingLot, StallCount, StallType} from "../recommendation/Inclusion";
+import {OccupancyDataDto} from "../sensade/OccupancyDataDto";
+import {Time} from "../../time/time";
+import {Recommendation} from "../../recommendation/Recommendation";
+import {ParkingLot, StallCount, StallType} from "../../recommendation/Inclusion";
 
 // This should not know about DTOs
 // This should be split into smaller functions

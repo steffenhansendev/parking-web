@@ -4,7 +4,7 @@ import {ParkingLotMetadataDto} from "./ParkingLotMetadataDto";
 import {SpaceCountDto} from "./SpaceCountDto";
 
 import {ParkingApiUrlFactory} from "./ParkingApiUrlFactory";
-import {ParkingLot, StallType} from "../recommendation/Inclusion";
+import {ParkingLot, StallType} from "../../recommendation/Inclusion";
 
 const STALL_TYPES_INCLUDED_BY_DEFAULT: string[] = [
     "default",
@@ -36,7 +36,11 @@ export function useInclusions(setParkingLots: (value: ParkingLot[]) => void, set
                                     count: spaceDto.capacity
                                 })
                             ),
-                        isIncluded: false
+                        isIncluded: false,
+                        location: lotDto.latitude && lotDto.longitude ? {
+                            latitude: lotDto.latitude,
+                            longitude: lotDto.longitude
+                        } : undefined
                     }
                 }))
                 const distinctTypes: string[] = [];
