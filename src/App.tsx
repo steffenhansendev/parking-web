@@ -25,14 +25,11 @@ function App(): JSX.Element {
     useInclusions(setParkingLotInclusions, setStallTypeInclusions, setIsFetchingInclusions, apiUrlFactory);
     const recommend: (lots: ParkingLot[], stallTypes: StallType[]) => void = useRecommendations(setRecommendations, setIsFetchingRecommendations, apiUrlFactory);
     const [address, setAddress] = useState<Address>();
-    const isLotInclusionSetByUser = useRef<boolean>(false);
+
     useEffect((): void => {
-        if (!address) {
-            return;
-        }
         const geod: GeodesicClass = geodesic.Geodesic.WGS84;
         const nextParkingLotInclusions: ParkingLot[] = parkingLotInclusions.map((lot: ParkingLot): ParkingLot => {
-            if (!isLotInclusionSetByUser.current) {
+            if (address) {
                 lot.isIncluded = true;
             }
             lot.distanceFromUserInMeters = geod.Inverse(address?.location?.latitude as number, address?.location.longitude as number, lot.location?.latitude as number, lot.location?.longitude as number).s12;
@@ -40,12 +37,7 @@ function App(): JSX.Element {
         });
         nextParkingLotInclusions.sort((lotA: ParkingLot, lotB: ParkingLot): number => (lotA.distanceFromUserInMeters ?? 0) - (lotB.distanceFromUserInMeters ?? 0));
         setParkingLotInclusions(nextParkingLotInclusions);
-    }, [address, parkingLotInclusions]);
-
-    const setAddressDecorator = (address: Address | undefined) => {
-        isLotInclusionSetByUser.current = false;
-        setAddress(address);
-    }
+    }, [address, isFetchingInclusions]);
 
     return (
         <div className="container">
@@ -57,7 +49,7 @@ function App(): JSX.Element {
             <div className="row my-3">
                 <h5>{"Closest to"}</h5>
                 <AutoCompleteSearchBar<Address> placeholder={"Search for Danish address"}
-                                                setResult={setAddressDecorator}
+                                                setResult={setAddress}
                                                 isInFocus={true}
                                                 optionsManager={createOptionsManager()}/>
             </div>
@@ -122,7 +114,7 @@ function App(): JSX.Element {
                                     return <Checkbox key={stallType.value} label={label}
                                                      isChecked={stallType.isIncluded}
                                                      handleOnChange={(): void => {
-                                                         toggleInclusion<StallType>(i, stallTypeInclusions, setStallTypeInclusions, isLotInclusionSetByUser);
+                                                         toggleInclusion<StallType>(i, stallTypeInclusions, setStallTypeInclusions);
                                                      }}/>;
                                 })}
                             </div>
@@ -135,7 +127,7 @@ function App(): JSX.Element {
                                     }
                                     return <Checkbox key={lot.id} label={label
                                     } isChecked={lot.isIncluded} handleOnChange={(): void => {
-                                        toggleInclusion<ParkingLot>(i, parkingLotInclusions, setParkingLotInclusions, isLotInclusionSetByUser);
+                                        toggleInclusion<ParkingLot>(i, parkingLotInclusions, setParkingLotInclusions);
                                     }}/>
                                 })}
                             </div>
@@ -146,8 +138,7 @@ function App(): JSX.Element {
     );
 }
 
-function toggleInclusion<T extends Inclusion>(i: number, inclusions: T[], setInclusion: (inclusions: T[]) => void, isLotInclusionSetByUser: React.RefObject<boolean>): void {
-    isLotInclusionSetByUser.current = true;
+function toggleInclusion<T extends Inclusion>(i: number, inclusions: T[], setInclusion: (inclusions: T[]) => void): void {
     setInclusion(inclusions.map((value: T, j: number): T => {
         if (i === j) {
             value.isIncluded = !value.isIncluded;
