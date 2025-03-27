@@ -1,4 +1,4 @@
-import React, {JSX, useEffect, useState} from "react";
+import React, {JSX, useEffect, useRef, useState} from "react";
 import "./styles.css";
 import Checkbox from "./components/Checkbox";
 import Button from "./components/Button";
@@ -25,19 +25,27 @@ function App(): JSX.Element {
     useInclusions(setParkingLotInclusions, setStallTypeInclusions, setIsFetchingInclusions, apiUrlFactory);
     const recommend: (lots: ParkingLot[], stallTypes: StallType[]) => void = useRecommendations(setRecommendations, setIsFetchingRecommendations, apiUrlFactory);
     const [address, setAddress] = useState<Address>();
+    const isLotInclusionSetByUser = useRef<boolean>(false);
     useEffect((): void => {
         if (!address) {
             return;
         }
         const geod: GeodesicClass = geodesic.Geodesic.WGS84;
         const nextParkingLotInclusions: ParkingLot[] = parkingLotInclusions.map((lot: ParkingLot): ParkingLot => {
-            lot.isIncluded = true;
+            if (!isLotInclusionSetByUser.current) {
+                lot.isIncluded = true;
+            }
             lot.distanceFromUserInMeters = geod.Inverse(address?.location?.latitude as number, address?.location.longitude as number, lot.location?.latitude as number, lot.location?.longitude as number).s12;
             return lot;
         });
         nextParkingLotInclusions.sort((lotA: ParkingLot, lotB: ParkingLot): number => (lotA.distanceFromUserInMeters ?? 0) - (lotB.distanceFromUserInMeters ?? 0));
         setParkingLotInclusions(nextParkingLotInclusions);
     }, [address, parkingLotInclusions]);
+
+    const setAddressDecorator = (address: Address | undefined) => {
+        isLotInclusionSetByUser.current = false;
+        setAddress(address);
+    }
 
     return (
         <div className="container">
@@ -48,7 +56,8 @@ function App(): JSX.Element {
             </div>
             <div className="row my-3">
                 <h5>{"Closest to"}</h5>
-                <AutoCompleteSearchBar<Address> placeholder={"Search for Danish address"} setResult={setAddress}
+                <AutoCompleteSearchBar<Address> placeholder={"Search for Danish address"}
+                                                setResult={setAddressDecorator}
                                                 isInFocus={true}
                                                 optionsManager={createOptionsManager()}/>
             </div>
@@ -113,7 +122,7 @@ function App(): JSX.Element {
                                     return <Checkbox key={stallType.value} label={label}
                                                      isChecked={stallType.isIncluded}
                                                      handleOnChange={(): void => {
-                                                         toggleInclusion<StallType>(i, stallTypeInclusions, setStallTypeInclusions);
+                                                         toggleInclusion<StallType>(i, stallTypeInclusions, setStallTypeInclusions, isLotInclusionSetByUser);
                                                      }}/>;
                                 })}
                             </div>
@@ -126,7 +135,7 @@ function App(): JSX.Element {
                                     }
                                     return <Checkbox key={lot.id} label={label
                                     } isChecked={lot.isIncluded} handleOnChange={(): void => {
-                                        toggleInclusion<ParkingLot>(i, parkingLotInclusions, setParkingLotInclusions);
+                                        toggleInclusion<ParkingLot>(i, parkingLotInclusions, setParkingLotInclusions, isLotInclusionSetByUser);
                                     }}/>
                                 })}
                             </div>
@@ -137,7 +146,8 @@ function App(): JSX.Element {
     );
 }
 
-function toggleInclusion<T extends Inclusion>(i: number, inclusions: T[], setInclusion: (inclusions: T[]) => void): void {
+function toggleInclusion<T extends Inclusion>(i: number, inclusions: T[], setInclusion: (inclusions: T[]) => void, isLotInclusionSetByUser: React.RefObject<boolean>): void {
+    isLotInclusionSetByUser.current = true;
     setInclusion(inclusions.map((value: T, j: number): T => {
         if (i === j) {
             value.isIncluded = !value.isIncluded;
