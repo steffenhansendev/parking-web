@@ -99,13 +99,13 @@ function App(): JSX.Element {
             }
             {
                 isFetchingInclusions
-                    ? <div className="row my-3 d-flex align-items-center justify-content-center vh-100">
+                    ? <div className="row my-3 d-flex vh-100">
                         <div className="col justify-content-center text-center">
                             <h5>{"Fetching lots and stall types "}<EllipsisSpinnerSpans/></h5>
                         </div>
                     </div>
                     : <>
-                        <div className="row my-5">
+                        <div className="row my-3">
                             <div className="col-md m-md-0 my-3">
                                 <h5>{"Stall types included"}</h5>
                                 {stallTypeInclusions.map((stallType: StallType, i: number): JSX.Element => {
