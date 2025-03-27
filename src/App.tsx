@@ -4,7 +4,7 @@ import Checkbox from "./components/Checkbox";
 import Button from "./components/Button";
 import {useInclusions} from "./integration/sensade/useInclusions";
 import {useRecommendations} from "./integration/sensade/useRecommendations";
-import {parkingApiUrlFactory} from "./integration/sensade/parking-api-url-factory";
+import {createParkingApiUrlFactory} from "./integration/sensade/create-parking-api-url-factory";
 import {ParkingApiUrlFactory} from "./integration/sensade/ParkingApiUrlFactory";
 import {Recommendation} from "./recommendation/Recommendation";
 import {Inclusion, ParkingLot, StallType} from "./recommendation/Inclusion";
@@ -14,7 +14,7 @@ import AutoCompleteSearchBar from "./components/AutoCompleteSearchBar";
 import {Address} from "./recommendation/Address";
 import {createOptionsManager} from "./integration/dataforsyningen/create-options-manager";
 
-const apiUrlFactory: ParkingApiUrlFactory = parkingApiUrlFactory();
+const apiUrlFactory: ParkingApiUrlFactory = createParkingApiUrlFactory();
 
 function App(): JSX.Element {
     const [parkingLotInclusions, setParkingLotInclusions] = useState<ParkingLot[]>([]);

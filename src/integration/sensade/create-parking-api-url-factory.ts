@@ -1,6 +1,6 @@
 import {ParkingApiUrlFactory} from "./ParkingApiUrlFactory";
 
-export function parkingApiUrlFactory(): ParkingApiUrlFactory {
+export function createParkingApiUrlFactory(): ParkingApiUrlFactory {
 // @ts-ignore
     const HOST: string = PARKING_API_HOST;
 // @ts-ignore
