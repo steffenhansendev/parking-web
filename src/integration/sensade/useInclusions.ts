@@ -25,15 +25,12 @@ export function useInclusions(setParkingLots: (value: ParkingLot[]) => void, set
                 lotDtos = (await lotDtoReponses.json()) as ParkingLotMetadataDto[];
                 const nextParkingLots: ParkingLot[] = lotDtos.map((lotDto: ParkingLotMetadataDto): ParkingLot => mapToParkingLot(lotDto));
                 setParkingLots(nextParkingLots);
-                const distinctTypes: string[] = [];
-                lotDtos.forEach((lotDto: ParkingLotMetadataDto): void => {
-                    lotDto.spaces?.forEach((spaceDto: SpaceCountDto): void => {
-                        const spaceType: string | undefined = spaceDto.spaceType?.toLowerCase();
-                        if (spaceType && !distinctTypes.includes(spaceType)) {
-                            distinctTypes.push(spaceType);
-                        }
-                    });
-                });
+                let allTypes: string[] = lotDtos
+                    .map((dto: ParkingLotMetadataDto) => dto.spaces ?? [])
+                    .flat(1)
+                    .map((s) => s.spaceType?.toLowerCase())
+                    .filter((s) => s !== undefined);
+                const distinctTypes: string[] = toDistinct(allTypes);
                 const nextStallTypes: StallType[] = distinctTypes.map((distinctType: string): StallType => mapToStallType(distinctType));
                 setStallTypes(nextStallTypes);
             } catch (e: unknown) {
@@ -43,6 +40,16 @@ export function useInclusions(setParkingLots: (value: ParkingLot[]) => void, set
             }
         })();
     }, []);
+}
+
+function toDistinct(strings: string[]): string[] {
+    const distinctStrings: string[] = [];
+    strings.forEach((s: string): void => {
+        if (!distinctStrings.includes(s)) {
+            distinctStrings.push(s);
+        }
+    });
+    return distinctStrings;
 }
 
 function mapToParkingLot(lotDto: ParkingLotMetadataDto): ParkingLot {
