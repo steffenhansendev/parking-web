@@ -87,11 +87,12 @@ function App(): JSX.Element {
                     </div>
                     <div className="row my-3">
                         <div className="col justify-content-center text-center">
-                            <Button
-                                title={"Let's park!"}
-                                handleOnClick={(): void => {
-                                    recommend(parkingLotInclusions, stallTypeInclusions);
-                                }}></Button>
+                            {parkingLotInclusions.length > 0 &&
+                                <Button
+                                    title={"Let's park!"}
+                                    handleOnClick={(): void => {
+                                        recommend(parkingLotInclusions, stallTypeInclusions);
+                                    }}></Button>}
                         </div>
                     </div>
                 </>
