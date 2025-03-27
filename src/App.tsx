@@ -26,15 +26,18 @@ function App(): JSX.Element {
     const recommend: (lots: ParkingLot[], stallTypes: StallType[]) => void = useRecommendations(setRecommendations, setIsFetchingRecommendations, apiUrlFactory);
     const [address, setAddress] = useState<Address>();
     useEffect((): void => {
+        if (!address) {
+            return;
+        }
         const geod: GeodesicClass = geodesic.Geodesic.WGS84;
-        const nextParkingLotInclusions: ParkingLot[] = parkingLotInclusions.map((lot: ParkingLot) => {
+        const nextParkingLotInclusions: ParkingLot[] = parkingLotInclusions.map((lot: ParkingLot): ParkingLot => {
             lot.isIncluded = true;
             lot.distanceFromUserInMeters = geod.Inverse(address?.location?.latitude as number, address?.location.longitude as number, lot.location?.latitude as number, lot.location?.longitude as number).s12;
             return lot;
         });
         nextParkingLotInclusions.sort((lotA: ParkingLot, lotB: ParkingLot): number => (lotA.distanceFromUserInMeters ?? 0) - (lotB.distanceFromUserInMeters ?? 0));
         setParkingLotInclusions(nextParkingLotInclusions);
-    }, [address]);
+    }, [address, parkingLotInclusions]);
 
     return (
         <div className="container">
@@ -45,7 +48,8 @@ function App(): JSX.Element {
             </div>
             <div className="row my-3">
                 <h5>{"Closest to"}</h5>
-                <AutoCompleteSearchBar<Address> placeholder={"Search for Danish address"} setResult={setAddress} isInFocus={true}
+                <AutoCompleteSearchBar<Address> placeholder={"Search for Danish address"} setResult={setAddress}
+                                                isInFocus={true}
                                                 optionsManager={createOptionsManager()}/>
             </div>
             {isFetchingRecommendations
