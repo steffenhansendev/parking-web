@@ -2,7 +2,6 @@ import {useEffect} from "react";
 import {SparseOrganizationDto} from "./SparseOrganizationDto";
 import {ParkingLotMetadataDto} from "./ParkingLotMetadataDto";
 import {SpaceCountDto} from "./SpaceCountDto";
-
 import {ParkingApiUrlFactory} from "./ParkingApiUrlFactory";
 import {ParkingLot, StallType} from "../../recommendation/Inclusion";
 
@@ -24,25 +23,8 @@ export function useInclusions(setParkingLots: (value: ParkingLot[]) => void, set
                 const organizationDtos: SparseOrganizationDto[] = (await organizationDtosResponse.json()) as SparseOrganizationDto[];
                 const lotDtoReponses: Response = await fetch(urlFactory.getParkingLotsUrl(organizationDtos[0].id));
                 lotDtos = (await lotDtoReponses.json()) as ParkingLotMetadataDto[];
-                setParkingLots(lotDtos.map((lotDto: ParkingLotMetadataDto): ParkingLot => {
-                    return {
-                        id: lotDto.id,
-                        name: lotDto.name,
-                        capacities: (lotDto.spaces ?? [])
-                            .filter((spaceDto: SpaceCountDto): boolean => !!spaceDto.spaceType)
-                            .map((spaceDto: SpaceCountDto): { stallType: string, count: number } =>
-                                ({
-                                    stallType: spaceDto.spaceType!.toLowerCase(), // Filtered
-                                    count: spaceDto.capacity
-                                })
-                            ),
-                        isIncluded: false,
-                        location: lotDto.latitude && lotDto.longitude ? {
-                            latitude: lotDto.latitude,
-                            longitude: lotDto.longitude
-                        } : undefined
-                    }
-                }))
+                const nextParkingLots: ParkingLot[] = lotDtos.map((lotDto: ParkingLotMetadataDto): ParkingLot => mapToParkingLot(lotDto));
+                setParkingLots(nextParkingLots);
                 const distinctTypes: string[] = [];
                 lotDtos.forEach((lotDto: ParkingLotMetadataDto): void => {
                     lotDto.spaces?.forEach((spaceDto: SpaceCountDto): void => {
@@ -52,12 +34,8 @@ export function useInclusions(setParkingLots: (value: ParkingLot[]) => void, set
                         }
                     });
                 });
-                setStallTypes(distinctTypes.map((distinctType: string): StallType =>
-                    ({
-                        value: distinctType,
-                        isIncluded: STALL_TYPES_INCLUDED_BY_DEFAULT.includes(distinctType)
-                    })
-                ));
+                const nextStallTypes: StallType[] = distinctTypes.map((distinctType: string): StallType => mapToStallType(distinctType));
+                setStallTypes(nextStallTypes);
             } catch (e: unknown) {
                 console.error(e);
             } finally {
@@ -65,4 +43,31 @@ export function useInclusions(setParkingLots: (value: ParkingLot[]) => void, set
             }
         })();
     }, []);
+}
+
+function mapToParkingLot(lotDto: ParkingLotMetadataDto): ParkingLot {
+    return {
+        id: lotDto.id,
+        name: lotDto.name,
+        capacities: (lotDto.spaces ?? [])
+            .filter((spaceDto: SpaceCountDto): boolean => !!spaceDto.spaceType)
+            .map((spaceDto: SpaceCountDto): { stallType: string, count: number } =>
+                ({
+                    stallType: spaceDto.spaceType!.toLowerCase(), // Filtered
+                    count: spaceDto.capacity
+                })
+            ),
+        isIncluded: false,
+        location: lotDto.latitude && lotDto.longitude ? {
+            latitude: lotDto.latitude,
+            longitude: lotDto.longitude
+        } : undefined
+    };
+}
+
+function mapToStallType(stallTypeString: string): StallType {
+    return {
+        value: stallTypeString,
+        isIncluded: STALL_TYPES_INCLUDED_BY_DEFAULT.includes(stallTypeString)
+    };
 }

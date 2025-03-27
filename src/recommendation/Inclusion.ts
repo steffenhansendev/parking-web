@@ -3,7 +3,8 @@ export interface Inclusion {
 }
 
 export interface StallType extends Inclusion {
-    value: string
+    // To allow the back end to change these without breaking the front, plain string was chosen over enum and a type union of strings
+    value: string;
 }
 
 export interface ParkingLot extends Inclusion {
