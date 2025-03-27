@@ -24,9 +24,10 @@ export function useRecommendations(setRecommendations: (recommendations: Recomme
                 const recommendations: Recommendation[] = calculateRecommendations([lot], stallTypes, occupancyDtos);
                 if (recommendations[0].numberOfAvailableStalls > 0) {
                     setRecommendations(recommendations);
-                    break;
+                    return;
                 }
             }
+            setRecommendations([createNullObject()])
         } catch (e: unknown) {
             if (!(e instanceof Error)) {
                 console.error("Fetching occupancy failed.");
@@ -53,4 +54,17 @@ async function fetchOccupancyDtos(lots: ParkingLot[], urlFactory: ParkingApiUrlF
             return (await response.json()) as OccupancyDataDto;
         });
     return await Promise.all(occupancyDtoPromises);
+}
+
+
+function createNullObject(): Recommendation {
+    return {
+        parkingLot: {
+            id: "",
+            name: "",
+            capacities: [],
+            isIncluded: false
+        },
+        numberOfAvailableStalls: 0
+    }
 }
