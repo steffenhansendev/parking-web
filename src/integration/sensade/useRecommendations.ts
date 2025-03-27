@@ -17,28 +17,28 @@ export function useRecommendations(setRecommendations: (recommendations: Recomme
         abortController.current = new AbortController();
         lots = lots.filter((lot: ParkingLot): boolean => lot.isIncluded);
         stallTypes = stallTypes.filter((stallType: StallType): boolean => stallType.isIncluded);
-        for (let i: number = 0; i < lots.length; i++) {
-            const lot: ParkingLot = lots[i];
-            try {
+        try {
+            for (let i: number = 0; i < lots.length; i++) {
+                const lot: ParkingLot = lots[i];
                 let occupancyDtos: OccupancyDataDto[] = await fetchOccupancyDtos([lot], urlFactory, abortController.current);
                 const recommendations: Recommendation[] = calculateRecommendations([lot], stallTypes, occupancyDtos);
                 if (recommendations[0].numberOfAvailableStalls > 0) {
                     setRecommendations(recommendations);
                     break;
                 }
-            } catch (e: unknown) {
-                if (!(e instanceof Error)) {
-                    console.error("Fetching occupancy failed.");
-                    break;
-                }
-                if (e.name === "AbortError") {
-                    console.debug("useRecommendations() was invoked again.");
-                    break;
-                }
-                console.error(e);
-            } finally {
-                setIsFetchingRecommendations(false);
             }
+        } catch (e: unknown) {
+            if (!(e instanceof Error)) {
+                console.error("Fetching occupancy failed.");
+                return;
+            }
+            if (e.name === "AbortError") {
+                console.debug("useRecommendations() was invoked again.");
+                return;
+            }
+            console.error(e);
+        } finally {
+            setIsFetchingRecommendations(false);
         }
     };
 }
