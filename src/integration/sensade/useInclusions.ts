@@ -21,8 +21,8 @@ export function useInclusions(setParkingLots: (value: ParkingLot[]) => void, set
                 setIsFetching(true);
                 const organizationDtosResponse: Response = await fetch(urlFactory.getOrganizationsUrl());
                 const organizationDtos: SparseOrganizationDto[] = (await organizationDtosResponse.json()) as SparseOrganizationDto[];
-                const lotDtoReponses: Response = await fetch(urlFactory.getParkingLotsUrl(organizationDtos[0].id));
-                lotDtos = (await lotDtoReponses.json()) as ParkingLotMetadataDto[];
+                const lotDtoResponses: Response = await fetch(urlFactory.getParkingLotsUrl(organizationDtos[0].id));
+                lotDtos = (await lotDtoResponses.json()) as ParkingLotMetadataDto[];
                 const nextParkingLots: ParkingLot[] = lotDtos.map((lotDto: ParkingLotMetadataDto): ParkingLot => mapToParkingLot(lotDto));
                 setParkingLots(nextParkingLots);
                 let allTypes: string[] = lotDtos
