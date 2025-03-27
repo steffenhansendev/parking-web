@@ -87,8 +87,7 @@ function AutoCompleteSearchBar<T>({
 
         stagedOption.current = choice;
         if (choice.isFurtherSpecifiable()) {
-            inputElementRef.current?.focus();
-            return
+            setInputElementValue(choice.viewValue);
         }
         await commit();
         inputElementRef.current?.blur();
