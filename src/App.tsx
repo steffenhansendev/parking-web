@@ -101,7 +101,7 @@ function App(): JSX.Element {
                                     title={"Let's park!"}
                                     handleOnClick={(): void => {
                                         recommend(parkingLotInclusions, stallTypeInclusions);
-                                    }}></Button>}
+                                    }} classNames={["w-100"]}></Button>}
                         </div>
                     </div>
                 </>
