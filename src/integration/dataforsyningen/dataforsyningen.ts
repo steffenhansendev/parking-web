@@ -37,38 +37,36 @@ async function search(query: AutocompleteQuery): Promise<Option[]> {
     const url: URL = urlFactory.getAutocompleteUrl(query);
     const response: Response = await fetch(url);
     const dtos = (await response.json()) as AutocompleteDto[];
-    return mapToOptions(dtos);
+    return dtos.map((dto: AutocompleteDto): Option => mapToOption(dto));
 }
 
-function mapToOptions(dtos: AutocompleteDto[]): Option[] {
-    return dtos.map((dto: AutocompleteDto): Option => {
-        return {
-            viewValue: dto.forslagstekst,
-            queryValue: dto.tekst,
-            caretIndexInQueryValue: dto.caretpos,
-            type: mapToAddressType(dto.type),
-            id: dto.data.id,
-            accessAddressId: dto.data.adgangsadresseid,
-            isCommittable: function (): boolean {
-                return this.type === AddressType.Entrance || this.type === AddressType.Address;
-            },
-            isChoice: function (query: string): boolean {
-                return query.toLowerCase() === this.queryValue.toLowerCase() || query.toLowerCase() === this.viewValue.toLowerCase();
-            },
-            isFurtherSpecifiable: function (): boolean {
-                return !(this.type === AddressType.Address);
-            },
-            getResult: function (): Address {
-                return {
-                    name: this.isFurtherSpecifiable() ? this.viewValue : this.queryValue,
-                    location: {
-                        latitude: dto.data.y,
-                        longitude: dto.data.x
-                    }
+function mapToOption(dto: AutocompleteDto): Option {
+    return {
+        viewValue: dto.forslagstekst,
+        queryValue: dto.tekst,
+        caretIndexInQueryValue: dto.caretpos,
+        type: mapToAddressType(dto.type),
+        id: dto.data.id,
+        accessAddressId: dto.data.adgangsadresseid,
+        isCommittable: function (): boolean {
+            return this.type === AddressType.Entrance || this.type === AddressType.Address;
+        },
+        isChoice: function (query: string): boolean {
+            return query.toLowerCase() === this.queryValue.toLowerCase() || query.toLowerCase() === this.viewValue.toLowerCase();
+        },
+        isFurtherSpecifiable: function (): boolean {
+            return !(this.type === AddressType.Address);
+        },
+        getResult: function (): Address {
+            return {
+                name: this.isFurtherSpecifiable() ? this.viewValue : this.queryValue,
+                location: {
+                    latitude: dto.data.y,
+                    longitude: dto.data.x
                 }
             }
-        };
-    });
+        }
+    };
 }
 
 function mapToAddressType(type: DataforsyningenAddressType): AddressType {
