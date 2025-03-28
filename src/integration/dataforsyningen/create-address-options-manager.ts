@@ -5,6 +5,7 @@ import {
     AddressAutocompleteOptionProvider,
     createAddressAutocompleteOptionProvider
 } from "./create-address-autocomplete-option-provider";
+import {createDataforsyningenClient} from "./create-dataforsyningen-client";
 
 export interface AddressAutocompleteSearchOption extends AutocompleteSearchOption<Address> {
     type: AddressType;
@@ -14,7 +15,7 @@ export interface AddressAutocompleteSearchOption extends AutocompleteSearchOptio
 
 export function createAddressOptionsManager(): OptionsManager<Address> {
     const [options, setOptions] = useState<AddressAutocompleteSearchOption[]>([]);
-    const optionProvider: AddressAutocompleteOptionProvider = createAddressAutocompleteOptionProvider();
+    const optionProvider: AddressAutocompleteOptionProvider = createAddressAutocompleteOptionProvider(createDataforsyningenClient());
     return {
         options: options,
         setOptions: async (queryValue: string, caretIndexInQueryValue: number): Promise<void> => {

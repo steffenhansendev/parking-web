@@ -12,13 +12,14 @@ export interface AddressAutocompleteOptionProvider {
     getMoreSpecificOptions: (option: AddressAutocompleteSearchOption) => Promise<AddressAutocompleteSearchOption[]>;
 }
 
-export function createAddressAutocompleteOptionProvider(): AddressAutocompleteOptionProvider {
+export function createAddressAutocompleteOptionProvider(dataforsyningenClient: DataForsyningenClient): AddressAutocompleteOptionProvider {
+
     return {
         getOptions: async (value: string, caretIndexInValue: number): Promise<AddressAutocompleteSearchOption[]> => {
             return await search({
                 value: value,
                 caretIndexInValue: caretIndexInValue,
-            });
+            }, dataforsyningenClient);
         },
         getMoreSpecificOptions: async (option: AddressAutocompleteSearchOption): Promise<AddressAutocompleteSearchOption[]> => {
             const query: AutocompleteQuery = {
@@ -37,13 +38,12 @@ export function createAddressAutocompleteOptionProvider(): AddressAutocompleteOp
                     query.scope!.entranceAddressId = option.entranceAddressId;
                     break;
             }
-            return await search(query);
+            return await search(query, dataforsyningenClient);
         }
     }
 }
 
-async function search(query: AutocompleteQuery): Promise<AddressAutocompleteSearchOption[]> {
-    const client: DataForsyningenClient = createDataforsyningenClient();
+async function search(query: AutocompleteQuery, client: DataForsyningenClient): Promise<AddressAutocompleteSearchOption[]> {
     const results: AutoCompleteResultDto[] = await client.httpGetAutocomplete(query);
     return results.map((dto: AutoCompleteResultDto): AddressAutocompleteSearchOption => mapToAutocompleteSearchOption(dto));
 }
