@@ -1,8 +1,11 @@
 import {Address} from "../../recommendation/Address";
-import {AutocompleteDto, DataforsyningenAddressType} from "./AutocompleteDto";
 import {AddressType, AddressAutocompleteSearchOption} from "./AddressAutocompleteSearchOption";
-import {AddressApiUrlFactory, AutocompleteQuery} from "./AddressApiUrlFactory";
-import {createAddressApiUrlFactory} from "./create-address-api-url-factory";
+import {
+    AutocompleteQuery,
+    AutoCompleteResultDto,
+    createDataforsyningenClient,
+    DataforsyningenAddressType, DataForsyningenClient
+} from "./create-dataforsyningen-client";
 
 export async function getOptions(value: string, caretIndexInValue: number): Promise<AddressAutocompleteSearchOption[]> {
     return await search({
@@ -31,16 +34,13 @@ export async function getMoreSpecificOptions(option: AddressAutocompleteSearchOp
     return await search(query);
 }
 
-
 async function search(query: AutocompleteQuery): Promise<AddressAutocompleteSearchOption[]> {
-    const urlFactory: AddressApiUrlFactory = createAddressApiUrlFactory();
-    const url: URL = urlFactory.getAutocompleteUrl(query);
-    const response: Response = await fetch(url);
-    const dtos = (await response.json()) as AutocompleteDto[];
-    return dtos.map((dto: AutocompleteDto): AddressAutocompleteSearchOption => mapToOption(dto));
+    const client: DataForsyningenClient = createDataforsyningenClient();
+    const results: AutoCompleteResultDto[] = await client.httpGetAutocomplete(query);
+    return results.map((dto: AutoCompleteResultDto): AddressAutocompleteSearchOption => mapToAutocompleteSearchOption(dto));
 }
 
-function mapToOption(dto: AutocompleteDto): AddressAutocompleteSearchOption {
+function mapToAutocompleteSearchOption(dto: AutoCompleteResultDto): AddressAutocompleteSearchOption {
     return {
         viewValue: dto.forslagstekst,
         queryValue: dto.tekst,
