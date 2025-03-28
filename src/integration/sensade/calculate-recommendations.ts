@@ -1,4 +1,4 @@
-import {OccupancyDataDto} from "../sensade/OccupancyDataDto";
+import {OccupancyDataDto} from "./OccupancyDataDto";
 import {Time} from "../../time/time";
 import {Recommendation} from "../../recommendation/Recommendation";
 import {ParkingLot, StallCount, StallType} from "../../recommendation/Inclusion";

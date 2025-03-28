@@ -38,6 +38,8 @@ module.exports = (env, argv) => {
         }, plugins: [
             new webpack.DefinePlugin({PARKING_API_HOST: JSON.stringify(isProductionPack ? "https://api.sensade.com" : "http://localhost:8080/")}),
             new webpack.DefinePlugin({PARKING_API_BASE_URI: JSON.stringify(isProductionPack ? "" : "/parking")}),
+            new webpack.DefinePlugin({ADDRESS_API_HOST: JSON.stringify("https://api.dataforsyningen.dk")}),
+            new webpack.DefinePlugin({ADDRESS_API_BASE_URI: JSON.stringify("/autocomplete")}),
             new HtmlWebpackPlugin({
                 template: path.join(__dirname, 'public', 'index.html')
             })], devServer: {

@@ -1,6 +1,6 @@
 import {OccupancyDataDto} from "./OccupancyDataDto";
 import React, {useRef} from "react";
-import {calculateRecommendations} from "../dataforsyningen/calculate-recommendations";
+import {calculateRecommendations} from "./calculate-recommendations";
 import {Time} from "../../time/time";
 
 
