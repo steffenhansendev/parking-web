@@ -2,26 +2,24 @@ import {Address} from "../../recommendation/Address";
 import {
     AutocompleteQuery,
     AutoCompleteResultDto,
-    createDataforsyningenClient,
     DataforsyningenAddressType, DataForsyningenClient
 } from "./create-dataforsyningen-client";
-import {AddressAutocompleteSearchOption, AddressType} from "./create-address-options-manager";
+import {AddressAutocompleteOption, AddressType} from "./create-address-autocomplete-options-manager";
 
 export interface AddressAutocompleteOptionProvider {
-    getOptions: (value: string, caretIndexInValue: number) => Promise<AddressAutocompleteSearchOption[]>;
-    getMoreSpecificOptions: (option: AddressAutocompleteSearchOption) => Promise<AddressAutocompleteSearchOption[]>;
+    getOptions: (value: string, caretIndexInValue: number) => Promise<AddressAutocompleteOption[]>;
+    getMoreSpecificOptions: (option: AddressAutocompleteOption) => Promise<AddressAutocompleteOption[]>;
 }
 
 export function createAddressAutocompleteOptionProvider(dataforsyningenClient: DataForsyningenClient): AddressAutocompleteOptionProvider {
-
     return {
-        getOptions: async (value: string, caretIndexInValue: number): Promise<AddressAutocompleteSearchOption[]> => {
+        getOptions: async (value: string, caretIndexInValue: number): Promise<AddressAutocompleteOption[]> => {
             return await search({
                 value: value,
                 caretIndexInValue: caretIndexInValue,
             }, dataforsyningenClient);
         },
-        getMoreSpecificOptions: async (option: AddressAutocompleteSearchOption): Promise<AddressAutocompleteSearchOption[]> => {
+        getMoreSpecificOptions: async (option: AddressAutocompleteOption): Promise<AddressAutocompleteOption[]> => {
             const query: AutocompleteQuery = {
                 value: option.queryValue,
                 caretIndexInValue: option.caretIndexInQueryValue ?? option.queryValue.length,
@@ -43,12 +41,12 @@ export function createAddressAutocompleteOptionProvider(dataforsyningenClient: D
     }
 }
 
-async function search(query: AutocompleteQuery, client: DataForsyningenClient): Promise<AddressAutocompleteSearchOption[]> {
+async function search(query: AutocompleteQuery, client: DataForsyningenClient): Promise<AddressAutocompleteOption[]> {
     const results: AutoCompleteResultDto[] = await client.httpGetAutocomplete(query);
-    return results.map((dto: AutoCompleteResultDto): AddressAutocompleteSearchOption => mapToAutocompleteSearchOption(dto));
+    return results.map((dto: AutoCompleteResultDto): AddressAutocompleteOption => mapToAutocompleteSearchOption(dto));
 }
 
-function mapToAutocompleteSearchOption(dto: AutoCompleteResultDto): AddressAutocompleteSearchOption {
+function mapToAutocompleteSearchOption(dto: AutoCompleteResultDto): AddressAutocompleteOption {
     return {
         viewValue: dto.forslagstekst,
         queryValue: dto.tekst,

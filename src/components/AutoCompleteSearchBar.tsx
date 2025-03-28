@@ -1,12 +1,12 @@
 import React, {JSX, useEffect, useRef, useState} from "react";
 
-export interface OptionsManager<T> {
-    options: AutocompleteSearchOption<T>[];
+export interface AutocompleteOptionsManager<T> {
+    options: AutocompleteOption<T>[];
     setOptions: (queryValue: string, caretIndexInQueryValue: number) => Promise<void>;
-    setMoreSpecificOptions: (option: AutocompleteSearchOption<T>) => Promise<void>;
+    setMoreSpecificOptions: (option: AutocompleteOption<T>) => Promise<void>;
 }
 
-export interface AutocompleteSearchOption<T> {
+export interface AutocompleteOption<T> {
     queryValue: string;
     caretIndexInQueryValue: number;
     viewValue: string;
@@ -19,7 +19,7 @@ export interface AutocompleteSearchOption<T> {
 interface Props<T> {
     placeholder: string;
     setResult: (result: T | undefined) => void;
-    optionsManager: OptionsManager<T>;
+    optionsManager: AutocompleteOptionsManager<T>;
     isInFocus: boolean;
 }
 
@@ -34,7 +34,7 @@ function AutoCompleteSearchBar<T>({
     const [isInputElementInFocus, setIsInputElementInFocus] = useState<boolean>(false);
     const [activeLiElementIndex, setActiveLiElementIndex] = useState(-1);
     const [isDroppedDown, setIsDroppedDown] = useState<boolean>(false);
-    const stagedOption = useRef<AutocompleteSearchOption<T>>(undefined);
+    const stagedOption = useRef<AutocompleteOption<T>>(undefined);
     useEffect((): void => {
         setActiveLiElementIndex(-1);
     }, [options]);
@@ -58,7 +58,7 @@ function AutoCompleteSearchBar<T>({
     const handleValueChanged =
         async (value: string, selectionStart: number): Promise<void> => {
             setInputElementValue(value);
-            const match: AutocompleteSearchOption<T> | undefined = options.find((option: AutocompleteSearchOption<T>): boolean => option.isChoice(value));
+            const match: AutocompleteOption<T> | undefined = options.find((option: AutocompleteOption<T>): boolean => option.isChoice(value));
             if (match?.isCommittable()) {
                 await choose(match);
                 return;
@@ -76,7 +76,7 @@ function AutoCompleteSearchBar<T>({
             }, PEND_TIME_OF_GET_OPTIONS_IN_MILLISECONDS);
         };
 
-    const choose = async (choice: AutocompleteSearchOption<T>): Promise<void> => {
+    const choose = async (choice: AutocompleteOption<T>): Promise<void> => {
         setInputElementValue(choice.queryValue);
         stagedOption.current = undefined;
         await setMoreSpecificOptions(choice);
@@ -129,7 +129,7 @@ function AutoCompleteSearchBar<T>({
                 if (activeLiElementIndex < length - 1) {
                     const nextActiveLiElementIndex: number = activeLiElementIndex + 1;
                     setActiveLiElementIndex(nextActiveLiElementIndex);
-                    const option: AutocompleteSearchOption<T> = options[nextActiveLiElementIndex];
+                    const option: AutocompleteOption<T> = options[nextActiveLiElementIndex];
                     setInputElementValue(option.queryValue);
                     setCaret(option.caretIndexInQueryValue);
                 }
@@ -139,7 +139,7 @@ function AutoCompleteSearchBar<T>({
                 if (activeLiElementIndex > -1) {
                     const nextActiveLiElementIndex: number = activeLiElementIndex - 1;
                     setActiveLiElementIndex(nextActiveLiElementIndex);
-                    const option: AutocompleteSearchOption<T> = options[nextActiveLiElementIndex];
+                    const option: AutocompleteOption<T> = options[nextActiveLiElementIndex];
                     if (!option) {
                         return;
                     }
@@ -191,7 +191,7 @@ function AutoCompleteSearchBar<T>({
                         // Using <Option> offers no way of distinguishing whether an option was chosen or the <Input>'s value was changed.
                         className={"dropdown-menu"}
                         style={UL_ELEMENT_STYLE}>
-                        {options.map((option: AutocompleteSearchOption<T>, i: number) => {
+                        {options.map((option: AutocompleteOption<T>, i: number) => {
                             return <li
                                 className={activeLiElementIndex === i ? "dropdown-item active" : "dropdown-item"}
                                 onMouseOver={(e): void => {

@@ -1,4 +1,4 @@
-import {AddressType} from "./create-address-options-manager";
+import {AddressType} from "./create-address-autocomplete-options-manager";
 
 // @ts-ignore
 // Webpack
