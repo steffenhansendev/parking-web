@@ -12,7 +12,7 @@ import EllipsisSpinnerSpans from "./components/EllipsisSpinnerSpans";
 import geodesic, {GeodesicClass} from "geographiclib-geodesic";
 import AutoCompleteSearchBar from "./components/AutoCompleteSearchBar";
 import {Address} from "./recommendation/Address";
-import {createOptionsManager} from "./integration/dataforsyningen/create-options-manager";
+import {createAddressOptionsManager} from "./integration/dataforsyningen/create-address-options-manager";
 
 const apiUrlFactory: ParkingApiUrlFactory = createParkingApiUrlFactory();
 
@@ -51,7 +51,7 @@ function App(): JSX.Element {
                 <AutoCompleteSearchBar<Address> placeholder={"Search for Danish address"}
                                                 setResult={setAddress}
                                                 isInFocus={true}
-                                                optionsManager={createOptionsManager()}/>
+                                                optionsManager={createAddressOptionsManager()}/>
             </div>
             {isFetchingRecommendations
                 ?

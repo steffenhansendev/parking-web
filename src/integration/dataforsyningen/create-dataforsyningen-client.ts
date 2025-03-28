@@ -1,4 +1,4 @@
-import {AddressType} from "./create-options-manager";
+import {AddressType} from "./create-address-options-manager";
 
 const HOST: string = "https://api.dataforsyningen.dk";
 const URI: string = "autocomplete";

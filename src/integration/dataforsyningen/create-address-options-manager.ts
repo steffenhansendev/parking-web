@@ -18,7 +18,7 @@ export enum AddressType {
     Address
 }
 
-export function createOptionsManager(): OptionsManager<Address> {
+export function createAddressOptionsManager(): OptionsManager<Address> {
     const [options, setOptions] = useState<AddressAutocompleteSearchOption[]>([]);
     const optionsProvider: AddressAutocompleteOptionProvider = createAddressAutocompleteOptionProvider();
     const setNextOptions = async (queryValue: string, caretIndexInQueryValue: number): Promise<void> => {

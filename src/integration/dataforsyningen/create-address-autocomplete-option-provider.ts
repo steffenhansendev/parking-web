@@ -5,7 +5,7 @@ import {
     createDataforsyningenClient,
     DataforsyningenAddressType, DataForsyningenClient
 } from "./create-dataforsyningen-client";
-import {AddressAutocompleteSearchOption, AddressType} from "./create-options-manager";
+import {AddressAutocompleteSearchOption, AddressType} from "./create-address-options-manager";
 
 export interface AddressAutocompleteOptionProvider {
     getOptions: (value: string, caretIndexInValue: number) => Promise<AddressAutocompleteSearchOption[]>;
