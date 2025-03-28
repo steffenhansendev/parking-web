@@ -1,7 +1,11 @@
 import {AddressType} from "./create-address-options-manager";
 
-const HOST: string = "https://api.dataforsyningen.dk";
-const URI: string = "autocomplete";
+// @ts-ignore
+// Webpack
+const HOST: string = ADDRESS_API_HOST;
+// @ts-ignore
+// Webpack
+const URI: string = ADDRESS_API_BASE_URI;
 const maxNumberOfResults: number = 10;
 
 export interface DataForsyningenClient {
