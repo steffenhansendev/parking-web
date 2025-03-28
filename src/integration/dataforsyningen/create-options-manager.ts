@@ -1,11 +1,22 @@
 import {useState} from "react";
 import {Address} from "../../recommendation/Address";
 import {AutocompleteSearchOption, OptionsManager} from "../../components/AutoCompleteSearchBar";
-import {AddressAutocompleteSearchOption} from "./AddressAutocompleteSearchOption";
 import {
     AddressAutocompleteOptionProvider,
     createAddressAutocompleteOptionProvider
 } from "./create-address-autocomplete-option-provider";
+
+export interface AddressAutocompleteSearchOption extends AutocompleteSearchOption<Address> {
+    type: AddressType;
+    id: string;
+    entranceAddressId?: string; // Only for type = Address
+}
+
+export enum AddressType {
+    Street,
+    Entrance,
+    Address
+}
 
 export function createOptionsManager(): OptionsManager<Address> {
     const [options, setOptions] = useState<AddressAutocompleteSearchOption[]>([]);

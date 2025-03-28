@@ -1,11 +1,11 @@
 import {Address} from "../../recommendation/Address";
-import {AddressType, AddressAutocompleteSearchOption} from "./AddressAutocompleteSearchOption";
 import {
     AutocompleteQuery,
     AutoCompleteResultDto,
     createDataforsyningenClient,
     DataforsyningenAddressType, DataForsyningenClient
 } from "./create-dataforsyningen-client";
+import {AddressAutocompleteSearchOption, AddressType} from "./create-options-manager";
 
 export interface AddressAutocompleteOptionProvider {
     getOptions: (value: string, caretIndexInValue: number) => Promise<AddressAutocompleteSearchOption[]>;
