@@ -12,12 +12,6 @@ export interface AddressAutocompleteSearchOption extends AutocompleteSearchOptio
     entranceAddressId?: string; // Only for type = Address
 }
 
-export enum AddressType {
-    Street,
-    Entrance,
-    Address
-}
-
 export function createAddressOptionsManager(): OptionsManager<Address> {
     const [options, setOptions] = useState<AddressAutocompleteSearchOption[]>([]);
     const optionProvider: AddressAutocompleteOptionProvider = createAddressAutocompleteOptionProvider();
@@ -41,4 +35,10 @@ export function createAddressOptionsManager(): OptionsManager<Address> {
         setOptions: setNextOptions,
         setMoreSpecificOptions: setNextMoreSpecificOptions,
     }
+}
+
+export enum AddressType {
+    Street,
+    Entrance,
+    Address
 }
