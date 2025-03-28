@@ -1,4 +1,5 @@
 import React, {JSX, useEffect, useRef, useState} from "react";
+import AutocompleteSearchBarOptions from "./AutocompleteSearchBarOptions";
 
 export interface AutocompleteOptionsManager<T> {
     options: AutocompleteOption<T>[];
@@ -23,7 +24,7 @@ interface Props<T> {
     isInFocus: boolean;
 }
 
-function AutoCompleteSearchBar<T>({
+function AutocompleteSearchBar<T>({
                                       placeholder,
                                       setResult,
                                       optionsManager: {options, setOptions, setMoreSpecificOptions},
@@ -156,9 +157,7 @@ function AutoCompleteSearchBar<T>({
         }
     }
 
-    const MOUSE_OVER_LI_ELEMENT_CLASS: string = "bg-dark-subtle";
     const INPUT_ELEMENT_VALID_CLASS: string = "is-valid";
-    const UL_ELEMENT_STYLE: React.CSSProperties = {width: "100%", cursor: "default", display: "block"}
     const PEND_TIME_OF_GET_OPTIONS_IN_MILLISECONDS: number = 50;
 
     return (
@@ -183,35 +182,14 @@ function AutoCompleteSearchBar<T>({
                     }}
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}/>
-                {
-                    isDroppedDown &&
-                    <ul
-                        // Rather than a list of <Option> elements, <li> and <ul> were chosen because:
-                        // Using <Option> will cause the dropdown to never show again whenever an option is chosen.
-                        // Using <Option> offers no way of distinguishing whether an option was chosen or the <Input>'s value was changed.
-                        className={"dropdown-menu"}
-                        style={UL_ELEMENT_STYLE}>
-                        {options.map((option: AutocompleteOption<T>, i: number) => {
-                            return <li
-                                className={activeLiElementIndex === i ? "dropdown-item active" : "dropdown-item"}
-                                onMouseOver={(e): void => {
-                                    e.currentTarget.classList.add(MOUSE_OVER_LI_ELEMENT_CLASS);
-                                }}
-                                onMouseOut={(e): void => {
-                                    e.currentTarget.classList.remove(MOUSE_OVER_LI_ELEMENT_CLASS);
-                                }}
-                                onMouseDown={async () => {
-                                    await choose(option);
-                                }}
-                                key={option.queryValue}
-                            >
-                                {option.viewValue}
-                            </li>;
-                        })}
-                    </ul>}
+                {isDroppedDown &&
+                    <AutocompleteSearchBarOptions options={options}
+                                                  activeLiElementIndex={activeLiElementIndex}
+                                                  choose={choose}/>
+                }
             </div>
         </form>
     );
 }
 
-export default AutoCompleteSearchBar;
+export default AutocompleteSearchBar;
