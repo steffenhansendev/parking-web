@@ -21,10 +21,12 @@ export enum AddressType {
 export function createAddressOptionsManager(): OptionsManager<Address> {
     const [options, setOptions] = useState<AddressAutocompleteSearchOption[]>([]);
     const optionProvider: AddressAutocompleteOptionProvider = createAddressAutocompleteOptionProvider();
+
     const setNextOptions = async (queryValue: string, caretIndexInQueryValue: number): Promise<void> => {
         const nextOptions: AddressAutocompleteSearchOption[] = await optionProvider.getOptions(queryValue, caretIndexInQueryValue);
         setOptions(nextOptions);
     };
+
     const setNextMoreSpecificOptions = async (option: AutocompleteSearchOption<Address>): Promise<void> => {
         const match: AddressAutocompleteSearchOption | undefined = options.find((o: AddressAutocompleteSearchOption): boolean => o == option);
         if (!match) {
@@ -33,6 +35,7 @@ export function createAddressOptionsManager(): OptionsManager<Address> {
         const nextOptions: AddressAutocompleteSearchOption[] = await optionProvider.getMoreSpecificOptions(match);
         setOptions(nextOptions);
     }
+
     return {
         options: options,
         setOptions: setNextOptions,
