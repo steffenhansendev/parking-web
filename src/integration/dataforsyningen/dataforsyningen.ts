@@ -1,64 +1,40 @@
 import {Address} from "../../recommendation/Address";
 import {AutocompleteDto, DataforsyningenAddressType} from "./AutocompleteDto";
 import {AddressType, Option} from "./Option";
-
-const HOST: string = "https://api.dataforsyningen.dk";
-const URI: string = "autocomplete";
+import {AddressApiUrlFactory, AutocompleteQuery} from "./AddressApiUrlFactory";
+import {createAddressApiUrlFactory} from "./create-address-api-url-factory";
 
 export async function getOptions(value: string, caretIndexInValue: number): Promise<Option[]> {
     return await search({
         value: value,
-        caretIndexInValue: caretIndexInValue
+        caretIndexInValue: caretIndexInValue,
     });
 }
 
 export async function getMoreSpecificOptions(option: Option): Promise<Option[]> {
-    const parameters: SearchParameters = {
+    const query: AutocompleteQuery = {
         value: option.queryValue,
         caretIndexInValue: option.caretIndexInQueryValue ?? option.queryValue.length,
-        type: AddressType.Address,
+        scope: {type: AddressType.Address}
     }
     switch (option.type) {
         case AddressType.Street:
-            parameters.leastSpecificity = AddressType.Entrance;
+            query.scope!.leastSpecificity = AddressType.Entrance;
             break;
         case AddressType.Entrance:
-            parameters.entranceAddressId = option.id;
+            query.scope!.entranceAddressId = option.id;
             break;
         case AddressType.Address:
-            parameters.entranceAddressId = option.accessAddressId;
+            query.scope!.entranceAddressId = option.accessAddressId;
             break;
     }
-    return await search(parameters);
+    return await search(query);
 }
 
-interface SearchParameters {
-    value: string;
-    caretIndexInValue: number;
-    type?: AddressType;
-    entranceAddressId?: string;
-    leastSpecificity?: AddressType;
-    id?: string;
-}
 
-async function search(parameters: SearchParameters): Promise<Option[]> {
-    const searchParameters: URLSearchParams = new URLSearchParams({
-        q: parameters.value,
-        caretpos: parameters.caretIndexInValue.toString(),
-        fuzzy: "",
-        per_side: "10",
-        type: mapToDataforsyningenAddressType(parameters.type)
-    });
-    if (parameters.entranceAddressId) {
-        searchParameters.append("adgangsaddresseid", parameters.entranceAddressId);
-    }
-    if (parameters.leastSpecificity) {
-        searchParameters.append("startfra", mapToDataforsyningenAddressType(parameters.leastSpecificity))
-    }
-    if (parameters.id) {
-        searchParameters.append("id", parameters.id);
-    }
-    const url: URL = new URL(`${URI}?${searchParameters.toString()}`, HOST);
+async function search(query: AutocompleteQuery): Promise<Option[]> {
+    const urlFactory: AddressApiUrlFactory = createAddressApiUrlFactory();
+    const url: URL = urlFactory.getAutocompleteUrl(query);
     const response: Response = await fetch(url);
     const dtos = (await response.json()) as AutocompleteDto[];
     return mapToOptions(dtos);
@@ -103,17 +79,5 @@ function mapToAddressType(type: DataforsyningenAddressType): AddressType {
             return AddressType.Entrance;
         case "adresse":
             return AddressType.Address;
-    }
-}
-
-function mapToDataforsyningenAddressType(type: AddressType | undefined): DataforsyningenAddressType {
-    switch (type) {
-        case AddressType.Street:
-            return "vejnavn";
-        case AddressType.Entrance:
-            return "adgangsadresse"
-        case AddressType.Address:
-        case undefined:
-            return "adresse";
     }
 }
