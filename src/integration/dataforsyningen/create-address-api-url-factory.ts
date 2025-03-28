@@ -1,5 +1,5 @@
 import {AddressApiUrlFactory, AutocompleteQuery} from "./AddressApiUrlFactory";
-import {AddressType} from "./Option";
+import {AddressType} from "./AddressSearchOption";
 import {DataforsyningenAddressType} from "./AutocompleteDto";
 
 export function createAddressApiUrlFactory(): AddressApiUrlFactory {

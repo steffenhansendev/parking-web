@@ -1,4 +1,4 @@
-import {AddressType} from "./Option";
+import {AddressType} from "./AddressSearchOption";
 
 export interface AddressApiUrlFactory {
     getAutocompleteUrl: (query: AutocompleteQuery) => URL;

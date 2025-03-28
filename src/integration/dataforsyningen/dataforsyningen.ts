@@ -1,17 +1,17 @@
 import {Address} from "../../recommendation/Address";
 import {AutocompleteDto, DataforsyningenAddressType} from "./AutocompleteDto";
-import {AddressType, Option} from "./Option";
+import {AddressType, AddressSearchOption} from "./AddressSearchOption";
 import {AddressApiUrlFactory, AutocompleteQuery} from "./AddressApiUrlFactory";
 import {createAddressApiUrlFactory} from "./create-address-api-url-factory";
 
-export async function getOptions(value: string, caretIndexInValue: number): Promise<Option[]> {
+export async function getOptions(value: string, caretIndexInValue: number): Promise<AddressSearchOption[]> {
     return await search({
         value: value,
         caretIndexInValue: caretIndexInValue,
     });
 }
 
-export async function getMoreSpecificOptions(option: Option): Promise<Option[]> {
+export async function getMoreSpecificOptions(option: AddressSearchOption): Promise<AddressSearchOption[]> {
     const query: AutocompleteQuery = {
         value: option.queryValue,
         caretIndexInValue: option.caretIndexInQueryValue ?? option.queryValue.length,
@@ -25,29 +25,29 @@ export async function getMoreSpecificOptions(option: Option): Promise<Option[]> 
             query.scope!.entranceAddressId = option.id;
             break;
         case AddressType.Address:
-            query.scope!.entranceAddressId = option.accessAddressId;
+            query.scope!.entranceAddressId = option.entranceAddressId;
             break;
     }
     return await search(query);
 }
 
 
-async function search(query: AutocompleteQuery): Promise<Option[]> {
+async function search(query: AutocompleteQuery): Promise<AddressSearchOption[]> {
     const urlFactory: AddressApiUrlFactory = createAddressApiUrlFactory();
     const url: URL = urlFactory.getAutocompleteUrl(query);
     const response: Response = await fetch(url);
     const dtos = (await response.json()) as AutocompleteDto[];
-    return dtos.map((dto: AutocompleteDto): Option => mapToOption(dto));
+    return dtos.map((dto: AutocompleteDto): AddressSearchOption => mapToOption(dto));
 }
 
-function mapToOption(dto: AutocompleteDto): Option {
+function mapToOption(dto: AutocompleteDto): AddressSearchOption {
     return {
         viewValue: dto.forslagstekst,
         queryValue: dto.tekst,
         caretIndexInQueryValue: dto.caretpos,
         type: mapToAddressType(dto.type),
         id: dto.data.id,
-        accessAddressId: dto.data.adgangsadresseid,
+        entranceAddressId: dto.data.adgangsadresseid,
         isCommittable: function (): boolean {
             return this.type === AddressType.Entrance || this.type === AddressType.Address;
         },
