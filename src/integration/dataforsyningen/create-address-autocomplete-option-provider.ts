@@ -7,31 +7,39 @@ import {
     DataforsyningenAddressType, DataForsyningenClient
 } from "./create-dataforsyningen-client";
 
-export async function getOptions(value: string, caretIndexInValue: number): Promise<AddressAutocompleteSearchOption[]> {
-    return await search({
-        value: value,
-        caretIndexInValue: caretIndexInValue,
-    });
+export interface AddressAutocompleteOptionProvider {
+    getOptions: (value: string, caretIndexInValue: number) => Promise<AddressAutocompleteSearchOption[]>;
+    getMoreSpecificOptions: (option: AddressAutocompleteSearchOption) => Promise<AddressAutocompleteSearchOption[]>;
 }
 
-export async function getMoreSpecificOptions(option: AddressAutocompleteSearchOption): Promise<AddressAutocompleteSearchOption[]> {
-    const query: AutocompleteQuery = {
-        value: option.queryValue,
-        caretIndexInValue: option.caretIndexInQueryValue ?? option.queryValue.length,
-        scope: {type: AddressType.Address}
+export function createAddressAutocompleteOptionProvider(): AddressAutocompleteOptionProvider {
+    return {
+        getOptions: async (value: string, caretIndexInValue: number): Promise<AddressAutocompleteSearchOption[]> => {
+            return await search({
+                value: value,
+                caretIndexInValue: caretIndexInValue,
+            });
+        },
+        getMoreSpecificOptions: async (option: AddressAutocompleteSearchOption): Promise<AddressAutocompleteSearchOption[]> => {
+            const query: AutocompleteQuery = {
+                value: option.queryValue,
+                caretIndexInValue: option.caretIndexInQueryValue ?? option.queryValue.length,
+                scope: {type: AddressType.Address}
+            }
+            switch (option.type) {
+                case AddressType.Street:
+                    query.scope!.leastSpecificity = AddressType.Entrance;
+                    break;
+                case AddressType.Entrance:
+                    query.scope!.entranceAddressId = option.id;
+                    break;
+                case AddressType.Address:
+                    query.scope!.entranceAddressId = option.entranceAddressId;
+                    break;
+            }
+            return await search(query);
+        }
     }
-    switch (option.type) {
-        case AddressType.Street:
-            query.scope!.leastSpecificity = AddressType.Entrance;
-            break;
-        case AddressType.Entrance:
-            query.scope!.entranceAddressId = option.id;
-            break;
-        case AddressType.Address:
-            query.scope!.entranceAddressId = option.entranceAddressId;
-            break;
-    }
-    return await search(query);
 }
 
 async function search(query: AutocompleteQuery): Promise<AddressAutocompleteSearchOption[]> {

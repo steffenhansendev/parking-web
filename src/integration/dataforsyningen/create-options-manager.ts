@@ -1,13 +1,17 @@
 import {useState} from "react";
-import {getMoreSpecificOptions, getOptions} from "./dataforsyningen";
 import {Address} from "../../recommendation/Address";
 import {AutocompleteSearchOption, OptionsManager} from "../../components/AutoCompleteSearchBar";
 import {AddressAutocompleteSearchOption} from "./AddressAutocompleteSearchOption";
+import {
+    AddressAutocompleteOptionProvider,
+    createAddressAutocompleteOptionProvider
+} from "./create-address-autocomplete-option-provider";
 
 export function createOptionsManager(): OptionsManager<Address> {
     const [options, setOptions] = useState<AddressAutocompleteSearchOption[]>([]);
+    const optionsProvider: AddressAutocompleteOptionProvider = createAddressAutocompleteOptionProvider();
     const setNextOptions = async (queryValue: string, caretIndexInQueryValue: number): Promise<void> => {
-        const nextOptions: AddressAutocompleteSearchOption[] = await getOptions(queryValue, caretIndexInQueryValue);
+        const nextOptions: AddressAutocompleteSearchOption[] = await optionsProvider.getOptions(queryValue, caretIndexInQueryValue);
         setOptions(nextOptions);
     };
     const setNextMoreSpecificOptions = async (option: AutocompleteSearchOption<Address>): Promise<void> => {
@@ -15,7 +19,7 @@ export function createOptionsManager(): OptionsManager<Address> {
         if (!match) {
             return;
         }
-        const nextOptions: AddressAutocompleteSearchOption[] = await getMoreSpecificOptions(match);
+        const nextOptions: AddressAutocompleteSearchOption[] = await optionsProvider.getMoreSpecificOptions(match);
         setOptions(nextOptions);
     }
     return {
