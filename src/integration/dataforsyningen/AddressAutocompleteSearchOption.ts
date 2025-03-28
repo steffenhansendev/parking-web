@@ -1,7 +1,7 @@
 import {AutocompleteSearchOption} from "../../components/AutoCompleteSearchBar";
 import {Address} from "../../recommendation/Address";
 
-export interface AddressSearchOption extends AutocompleteSearchOption<Address> {
+export interface AddressAutocompleteSearchOption extends AutocompleteSearchOption<Address> {
     type: AddressType;
     id: string;
     entranceAddressId?: string; // Only for type = Address

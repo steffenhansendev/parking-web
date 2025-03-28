@@ -1,17 +1,17 @@
 import {Address} from "../../recommendation/Address";
 import {AutocompleteDto, DataforsyningenAddressType} from "./AutocompleteDto";
-import {AddressType, AddressSearchOption} from "./AddressSearchOption";
+import {AddressType, AddressAutocompleteSearchOption} from "./AddressAutocompleteSearchOption";
 import {AddressApiUrlFactory, AutocompleteQuery} from "./AddressApiUrlFactory";
 import {createAddressApiUrlFactory} from "./create-address-api-url-factory";
 
-export async function getOptions(value: string, caretIndexInValue: number): Promise<AddressSearchOption[]> {
+export async function getOptions(value: string, caretIndexInValue: number): Promise<AddressAutocompleteSearchOption[]> {
     return await search({
         value: value,
         caretIndexInValue: caretIndexInValue,
     });
 }
 
-export async function getMoreSpecificOptions(option: AddressSearchOption): Promise<AddressSearchOption[]> {
+export async function getMoreSpecificOptions(option: AddressAutocompleteSearchOption): Promise<AddressAutocompleteSearchOption[]> {
     const query: AutocompleteQuery = {
         value: option.queryValue,
         caretIndexInValue: option.caretIndexInQueryValue ?? option.queryValue.length,
@@ -32,15 +32,15 @@ export async function getMoreSpecificOptions(option: AddressSearchOption): Promi
 }
 
 
-async function search(query: AutocompleteQuery): Promise<AddressSearchOption[]> {
+async function search(query: AutocompleteQuery): Promise<AddressAutocompleteSearchOption[]> {
     const urlFactory: AddressApiUrlFactory = createAddressApiUrlFactory();
     const url: URL = urlFactory.getAutocompleteUrl(query);
     const response: Response = await fetch(url);
     const dtos = (await response.json()) as AutocompleteDto[];
-    return dtos.map((dto: AutocompleteDto): AddressSearchOption => mapToOption(dto));
+    return dtos.map((dto: AutocompleteDto): AddressAutocompleteSearchOption => mapToOption(dto));
 }
 
-function mapToOption(dto: AutocompleteDto): AddressSearchOption {
+function mapToOption(dto: AutocompleteDto): AddressAutocompleteSearchOption {
     return {
         viewValue: dto.forslagstekst,
         queryValue: dto.tekst,
