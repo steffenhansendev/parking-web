@@ -36,7 +36,7 @@ function getAutocompleteUrl(query: AutocompleteQuery): URL {
     return new URL(`${URI}?${searchParameters.toString()}`, HOST);
 }
 
-function mapToDataforsyningenAddressType(type: AddressType | undefined): DataforsyningenAddressType {
+function mapToDataforsyningenAddressType(type: AddressType): DataforsyningenAddressType {
     switch (type) {
         case AddressType.Street:
             return "vejnavn";
