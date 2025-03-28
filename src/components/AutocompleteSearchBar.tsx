@@ -1,5 +1,5 @@
 import React, {JSX, useEffect, useRef, useState} from "react";
-import AutoCompleteSearchBarOptions from "./AutoCompleteSearchBarOptions";
+import AutocompleteSearchBarOptions from "./AutocompleteSearchBarOptions";
 
 export interface AutocompleteOptionsManager<T> {
     options: AutocompleteOption<T>[];
@@ -24,7 +24,7 @@ interface Props<T> {
     isInFocus: boolean;
 }
 
-function AutoCompleteSearchBar<T>({
+function AutocompleteSearchBar<T>({
                                       placeholder,
                                       setResult,
                                       optionsManager: {options, setOptions, setMoreSpecificOptions},
@@ -183,7 +183,7 @@ function AutoCompleteSearchBar<T>({
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}/>
                 {isDroppedDown &&
-                    <AutoCompleteSearchBarOptions options={options}
+                    <AutocompleteSearchBarOptions options={options}
                                                   activeLiElementIndex={activeLiElementIndex}
                                                   choose={choose}/>
                 }
@@ -192,4 +192,4 @@ function AutoCompleteSearchBar<T>({
     );
 }
 
-export default AutoCompleteSearchBar;
+export default AutocompleteSearchBar;

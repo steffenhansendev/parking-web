@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {Address} from "../../recommendation/Address";
-import {AutocompleteOption, AutocompleteOptionsManager} from "../../components/AutoCompleteSearchBar";
+import {AutocompleteOption, AutocompleteOptionsManager} from "../../components/AutocompleteSearchBar";
 import {
     AddressAutocompleteOptionProvider,
     createAddressAutocompleteOptionProvider

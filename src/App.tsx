@@ -10,7 +10,7 @@ import {Recommendation} from "./recommendation/Recommendation";
 import {Inclusion, ParkingLot, StallType} from "./recommendation/Inclusion";
 import EllipsisSpinnerSpans from "./components/EllipsisSpinnerSpans";
 import geodesic, {GeodesicClass} from "geographiclib-geodesic";
-import AutoCompleteSearchBar from "./components/AutoCompleteSearchBar";
+import AutocompleteSearchBar from "./components/AutocompleteSearchBar";
 import {Address} from "./recommendation/Address";
 import {createAddressAutocompleteOptionsManager} from "./integration/dataforsyningen/create-address-autocomplete-options-manager";
 
@@ -48,7 +48,7 @@ function App(): JSX.Element {
             </div>
             <div className="row my-3">
                 <h5>{"Closest to"}</h5>
-                <AutoCompleteSearchBar<Address> placeholder={"Search for Danish address"}
+                <AutocompleteSearchBar<Address> placeholder={"Search for Danish address"}
                                                 setResult={setAddress}
                                                 isInFocus={true}
                                                 optionsManager={createAddressAutocompleteOptionsManager()}/>
