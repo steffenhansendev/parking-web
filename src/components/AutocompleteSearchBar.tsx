@@ -30,7 +30,7 @@ function AutocompleteSearchBar<T>({
                                       optionsManager: {options, setOptions, setMoreSpecificOptions},
                                       isInFocus
                                   }: Props<T>): JSX.Element {
-    const inputElementRef = useRef<HTMLInputElement>(new HTMLInputElement());
+    const inputElementRef = useRef<HTMLInputElement>(null);
     const [inputElementValue, setInputElementValue] = useState<string>("");
     const [isInputElementInFocus, setIsInputElementInFocus] = useState<boolean>(false);
     const [activeLiElementIndex, setActiveLiElementIndex] = useState(-1);
@@ -45,7 +45,7 @@ function AutocompleteSearchBar<T>({
             isInputElementInFocus && options.length > 0 && !isInputMatchingSingleOption);
     }, [options, inputElementValue, isInputElementInFocus]);
     useEffect((): void => {
-        inputElementRef.current.focus()
+        inputElementRef.current?.focus()
     }, [isInFocus]);
     const abortController = useRef<AbortController>(new AbortController());
 
@@ -82,7 +82,7 @@ function AutocompleteSearchBar<T>({
         stagedOption.current = undefined;
         await setMoreSpecificOptions(choice);
         if (!choice.isCommittable()) {
-            inputElementRef.current.focus();
+            inputElementRef.current?.focus();
             return;
         }
 
@@ -91,7 +91,7 @@ function AutocompleteSearchBar<T>({
             setInputElementValue(choice.viewValue);
         }
         await commit();
-        inputElementRef.current.blur();
+        inputElementRef.current?.blur();
     }
 
     const handleInputBlur = async (): Promise<void> => {
@@ -114,7 +114,7 @@ function AutocompleteSearchBar<T>({
 
     const setCaret = (index: number): void => {
         setTimeout(() => {
-            if (index < -1) {
+            if (!inputElementRef.current || index < -1) {
                 return
             }
             inputElementRef.current.selectionStart = index;
