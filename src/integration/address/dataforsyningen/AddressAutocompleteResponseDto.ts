@@ -6,7 +6,7 @@ export interface AddressAutocompleteResponseDto {
     caretpos: number;
     forslagstekst: string;
     data: Data;
-    stormodtagerpostnr: boolean; // ??
+    stormodtagerpostnr: boolean;
 }
 
 export interface Data {
@@ -25,7 +25,7 @@ export interface Data {
     stormodtagerpostnr: any
     stormodtagerpostnrnavn: any
     kommunekode: string
-    adgangsadresseid?: string // only present if type === adresse
+    adgangsadresseid?: string // only present if type = adresse
     x: number
     y: number
     href: string
