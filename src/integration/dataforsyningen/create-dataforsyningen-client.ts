@@ -9,15 +9,15 @@ const URI: string = ADDRESS_API_BASE_URI;
 const maxNumberOfResults: number = 10;
 
 export interface DataForsyningenClient {
-    httpGetAutocomplete: (query: AutocompleteQuery) => Promise<AutoCompleteResultDto[]>
+    httpGetAutocomplete: (query: AutocompleteQuery) => Promise<AutocompleteResultDto[]>
 }
 
 export function createDataforsyningenClient(): DataForsyningenClient {
     return {
-        httpGetAutocomplete: async (query: AutocompleteQuery): Promise<AutoCompleteResultDto[]> => {
+        httpGetAutocomplete: async (query: AutocompleteQuery): Promise<AutocompleteResultDto[]> => {
             const url: URL = getAutocompleteUrl(query);
             const response: Response = await fetch(url);
-            return (await response.json()) as AutoCompleteResultDto[];
+            return (await response.json()) as AutocompleteResultDto[];
         }
     }
 }
@@ -63,7 +63,7 @@ export interface AutocompleteQuery {
     }
 }
 
-export interface AutoCompleteResultDto {
+export interface AutocompleteResultDto {
     type: DataforsyningenAddressType;
     tekst: string;
     caretpos: number;
