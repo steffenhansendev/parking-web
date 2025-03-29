@@ -25,7 +25,6 @@ interface Props<T> {
 }
 
 const INPUT_ELEMENT_VALID_CLASS: string = "is-valid";
-const PEND_TIME_OF_GET_OPTIONS_IN_MILLISECONDS: number = 50;
 
 function AutocompleteSearchBar<T>({
                                       placeholder,
@@ -50,7 +49,6 @@ function AutocompleteSearchBar<T>({
     useEffect((): void => {
         inputElementRef.current?.focus()
     }, [isInFocus]);
-    const abortController = useRef<AbortController>(new AbortController());
 
     const commit = async () => {
         if (!stagedOption.current) {
@@ -67,17 +65,7 @@ function AutocompleteSearchBar<T>({
                 await choose(match);
                 return;
             }
-
-            abortController.current.abort();
-            abortController.current = new AbortController();
-            const abort: AbortController = abortController.current;
-            setTimeout(async (): Promise<void> => {
-                if (abort.signal.aborted) {
-                    return;
-                }
-                // When typing, the user will trigger this faster than can be perceived, and getOptions may invoke integrations.
-                await setOptions(value, selectionStart ?? value.length);
-            }, PEND_TIME_OF_GET_OPTIONS_IN_MILLISECONDS);
+            await setOptions(value, selectionStart ?? value.length);
         };
 
     const choose = async (choice: AutocompleteOption<T>): Promise<void> => {
