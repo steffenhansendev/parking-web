@@ -64,7 +64,7 @@ function mapToAutocompleteSearchOption(dto: AutocompleteResultDto): AddressAutoc
         isFurtherSpecifiable: function (): boolean {
             return !(this.type === AddressType.Address);
         },
-        getResult: function (): Address {
+        getCommitResult: function (): Address {
             return {
                 name: this.isFurtherSpecifiable() ? this.viewValue : this.queryValue,
                 location: {

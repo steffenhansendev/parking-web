@@ -14,7 +14,7 @@ export interface AutocompleteOption<T> {
     isCommittable: () => boolean;
     isFurtherSpecifiable: () => boolean;
     isMatch: (query: string) => boolean;
-    getResult: () => T;
+    getCommitResult: () => T;
 }
 
 interface Props<T> {
@@ -54,7 +54,7 @@ function AutocompleteSearchBar<T>({
         if (!stagedOption.current) {
             return;
         }
-        setResult(stagedOption.current.getResult());
+        setResult(stagedOption.current.getCommitResult());
     }
 
     const handleValueChanged =
