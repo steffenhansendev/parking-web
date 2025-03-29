@@ -28,9 +28,9 @@ function AutocompleteSearchBar<T>({
         setActiveLiElementIndex(-1);
     }, [options]);
     useEffect((): void => {
-        const isInputMatchingSingleOption: boolean = (options.length === 1 && options[0].isMatch(inputElementValue));
-        setIsDroppedDown(
-            isInputElementInFocus && options.length > 0 && !isInputMatchingSingleOption);
+        const isInputMatchingSingleOption: boolean = options.length === 1 && options[0].isMatch(inputElementValue);
+        const isDroppedDown: boolean = isInputElementInFocus && options.length > 0 && !isInputMatchingSingleOption;
+        setIsDroppedDown(isDroppedDown);
     }, [options, inputElementValue, isInputElementInFocus]);
     useEffect((): void => {
         inputElementRef.current?.focus()
