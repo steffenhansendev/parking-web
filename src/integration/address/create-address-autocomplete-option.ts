@@ -24,7 +24,7 @@ export function createAddressAutocompleteOption(viewValue: string, queryValue: s
         isFurtherSpecifiable: function (): boolean {
             return this.type !== AddressType.Address;
         },
-        getCommitResult: function (): Address {
+        getResultToCommit: function (): Address {
             return {
                 name: this.isFurtherSpecifiable() ? this.viewValue : this.queryValue,
                 location: location

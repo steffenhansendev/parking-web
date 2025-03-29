@@ -5,5 +5,5 @@ export interface AutocompleteOption<T> {
     isCommittable: () => boolean;
     isFurtherSpecifiable: () => boolean;
     isMatch: (query: string) => boolean;
-    getCommitResult: () => T;
+    getResultToCommit: () => T;
 }

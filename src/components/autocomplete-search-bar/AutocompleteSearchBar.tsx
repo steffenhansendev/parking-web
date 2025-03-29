@@ -40,7 +40,7 @@ function AutocompleteSearchBar<T>({
         if (!stagedOption.current) {
             return;
         }
-        setResult(stagedOption.current.getCommitResult());
+        setResult(stagedOption.current.getResultToCommit());
     }
 
     const handleValueChanged =
