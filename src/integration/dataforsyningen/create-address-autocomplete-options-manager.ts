@@ -30,7 +30,7 @@ export function createAddressAutocompleteOptionsManager(): AutocompleteOptionsMa
             }, PEND_TIME_OF_GET_OPTIONS_IN_MILLISECONDS);
         },
         setMoreSpecificOptions: async (option: AutocompleteOption<Address>): Promise<void> => {
-            const match: AddressAutocompleteOption | undefined = options.find((o: AddressAutocompleteOption): boolean => o == option);
+            const match: AddressAutocompleteOption | undefined = options.find((o: AddressAutocompleteOption): boolean => o === option);
             if (!match) {
                 return;
             }
