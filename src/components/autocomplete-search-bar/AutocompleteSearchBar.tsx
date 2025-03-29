@@ -3,14 +3,14 @@ import AutocompleteSearchBarDropdown from "./AutocompleteSearchBarDropdown";
 import {AutocompleteOption} from "./AutocompleteOption";
 import {AutocompleteOptionsManager} from "./AutocompleteOptionsManager";
 
+const INPUT_ELEMENT_VALID_CLASS: string = "is-valid";
+
 interface Props<T> {
     placeholder: string;
     setResult: (result: T | undefined) => void;
     optionsManager: AutocompleteOptionsManager<T>;
     isInFocus: boolean;
 }
-
-const INPUT_ELEMENT_VALID_CLASS: string = "is-valid";
 
 function AutocompleteSearchBar<T>({
                                       placeholder,
