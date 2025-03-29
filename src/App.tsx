@@ -10,7 +10,7 @@ import {Recommendation} from "./recommendation/Recommendation";
 import {Inclusion, ParkingLot, StallType} from "./recommendation/Inclusion";
 import EllipsisSpinnerSpans from "./components/EllipsisSpinnerSpans";
 import geodesic, {GeodesicClass} from "geographiclib-geodesic";
-import AutocompleteSearchBar from "./components/AutocompleteSearchBar";
+import AutocompleteSearchBar from "./components/autocomplete-search-bar/AutocompleteSearchBar";
 import {Address} from "./recommendation/Address";
 import {createAddressAutocompleteOptionsManager} from "./integration/address/create-address-autocomplete-options-manager";
 

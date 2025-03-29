@@ -1,5 +1,6 @@
 import React, {JSX} from "react";
-import {AutocompleteOption} from "./AutocompleteSearchBar";
+
+import {AutocompleteOption} from "./AutocompleteOption";
 
 const ACTIVE_LI_ELEMENT_CLASS: string = "active";
 const MOUSE_OVER_LI_ELEMENT_CLASS: string = "bg-dark-subtle";

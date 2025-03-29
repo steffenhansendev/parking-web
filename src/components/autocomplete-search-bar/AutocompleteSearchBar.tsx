@@ -1,21 +1,7 @@
 import React, {JSX, useEffect, useRef, useState} from "react";
 import AutocompleteSearchBarDropdown from "./AutocompleteSearchBarDropdown";
-
-export interface AutocompleteOptionsManager<T> {
-    options: AutocompleteOption<T>[];
-    setOptions: (queryValue: string, caretIndexInQueryValue: number) => Promise<void>;
-    setMoreSpecificOptions: (option: AutocompleteOption<T>) => Promise<void>;
-}
-
-export interface AutocompleteOption<T> {
-    queryValue: string;
-    caretIndexInQueryValue: number;
-    viewValue: string;
-    isCommittable: () => boolean;
-    isFurtherSpecifiable: () => boolean;
-    isMatch: (query: string) => boolean;
-    getCommitResult: () => T;
-}
+import {AutocompleteOption} from "./AutocompleteOption";
+import {AutocompleteOptionsManager} from "./AutocompleteOptionsManager";
 
 interface Props<T> {
     placeholder: string;

@@ -1,12 +1,13 @@
 import {useRef, useState} from "react";
 import {Address} from "../../recommendation/Address";
-import {AutocompleteOption, AutocompleteOptionsManager} from "../../components/AutocompleteSearchBar";
 import {
     createAddressAutocompleteOptionProvider
 } from "./create-address-autocomplete-option-provider";
 import {createAddressAutocompleteClient} from "./dataforsyningen/create-address-autocomplete-client";
 import {AddressAutocompleteOptionProvider} from "./AddressAutocompleteOptionProvider";
 import {AddressAutocompleteOption} from "./AddressAutocompleteOption";
+import {AutocompleteOption} from "../../components/autocomplete-search-bar/AutocompleteOption";
+import {AutocompleteOptionsManager} from "../../components/autocomplete-search-bar/AutocompleteOptionsManager";
 
 const PEND_TIME_OF_GET_OPTIONS_IN_MILLISECONDS: number = 50;
 
