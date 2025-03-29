@@ -1,4 +1,4 @@
-import React, {JSX, useEffect, useRef, useState} from "react";
+import React, {JSX, useRef, useState} from "react";
 import AutocompleteSearchBarDropdown from "./AutocompleteSearchBarDropdown";
 import {AutocompleteOption} from "./AutocompleteOption";
 import {AutocompleteOptionsManager} from "./AutocompleteOptionsManager";
@@ -26,13 +26,6 @@ function AutocompleteSearchBar<T>({
 
     const isInputMatchingSingleOption: boolean = options.length === 1 && options[0].isMatch(inputElementValue);
     const isDroppedDown: boolean = isInputElementInFocus && options.length > 0 && !isInputMatchingSingleOption;
-
-    const commit = async () => {
-        if (!stagedOption.current) {
-            return;
-        }
-        setResult(stagedOption.current.getResultToCommit());
-    }
 
     const handleValueChanged =
         async (value: string, selectionStart: number): Promise<void> => {
@@ -62,6 +55,13 @@ function AutocompleteSearchBar<T>({
         }
         await commit();
         inputElementRef.current?.blur();
+    }
+
+    const commit = async () => {
+        if (!stagedOption.current) {
+            return;
+        }
+        setResult(stagedOption.current.getResultToCommit());
     }
 
     const handleInputBlur = async (): Promise<void> => {
