@@ -1,6 +1,6 @@
 import {AddressAutocompleteOption} from "./AddressAutocompleteOption";
 
 export interface AddressAutocompleteOptionProvider {
-    getOptions: (value: string, caretIndexInValue: number) => Promise<AddressAutocompleteOption[]>;
-    getMoreSpecificOptions: (option: AddressAutocompleteOption) => Promise<AddressAutocompleteOption[]>;
+    readonly getOptions: (value: string, caretIndexInValue: number) => Promise<AddressAutocompleteOption[]>;
+    readonly getMoreSpecificOptions: (option: AddressAutocompleteOption) => Promise<AddressAutocompleteOption[]>;
 }
