@@ -24,6 +24,9 @@ interface Props<T> {
     isInFocus: boolean;
 }
 
+const INPUT_ELEMENT_VALID_CLASS: string = "is-valid";
+const PEND_TIME_OF_GET_OPTIONS_IN_MILLISECONDS: number = 50;
+
 function AutocompleteSearchBar<T>({
                                       placeholder,
                                       setResult,
@@ -156,9 +159,6 @@ function AutocompleteSearchBar<T>({
                 }
         }
     }
-
-    const INPUT_ELEMENT_VALID_CLASS: string = "is-valid";
-    const PEND_TIME_OF_GET_OPTIONS_IN_MILLISECONDS: number = 50;
 
     return (
         <form
