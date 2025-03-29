@@ -13,7 +13,7 @@ export interface AutocompleteOption<T> {
     viewValue: string;
     isCommittable: () => boolean;
     isFurtherSpecifiable: () => boolean;
-    isChoice: (query: string) => boolean;
+    isMatch: (query: string) => boolean;
     getResult: () => T;
 }
 
@@ -40,7 +40,7 @@ function AutocompleteSearchBar<T>({
         setActiveLiElementIndex(-1);
     }, [options]);
     useEffect((): void => {
-        const isInputMatchingSingleOption: boolean = (options.length === 1 && options[0].isChoice(inputElementValue));
+        const isInputMatchingSingleOption: boolean = (options.length === 1 && options[0].isMatch(inputElementValue));
         setIsDroppedDown(
             isInputElementInFocus && options.length > 0 && !isInputMatchingSingleOption);
     }, [options, inputElementValue, isInputElementInFocus]);
@@ -59,7 +59,7 @@ function AutocompleteSearchBar<T>({
     const handleValueChanged =
         async (value: string, selectionStart: number): Promise<void> => {
             setInputElementValue(value);
-            const match: AutocompleteOption<T> | undefined = options.find((option: AutocompleteOption<T>): boolean => option.isChoice(value));
+            const match: AutocompleteOption<T> | undefined = options.find((option: AutocompleteOption<T>): boolean => option.isMatch(value));
             if (match?.isCommittable()) {
                 await choose(match);
                 return;

@@ -57,7 +57,7 @@ function mapToAutocompleteSearchOption(dto: AutoCompleteResultDto): AddressAutoc
         isCommittable: function (): boolean {
             return this.type === AddressType.Entrance || this.type === AddressType.Address;
         },
-        isChoice: function (query: string): boolean {
+        isMatch: function (query: string): boolean {
             return query.toLowerCase() === this.queryValue.toLowerCase() || query.toLowerCase() === this.viewValue.toLowerCase();
         },
         isFurtherSpecifiable: function (): boolean {
