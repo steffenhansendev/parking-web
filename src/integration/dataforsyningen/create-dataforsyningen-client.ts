@@ -8,11 +8,11 @@ const HOST: string = ADDRESS_API_HOST;
 const URI: string = ADDRESS_API_BASE_URI;
 const maxNumberOfResults: number = 10;
 
-export interface DataForsyningenClient {
+export interface DataforsyningenClient {
     httpGetAutocomplete: (query: AutocompleteQuery) => Promise<AutocompleteResultDto[]>
 }
 
-export function createDataforsyningenClient(): DataForsyningenClient {
+export function createDataforsyningenClient(): DataforsyningenClient {
     return {
         httpGetAutocomplete: async (query: AutocompleteQuery): Promise<AutocompleteResultDto[]> => {
             const url: URL = getAutocompleteUrl(query);

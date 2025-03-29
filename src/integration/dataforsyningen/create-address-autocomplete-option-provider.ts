@@ -2,7 +2,7 @@ import {Address} from "../../recommendation/Address";
 import {
     AutocompleteQuery,
     AutocompleteResultDto,
-    DataforsyningenAddressType, DataForsyningenClient
+    DataforsyningenAddressType, DataforsyningenClient
 } from "./create-dataforsyningen-client";
 
 import {AddressAutocompleteOption, AddressType} from "./AddressAutocompleteOption";
@@ -12,7 +12,7 @@ export interface AddressAutocompleteOptionProvider {
     getMoreSpecificOptions: (option: AddressAutocompleteOption) => Promise<AddressAutocompleteOption[]>;
 }
 
-export function createAddressAutocompleteOptionProvider(dataforsyningenClient: DataForsyningenClient): AddressAutocompleteOptionProvider {
+export function createAddressAutocompleteOptionProvider(dataforsyningenClient: DataforsyningenClient): AddressAutocompleteOptionProvider {
     return {
         getOptions: async (value: string, caretIndexInValue: number): Promise<AddressAutocompleteOption[]> => {
             return await search({
@@ -42,7 +42,7 @@ export function createAddressAutocompleteOptionProvider(dataforsyningenClient: D
     }
 }
 
-async function search(query: AutocompleteQuery, client: DataForsyningenClient): Promise<AddressAutocompleteOption[]> {
+async function search(query: AutocompleteQuery, client: DataforsyningenClient): Promise<AddressAutocompleteOption[]> {
     const results: AutocompleteResultDto[] = await client.httpGetAutocomplete(query);
     return results.map((dto: AutocompleteResultDto): AddressAutocompleteOption => mapToAutocompleteSearchOption(dto));
 }
