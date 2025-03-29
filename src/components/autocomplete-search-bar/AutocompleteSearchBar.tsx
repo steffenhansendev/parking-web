@@ -23,9 +23,6 @@ function AutocompleteSearchBar<T>({
     const [isInputElementInFocus, setIsInputElementInFocus] = useState<boolean>(false);
     const [activeLiElementIndex, setActiveLiElementIndex] = useState(-1);
     const stagedOption = useRef<AutocompleteOption<T>>(undefined);
-    useEffect((): void => {
-        setActiveLiElementIndex(-1);
-    }, [options]);
 
     const isInputMatchingSingleOption: boolean = options.length === 1 && options[0].isMatch(inputElementValue);
     const isDroppedDown: boolean = isInputElementInFocus && options.length > 0 && !isInputMatchingSingleOption;
@@ -46,12 +43,14 @@ function AutocompleteSearchBar<T>({
                 return;
             }
             await setOptions(value, selectionStart ?? value.length);
+            setActiveLiElementIndex(-1);
         };
 
     const choose = async (choice: AutocompleteOption<T>): Promise<void> => {
         setInputElementValue(choice.queryValue);
         stagedOption.current = undefined;
         await setMoreSpecificOptions(choice);
+        setActiveLiElementIndex(-1);
         if (!choice.isCommittable()) {
             inputElementRef.current?.focus();
             return;
