@@ -12,24 +12,24 @@ const maxNumberOfResults: number = 10;
 
 export function createAddressAutocompleteClient(): AddressAutocompleteClient {
     return {
-        httpGetAutocomplete: async (query: AddressAutocompleteRequestDto): Promise<AddressAutocompleteResponseDto[]> => {
-            const url: URL = getAutocompleteUrl(query);
+        httpGetAutocomplete: async (requestDto: AddressAutocompleteRequestDto): Promise<AddressAutocompleteResponseDto[]> => {
+            const url: URL = getAutocompleteUrl(requestDto);
             const response: Response = await fetch(url);
             return (await response.json()) as AddressAutocompleteResponseDto[];
         }
     }
 }
 
-function getAutocompleteUrl(query: AddressAutocompleteRequestDto): URL {
+function getAutocompleteUrl(requestDto: AddressAutocompleteRequestDto): URL {
     const searchParameters: URLSearchParams = new URLSearchParams({
-        "q": query.value,
-        "caretpos": query.caretIndexInValue.toString(),
+        "q": requestDto.value,
+        "caretpos": requestDto.caretIndexInValue.toString(),
         "fuzzy": "",    // Not documented but always provided as such in Dataforsyningen's own client
         "per_side": maxNumberOfResults.toString()
     });
-    query.scope?.type && searchParameters.append("type", query.scope.type)
-    query.scope?.entranceAddressId && searchParameters.append("adgangsaddresseid", query.scope.entranceAddressId);
-    query.scope?.leastSpecificity && searchParameters.append("startfra", query.scope.leastSpecificity);
-    query.scope?.id && searchParameters.append("id", query.scope.id);
+    requestDto.scope?.type && searchParameters.append("type", requestDto.scope.type)
+    requestDto.scope?.entranceAddressId && searchParameters.append("adgangsaddresseid", requestDto.scope.entranceAddressId);
+    requestDto.scope?.leastSpecificity && searchParameters.append("startfra", requestDto.scope.leastSpecificity);
+    requestDto.scope?.id && searchParameters.append("id", requestDto.scope.id);
     return new URL(`${URI}?${searchParameters.toString()}`, HOST);
 }

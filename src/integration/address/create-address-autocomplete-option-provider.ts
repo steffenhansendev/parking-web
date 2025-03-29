@@ -9,46 +9,46 @@ import {AddressAutocompleteOptionProvider} from "./AddressAutocompleteOptionProv
 import {AddressAutocompleteOption} from "./AddressAutocompleteOption";
 import {AddressType} from "./AddressType";
 
-export function createAddressAutocompleteOptionProvider(dataforsyningenClient: AddressAutocompleteClient): AddressAutocompleteOptionProvider {
+export function createAddressAutocompleteOptionProvider(addressAutocompleteClient: AddressAutocompleteClient): AddressAutocompleteOptionProvider {
     return {
         getOptions: async (value: string, caretIndexInValue: number): Promise<AddressAutocompleteOption[]> => {
             return await search({
                 value: value,
                 caretIndexInValue: caretIndexInValue,
-            }, dataforsyningenClient);
+            }, addressAutocompleteClient);
         },
         getMoreSpecificOptions: async (option: AddressAutocompleteOption): Promise<AddressAutocompleteOption[]> => {
-            const query: AddressAutocompleteRequestDto = {
+            const requestDto: AddressAutocompleteRequestDto = {
                 value: option.queryValue,
                 caretIndexInValue: option.caretIndexInQueryValue ?? option.queryValue.length,
                 scope: {type: mapToDataforsyningenAddressType(AddressType.Address)}
             }
             switch (option.type) {
                 case AddressType.Street:
-                    query.scope!.leastSpecificity = mapToDataforsyningenAddressType(AddressType.Entrance);
+                    requestDto.scope!.leastSpecificity = mapToDataforsyningenAddressType(AddressType.Entrance);
                     break;
                 case AddressType.Entrance:
-                    query.scope!.entranceAddressId = option.id;
+                    requestDto.scope!.entranceAddressId = option.id;
                     break;
                 case AddressType.Address:
-                    query.scope!.entranceAddressId = option.entranceAddressId;
+                    requestDto.scope!.entranceAddressId = option.entranceAddressId;
                     break;
             }
-            return await search(query, dataforsyningenClient);
+            return await search(requestDto, addressAutocompleteClient);
         }
     }
 }
 
-async function search(query: AddressAutocompleteRequestDto, client: AddressAutocompleteClient): Promise<AddressAutocompleteOption[]> {
-    const results: AddressAutocompleteResponseDto[] = await client.httpGetAutocomplete(query);
-    return results.map((dto: AddressAutocompleteResponseDto): AddressAutocompleteOption => createAddressAutocompleteOption(dto.forslagstekst, dto.tekst, dto.caretpos, mapToAddressType(dto.type), dto.data.id, dto.data.adgangsadresseid, {
-        latitude: dto.data.y,
-        longitude: dto.data.x
+async function search(requestDto: AddressAutocompleteRequestDto, client: AddressAutocompleteClient): Promise<AddressAutocompleteOption[]> {
+    const results: AddressAutocompleteResponseDto[] = await client.httpGetAutocomplete(requestDto);
+    return results.map((responseDto: AddressAutocompleteResponseDto): AddressAutocompleteOption => createAddressAutocompleteOption(responseDto.forslagstekst, responseDto.tekst, responseDto.caretpos, mapToAddressType(responseDto.type), responseDto.data.id, responseDto.data.adgangsadresseid, {
+        latitude: responseDto.data.y,
+        longitude: responseDto.data.x
     }));
 }
 
-function mapToAddressType(type: AddressAutocompleteAddressTypeDto): AddressType {
-    switch (type) {
+function mapToAddressType(typeDto: AddressAutocompleteAddressTypeDto): AddressType {
+    switch (typeDto) {
         case "vejnavn":
             return AddressType.Street;
         case "adgangsadresse":
