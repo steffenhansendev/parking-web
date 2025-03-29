@@ -28,11 +28,11 @@ export function createAddressAutocompleteOptionProvider(dataforsyningenClient: D
             const query: AutocompleteQuery = {
                 value: option.queryValue,
                 caretIndexInValue: option.caretIndexInQueryValue ?? option.queryValue.length,
-                scope: {type: AddressType.Address}
+                scope: {type: mapToDataforsyningenAddressType(AddressType.Address)}
             }
             switch (option.type) {
                 case AddressType.Street:
-                    query.scope!.leastSpecificity = AddressType.Entrance;
+                    query.scope!.leastSpecificity = mapToDataforsyningenAddressType(AddressType.Entrance);
                     break;
                 case AddressType.Entrance:
                     query.scope!.entranceAddressId = option.id;
@@ -62,5 +62,17 @@ function mapToAddressType(type: DataforsyningenAddressType): AddressType {
             return AddressType.Entrance;
         case "adresse":
             return AddressType.Address;
+    }
+}
+
+function mapToDataforsyningenAddressType(type: AddressType): DataforsyningenAddressType {
+    switch (type) {
+        case AddressType.Street:
+            return "vejnavn";
+        case AddressType.Entrance:
+            return "adgangsadresse"
+        case AddressType.Address:
+        case undefined:
+            return "adresse";
     }
 }
