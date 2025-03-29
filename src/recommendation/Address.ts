@@ -1,6 +1,6 @@
 import {Coordinates} from "./Inclusion";
 
 export interface Address {
-    name: string,
-    location: Coordinates
+    readonly name: string,
+    readonly location: Coordinates
 }
