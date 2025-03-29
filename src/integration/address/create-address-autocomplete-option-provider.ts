@@ -41,10 +41,17 @@ export function createAddressAutocompleteOptionProvider(addressAutocompleteClien
 
 async function search(requestDto: AddressAutocompleteRequestDto, client: AddressAutocompleteClient): Promise<AddressAutocompleteOption[]> {
     const results: AddressAutocompleteResponseDto[] = await client.httpGetAutocomplete(requestDto);
-    return results.map((responseDto: AddressAutocompleteResponseDto): AddressAutocompleteOption => createAddressAutocompleteOption(responseDto.forslagstekst, responseDto.tekst, responseDto.caretpos, mapToAddressType(responseDto.type), responseDto.data.id, responseDto.data.adgangsadresseid, {
-        latitude: responseDto.data.y,
-        longitude: responseDto.data.x
-    }));
+    return results.map((responseDto: AddressAutocompleteResponseDto): AddressAutocompleteOption => createAddressAutocompleteOption(
+        responseDto.forslagstekst,
+        responseDto.tekst,
+        responseDto.caretpos,
+        mapToAddressType(responseDto.type),
+        responseDto.data.id,
+        responseDto.data.adgangsadresseid, {
+            latitude: responseDto.data.y,
+            longitude: responseDto.data.x
+        })
+    );
 }
 
 function mapToAddressType(typeDto: AddressAutocompleteAddressTypeDto): AddressType {

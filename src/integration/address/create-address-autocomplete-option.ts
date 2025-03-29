@@ -3,7 +3,15 @@ import {Address} from "../../recommendation/Address";
 import {AddressAutocompleteOption} from "./AddressAutocompleteOption";
 import {AddressType} from "./AddressType";
 
-export function createAddressAutocompleteOption(viewValue: string, queryValue: string, caretIndexInQueryValue: number, type: AddressType, id: string, entranceAddressId: string | undefined, location: Coordinates): AddressAutocompleteOption {
+export function createAddressAutocompleteOption(
+    viewValue: string,
+    queryValue: string,
+    caretIndexInQueryValue: number,
+    type: AddressType,
+    id: string,
+    entranceAddressId: string | undefined,
+    location: Coordinates
+): AddressAutocompleteOption {
     return {
         viewValue: viewValue,
         queryValue: queryValue,
