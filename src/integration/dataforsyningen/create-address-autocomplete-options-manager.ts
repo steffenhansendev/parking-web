@@ -6,6 +6,7 @@ import {
     createAddressAutocompleteOptionProvider
 } from "./create-address-autocomplete-option-provider";
 import {createDataforsyningenClient} from "./create-dataforsyningen-client";
+import {AddressAutocompleteOption} from "./AddressAutocompleteOption";
 
 const PEND_TIME_OF_GET_OPTIONS_IN_MILLISECONDS: number = 50;
 
@@ -37,16 +38,4 @@ export function createAddressAutocompleteOptionsManager(): AutocompleteOptionsMa
             setOptions(nextOptions);
         }
     }
-}
-
-export interface AddressAutocompleteOption extends AutocompleteOption<Address> {
-    type: AddressType;
-    id: string;
-    entranceAddressId?: string; // Only for type = Address
-}
-
-export enum AddressType {
-    Street,
-    Entrance,
-    Address
 }
