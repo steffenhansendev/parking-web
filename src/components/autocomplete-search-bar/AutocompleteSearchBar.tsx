@@ -32,9 +32,6 @@ function AutocompleteSearchBar<T>({
         const isDroppedDown: boolean = isInputElementInFocus && options.length > 0 && !isInputMatchingSingleOption;
         setIsDroppedDown(isDroppedDown);
     }, [options, inputElementValue, isInputElementInFocus]);
-    useEffect((): void => {
-        inputElementRef.current?.focus()
-    }, [isInFocus]);
 
     const commit = async () => {
         if (!stagedOption.current) {
@@ -143,6 +140,7 @@ function AutocompleteSearchBar<T>({
             <div className={"dropdown"}>
                 <input
                     ref={inputElementRef}
+                    autoFocus={isInFocus}
                     type="text"
                     className={"form-control" + (stagedOption.current ? (" " + INPUT_ELEMENT_VALID_CLASS) : "")}
                     value={inputElementValue}
