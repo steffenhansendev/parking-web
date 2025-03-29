@@ -1,6 +1,7 @@
 import React, {JSX} from "react";
 import {AutocompleteOption} from "./AutocompleteSearchBar";
 
+const ACTIVE_LI_ELEMENT_CLASS: string = "active";
 const MOUSE_OVER_LI_ELEMENT_CLASS: string = "bg-dark-subtle";
 const UL_ELEMENT_STYLE: React.CSSProperties = {width: "100%", cursor: "default", display: "block"}
 
@@ -20,7 +21,7 @@ function AutocompleteSearchBarDropdown<T>({options, activeLiElementIndex, choose
             style={UL_ELEMENT_STYLE}>
             {options.map((option: AutocompleteOption<T>, i: number) => {
                 return <li
-                    className={activeLiElementIndex === i ? "dropdown-item active" : "dropdown-item"}
+                    className={activeLiElementIndex === i ? `dropdown-item ${ACTIVE_LI_ELEMENT_CLASS}` : "dropdown-item"}
                     onMouseOver={(e): void => {
                         e.currentTarget.classList.add(MOUSE_OVER_LI_ELEMENT_CLASS);
                     }}
