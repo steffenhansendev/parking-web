@@ -1,9 +1,9 @@
 export interface AutocompleteOption<T> {
-    queryValue: string;
-    caretIndexInQueryValue: number;
-    viewValue: string;
-    isCommittable: () => boolean;
-    isFurtherSpecifiable: () => boolean;
-    isMatch: (query: string) => boolean;
-    getResultToCommit: () => T;
+    readonly queryValue: string;
+    readonly caretIndexInQueryValue: number;
+    readonly viewValue: string;
+    readonly isCommittable: () => boolean;
+    readonly isFurtherSpecifiable: () => boolean;
+    readonly isMatch: (query: string) => boolean;
+    readonly getResultToCommit: () => T;
 }
