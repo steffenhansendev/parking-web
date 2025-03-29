@@ -1,11 +1,15 @@
-import {Address} from "../../recommendation/Address";
 import {
     AutocompleteQuery,
     AutocompleteResultDto,
-    DataforsyningenAddressType, DataforsyningenClient
+    DataforsyningenAddressType,
+    DataforsyningenClient
 } from "./create-dataforsyningen-client";
 
-import {AddressAutocompleteOption, AddressType} from "./AddressAutocompleteOption";
+import {
+    AddressAutocompleteOption,
+    AddressType,
+    createAddressAutocompleteOption
+} from "./create-address-autocomplete-option";
 
 export interface AddressAutocompleteOptionProvider {
     getOptions: (value: string, caretIndexInValue: number) => Promise<AddressAutocompleteOption[]>;
@@ -44,36 +48,10 @@ export function createAddressAutocompleteOptionProvider(dataforsyningenClient: D
 
 async function search(query: AutocompleteQuery, client: DataforsyningenClient): Promise<AddressAutocompleteOption[]> {
     const results: AutocompleteResultDto[] = await client.httpGetAutocomplete(query);
-    return results.map((dto: AutocompleteResultDto): AddressAutocompleteOption => mapToAutocompleteSearchOption(dto));
-}
-
-function mapToAutocompleteSearchOption(dto: AutocompleteResultDto): AddressAutocompleteOption {
-    return {
-        viewValue: dto.forslagstekst,
-        queryValue: dto.tekst,
-        caretIndexInQueryValue: dto.caretpos,
-        type: mapToAddressType(dto.type),
-        id: dto.data.id,
-        entranceAddressId: dto.data.adgangsadresseid,
-        isCommittable: function (): boolean {
-            return this.type === AddressType.Entrance || this.type === AddressType.Address;
-        },
-        isMatch: function (query: string): boolean {
-            return query.toLowerCase() === this.queryValue.toLowerCase() || query.toLowerCase() === this.viewValue.toLowerCase();
-        },
-        isFurtherSpecifiable: function (): boolean {
-            return !(this.type === AddressType.Address);
-        },
-        getCommitResult: function (): Address {
-            return {
-                name: this.isFurtherSpecifiable() ? this.viewValue : this.queryValue,
-                location: {
-                    latitude: dto.data.y,
-                    longitude: dto.data.x
-                }
-            }
-        }
-    };
+    return results.map((dto: AutocompleteResultDto): AddressAutocompleteOption => createAddressAutocompleteOption(dto.forslagstekst, dto.tekst, dto.caretpos, mapToAddressType(dto.type), dto.data.id, dto.data.adgangsadresseid, {
+        latitude: dto.data.y,
+        longitude: dto.data.x
+    }));
 }
 
 function mapToAddressType(type: DataforsyningenAddressType): AddressType {

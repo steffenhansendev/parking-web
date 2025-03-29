@@ -6,7 +6,7 @@ import {
     createAddressAutocompleteOptionProvider
 } from "./create-address-autocomplete-option-provider";
 import {createDataforsyningenClient} from "./create-dataforsyningen-client";
-import {AddressAutocompleteOption} from "./AddressAutocompleteOption";
+import {AddressAutocompleteOption} from "./create-address-autocomplete-option";
 
 const PEND_TIME_OF_GET_OPTIONS_IN_MILLISECONDS: number = 50;
 
