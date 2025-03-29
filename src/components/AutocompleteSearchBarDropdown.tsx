@@ -10,7 +10,7 @@ interface Props<T> {
     choose: (option: AutocompleteOption<T>) => Promise<void>;
 }
 
-function AutocompleteSearchBarOptions<T>({options, activeLiElementIndex, choose}: Props<T>): JSX.Element {
+function AutocompleteSearchBarDropdown<T>({options, activeLiElementIndex, choose}: Props<T>): JSX.Element {
     return (
         <ul
             // Rather than a list of <Option> elements, <li> and <ul> were chosen because:
@@ -39,4 +39,4 @@ function AutocompleteSearchBarOptions<T>({options, activeLiElementIndex, choose}
     );
 }
 
-export default AutocompleteSearchBarOptions;
+export default AutocompleteSearchBarDropdown;

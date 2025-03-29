@@ -1,5 +1,5 @@
 import React, {JSX, useEffect, useRef, useState} from "react";
-import AutocompleteSearchBarOptions from "./AutocompleteSearchBarOptions";
+import AutocompleteSearchBarDropdown from "./AutocompleteSearchBarDropdown";
 
 export interface AutocompleteOptionsManager<T> {
     options: AutocompleteOption<T>[];
@@ -171,9 +171,9 @@ function AutocompleteSearchBar<T>({
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}/>
                 {isDroppedDown &&
-                    <AutocompleteSearchBarOptions options={options}
-                                                  activeLiElementIndex={activeLiElementIndex}
-                                                  choose={choose}/>
+                    <AutocompleteSearchBarDropdown options={options}
+                                                   activeLiElementIndex={activeLiElementIndex}
+                                                   choose={choose}/>
                 }
             </div>
         </form>
