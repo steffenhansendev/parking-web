@@ -12,7 +12,7 @@ import EllipsisSpinnerSpans from "./components/EllipsisSpinnerSpans";
 import geodesic, {GeodesicClass} from "geographiclib-geodesic";
 import AutocompleteSearchBar from "./components/AutocompleteSearchBar";
 import {Address} from "./recommendation/Address";
-import {createAddressAutocompleteOptionsManager} from "./integration/dataforsyningen/create-address-autocomplete-options-manager";
+import {createAddressAutocompleteOptionsManager} from "./integration/address/create-address-autocomplete-options-manager";
 
 const apiUrlFactory: ParkingApiUrlFactory = createParkingApiUrlFactory();
 

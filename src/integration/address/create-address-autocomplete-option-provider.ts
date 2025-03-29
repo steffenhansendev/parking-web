@@ -1,22 +1,15 @@
 import {
-    AutocompleteQuery,
-    AutocompleteResultDto,
-    DataforsyningenAddressType,
-    DataforsyningenClient
-} from "./create-dataforsyningen-client";
-
-import {
-    AddressAutocompleteOption,
-    AddressType,
     createAddressAutocompleteOption
 } from "./create-address-autocomplete-option";
+import {AddressAutocompleteClient} from "./dataforsyningen/AddressAutocompleteClient";
+import {AddressAutocompleteResponseDto} from "./dataforsyningen/AddressAutocompleteResponseDto";
+import {AddressAutocompleteAddressTypeDto} from "./dataforsyningen/AddressAutocompleteAddressTypeDto";
+import {AddressAutocompleteRequestDto} from "./dataforsyningen/AddressAutocompleteRequestDto";
+import {AddressAutocompleteOptionProvider} from "./AddressAutocompleteOptionProvider";
+import {AddressAutocompleteOption} from "./AddressAutocompleteOption";
+import {AddressType} from "./AddressType";
 
-export interface AddressAutocompleteOptionProvider {
-    getOptions: (value: string, caretIndexInValue: number) => Promise<AddressAutocompleteOption[]>;
-    getMoreSpecificOptions: (option: AddressAutocompleteOption) => Promise<AddressAutocompleteOption[]>;
-}
-
-export function createAddressAutocompleteOptionProvider(dataforsyningenClient: DataforsyningenClient): AddressAutocompleteOptionProvider {
+export function createAddressAutocompleteOptionProvider(dataforsyningenClient: AddressAutocompleteClient): AddressAutocompleteOptionProvider {
     return {
         getOptions: async (value: string, caretIndexInValue: number): Promise<AddressAutocompleteOption[]> => {
             return await search({
@@ -25,7 +18,7 @@ export function createAddressAutocompleteOptionProvider(dataforsyningenClient: D
             }, dataforsyningenClient);
         },
         getMoreSpecificOptions: async (option: AddressAutocompleteOption): Promise<AddressAutocompleteOption[]> => {
-            const query: AutocompleteQuery = {
+            const query: AddressAutocompleteRequestDto = {
                 value: option.queryValue,
                 caretIndexInValue: option.caretIndexInQueryValue ?? option.queryValue.length,
                 scope: {type: mapToDataforsyningenAddressType(AddressType.Address)}
@@ -46,15 +39,15 @@ export function createAddressAutocompleteOptionProvider(dataforsyningenClient: D
     }
 }
 
-async function search(query: AutocompleteQuery, client: DataforsyningenClient): Promise<AddressAutocompleteOption[]> {
-    const results: AutocompleteResultDto[] = await client.httpGetAutocomplete(query);
-    return results.map((dto: AutocompleteResultDto): AddressAutocompleteOption => createAddressAutocompleteOption(dto.forslagstekst, dto.tekst, dto.caretpos, mapToAddressType(dto.type), dto.data.id, dto.data.adgangsadresseid, {
+async function search(query: AddressAutocompleteRequestDto, client: AddressAutocompleteClient): Promise<AddressAutocompleteOption[]> {
+    const results: AddressAutocompleteResponseDto[] = await client.httpGetAutocomplete(query);
+    return results.map((dto: AddressAutocompleteResponseDto): AddressAutocompleteOption => createAddressAutocompleteOption(dto.forslagstekst, dto.tekst, dto.caretpos, mapToAddressType(dto.type), dto.data.id, dto.data.adgangsadresseid, {
         latitude: dto.data.y,
         longitude: dto.data.x
     }));
 }
 
-function mapToAddressType(type: DataforsyningenAddressType): AddressType {
+function mapToAddressType(type: AddressAutocompleteAddressTypeDto): AddressType {
     switch (type) {
         case "vejnavn":
             return AddressType.Street;
@@ -65,7 +58,7 @@ function mapToAddressType(type: DataforsyningenAddressType): AddressType {
     }
 }
 
-function mapToDataforsyningenAddressType(type: AddressType): DataforsyningenAddressType {
+function mapToDataforsyningenAddressType(type: AddressType): AddressAutocompleteAddressTypeDto {
     switch (type) {
         case AddressType.Street:
             return "vejnavn";

@@ -1,0 +1,1 @@
+export type AddressAutocompleteAddressTypeDto = "vejnavn" | "adgangsadresse" | "adresse";

@@ -1,18 +1,7 @@
 import {Coordinates} from "../../recommendation/Inclusion";
 import {Address} from "../../recommendation/Address";
-import {AutocompleteOption} from "../../components/AutocompleteSearchBar";
-
-export interface AddressAutocompleteOption extends AutocompleteOption<Address> {
-    type: AddressType;
-    id: string;
-    entranceAddressId?: string; // Only for type = Address
-}
-
-export enum AddressType {
-    Street,
-    Entrance,
-    Address
-}
+import {AddressAutocompleteOption} from "./AddressAutocompleteOption";
+import {AddressType} from "./AddressType";
 
 export function createAddressAutocompleteOption(viewValue: string, queryValue: string, caretIndexInQueryValue: number, type: AddressType, id: string, entranceAddressId: string | undefined, location: Coordinates): AddressAutocompleteOption {
     return {
