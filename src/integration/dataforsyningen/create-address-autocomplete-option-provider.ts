@@ -72,7 +72,6 @@ function mapToDataforsyningenAddressType(type: AddressType): DataforsyningenAddr
         case AddressType.Entrance:
             return "adgangsadresse"
         case AddressType.Address:
-        case undefined:
             return "adresse";
     }
 }
