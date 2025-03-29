@@ -1,7 +1,7 @@
 import {ParkingLot} from "./Inclusion";
 
 export interface Recommendation {
-    parkingLot?: ParkingLot;
-    asOf?: Date;
-    numberOfAvailableStalls: number
+    readonly parkingLot?: ParkingLot;
+    readonly asOf?: Date;
+    readonly numberOfAvailableStalls: number
 }
