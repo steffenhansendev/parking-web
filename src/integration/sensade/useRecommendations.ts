@@ -18,16 +18,18 @@ export function useRecommendations(setRecommendations: (recommendations: Recomme
         lots = lots.filter((lot: ParkingLot): boolean => lot.isIncluded);
         stallTypes = stallTypes.filter((stallType: StallType): boolean => stallType.isIncluded);
         try {
+            let recommendations: Recommendation[] = [];
             for (let i: number = 0; i < lots.length; i++) {
                 const lot: ParkingLot = lots[i];
                 let occupancyDtos: OccupancyDataDto[] = await fetchOccupancyDtos([lot], urlFactory, abortController.current);
-                const recommendations: Recommendation[] = calculateRecommendations([lot], stallTypes, occupancyDtos);
+                recommendations = calculateRecommendations([lot], stallTypes, occupancyDtos);
                 if (recommendations[0].numberOfAvailableStalls > 0) {
                     setRecommendations(recommendations);
                     return;
                 }
             }
-            setRecommendations([createNullObject()])
+            setRecommendations(recommendations);
+            return;
         } catch (e: unknown) {
             if (!(e instanceof Error)) {
                 console.error("Fetching occupancy failed.");
@@ -54,17 +56,4 @@ async function fetchOccupancyDtos(lots: ParkingLot[], urlFactory: ParkingApiUrlF
             return (await response.json()) as OccupancyDataDto;
         });
     return await Promise.all(occupancyDtoPromises);
-}
-
-
-function createNullObject(): Recommendation {
-    return {
-        parkingLot: {
-            id: "",
-            name: "",
-            capacities: [],
-            isIncluded: false
-        },
-        numberOfAvailableStalls: 0
-    }
 }

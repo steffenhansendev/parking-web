@@ -2,6 +2,7 @@ import {OccupancyDataDto} from "./OccupancyDataDto";
 import {Time} from "../../time/time";
 import {Recommendation} from "../../recommendation/Recommendation";
 import {ParkingLot, StallCount, StallType} from "../../recommendation/Inclusion";
+import BEGINNING_OF_TIME = Time.BEGINNING_OF_TIME;
 
 // This should not know about DTOs
 // This should be split into smaller functions
@@ -55,9 +56,26 @@ export function calculateRecommendations(lots: ParkingLot[], stallTypes: StallTy
         }
     }
     maximumAvailability = Math.floor(maximumAvailability);
+    if (!lotOfMaximumAvailability) {
+        return [createNullObject()];
+    }
     return [{
         parkingLot: lotOfMaximumAvailability,
         asOf: timeOfStalestStallOccupancyInSumForLotOfMaximumAvailability,
         numberOfAvailableStalls: maximumAvailability
     }];
+}
+
+function createNullObject(): Recommendation {
+    return {
+        parkingLot: {
+            id: "",
+            name: "",
+            capacities: [],
+            isIncluded: false,
+            location: {latitude: 0, longitude: 0}
+        },
+        numberOfAvailableStalls: 0,
+        asOf: BEGINNING_OF_TIME
+    }
 }

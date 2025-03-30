@@ -65,10 +65,10 @@ function mapToParkingLot(lotDto: ParkingLotMetadataDto): ParkingLot {
                 })
             ),
         isIncluded: false,
-        location: lotDto.latitude && lotDto.longitude ? {
-            latitude: lotDto.latitude,
-            longitude: lotDto.longitude
-        } : undefined
+        location: {
+            latitude: lotDto.latitude ?? 0,
+            longitude: lotDto.longitude ?? 0
+        }
     };
 }
 

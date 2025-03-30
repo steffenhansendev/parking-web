@@ -11,7 +11,7 @@ export interface ParkingLot extends Inclusion {
     readonly id: string;
     readonly name: string | undefined;
     readonly capacities: StallCount[];
-    readonly location?: Coordinates;
+    readonly location: Coordinates;
     distanceFromUserInMeters?: number;
 }
 

@@ -17,7 +17,7 @@ export interface Data {
     vejnavn: string
     adresseringsvejnavn: string
     husnr: string
-    etage?: string
+    etage: string
     dør: any
     supplerendebynavn: any
     postnr: string
@@ -25,7 +25,7 @@ export interface Data {
     stormodtagerpostnr: any
     stormodtagerpostnrnavn: any
     kommunekode: string
-    adgangsadresseid?: string // only present if type = adresse
+    adgangsadresseid: string // only present if type = adresse
     x: number
     y: number
     href: string
