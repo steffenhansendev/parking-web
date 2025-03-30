@@ -12,7 +12,7 @@ interface _AddressAutocompleteResponseDto {
     stormodtagerpostnr: boolean;
 }
 
-export interface DataDto extends Readonly <_DataDto> {
+export interface DataDto extends Readonly<_DataDto> {
 }
 
 interface _DataDto {
