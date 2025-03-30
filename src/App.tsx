@@ -1,4 +1,4 @@
-import React, {JSX, useEffect, useRef, useState} from "react";
+import React, {JSX, useContext, useEffect, useRef, useState} from "react";
 import "./styles.css";
 import Checkbox from "./components/Checkbox";
 import Button from "./components/Button";
@@ -12,11 +12,13 @@ import EllipsisSpinnerSpans from "./components/EllipsisSpinnerSpans";
 import geodesic, {GeodesicClass} from "geographiclib-geodesic";
 import AutocompleteSearchBar from "./components/autocomplete-search-bar/AutocompleteSearchBar";
 import {Address} from "./recommendation/Address";
-import {createAddressAutocompleteOptionsManager} from "./integration/address/create-address-autocomplete-options-manager";
+import {useDi} from "./dependency-injection/DiProvider";
+import {AutocompleteOptionsManager} from "./components/autocomplete-search-bar/AutocompleteOptionsManager";
 
 const apiUrlFactory: ParkingApiUrlFactory = createParkingApiUrlFactory();
 
 function App(): JSX.Element {
+    const addressAutocompleteOptionsManager: AutocompleteOptionsManager<Address> = useDi().resolveAddressAutocompleteOptionsManager();
     const [parkingLotInclusions, setParkingLotInclusions] = useState<ParkingLot[]>([]);
     const [stallTypeInclusions, setStallTypeInclusions] = useState<StallType[]>([]);
     const [isFetchingInclusions, setIsFetchingInclusions] = useState<boolean>(true);
@@ -51,7 +53,7 @@ function App(): JSX.Element {
                 <AutocompleteSearchBar<Address> placeholder={"Search for Danish address"}
                                                 setResult={setAddress}
                                                 isInFocus={true}
-                                                optionsManager={createAddressAutocompleteOptionsManager()}/>
+                                                optionsManager={addressAutocompleteOptionsManager}/>
             </div>
             {isFetchingRecommendations
                 ?

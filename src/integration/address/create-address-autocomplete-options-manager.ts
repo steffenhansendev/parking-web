@@ -1,20 +1,17 @@
 import {useRef, useState} from "react";
 import {Address} from "../../recommendation/Address";
-import {
-    createAddressAutocompleteOptionProvider
-} from "./create-address-autocomplete-option-provider";
-import {createAddressAutocompleteClient} from "./dataforsyningen/create-address-autocomplete-client";
 import {AddressAutocompleteOptionProvider} from "./AddressAutocompleteOptionProvider";
 import {AddressAutocompleteOption} from "./AddressAutocompleteOption";
 import {AutocompleteOption} from "../../components/autocomplete-search-bar/AutocompleteOption";
 import {AutocompleteOptionsManager} from "../../components/autocomplete-search-bar/AutocompleteOptionsManager";
+import {useDi} from "../../dependency-injection/DiProvider";
 
 const PEND_TIME_OF_GET_OPTIONS_IN_MILLISECONDS: number = 50;
 
 export function createAddressAutocompleteOptionsManager(): AutocompleteOptionsManager<Address> {
     const [options, setOptions] = useState<AddressAutocompleteOption[]>([]);
     const abortController = useRef<AbortController>(new AbortController());
-    const optionProvider: AddressAutocompleteOptionProvider = createAddressAutocompleteOptionProvider(createAddressAutocompleteClient());
+    const optionProvider: AddressAutocompleteOptionProvider = useDi().resolveAddressAutocompleteOptionProvider();
     return {
         options: options,
         setOptions: async (queryValue: string, caretIndexInQueryValue: number): Promise<void> => {

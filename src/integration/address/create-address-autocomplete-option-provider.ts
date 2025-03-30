@@ -8,8 +8,10 @@ import {AddressAutocompleteRequestDto} from "./dataforsyningen/AddressAutocomple
 import {AddressAutocompleteOptionProvider} from "./AddressAutocompleteOptionProvider";
 import {AddressAutocompleteOption} from "./AddressAutocompleteOption";
 import {AddressType} from "./AddressType";
+import {useDi} from "../../dependency-injection/DiProvider";
 
-export function createAddressAutocompleteOptionProvider(addressAutocompleteClient: AddressAutocompleteClient): AddressAutocompleteOptionProvider {
+export function createAddressAutocompleteOptionProvider(): AddressAutocompleteOptionProvider {
+    const addressAutocompleteClient: AddressAutocompleteClient = useDi().resolveAddressAutocompleteClient();
     return {
         getOptions: async (value: string, caretIndexInValue: number): Promise<AddressAutocompleteOption[]> => {
             return await search({
