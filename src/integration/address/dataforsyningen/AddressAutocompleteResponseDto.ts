@@ -5,11 +5,11 @@ export interface AddressAutocompleteResponseDto {
     tekst: string;
     caretpos: number;
     forslagstekst: string;
-    data: Data;
+    data: DataDto;
     stormodtagerpostnr: boolean;
 }
 
-export interface Data {
+export interface DataDto {
     id: string
     status: number
     darstatus: number
