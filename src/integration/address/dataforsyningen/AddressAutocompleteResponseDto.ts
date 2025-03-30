@@ -1,6 +1,9 @@
 import {AddressAutocompleteAddressTypeDto} from "./AddressAutocompleteAddressTypeDto";
 
-export interface AddressAutocompleteResponseDto {
+export interface AddressAutocompleteResponseDto extends Readonly<_AddressAutocompleteResponseDto> {
+}
+
+interface _AddressAutocompleteResponseDto {
     type: AddressAutocompleteAddressTypeDto;
     tekst: string;
     caretpos: number;
@@ -9,7 +12,10 @@ export interface AddressAutocompleteResponseDto {
     stormodtagerpostnr: boolean;
 }
 
-export interface DataDto {
+export interface DataDto extends Readonly <_DataDto> {
+}
+
+interface _DataDto {
     id: string
     status: number
     darstatus: number

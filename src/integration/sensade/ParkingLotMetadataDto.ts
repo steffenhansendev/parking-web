@@ -1,6 +1,9 @@
 import {SpaceCountDto} from "./SpaceCountDto";
 
-export interface ParkingLotMetadataDto {
+export interface ParkingLotMetadataDto extends Readonly<_ParkingLotMetadataDto> {
+}
+
+interface _ParkingLotMetadataDto {
     id: string;
     name?: string;
     longitude?: number;

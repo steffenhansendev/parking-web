@@ -1,5 +1,7 @@
+export interface SpaceCountDto extends Readonly<_SpaceCountDto> {
+}
 
-export interface SpaceCountDto {
+interface _SpaceCountDto {
     spaceType?: string;
     capacity: number;
 }

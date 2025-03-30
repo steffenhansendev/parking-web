@@ -1,6 +1,9 @@
 import {AddressAutocompleteAddressTypeDto} from "./AddressAutocompleteAddressTypeDto";
 
-export interface AddressAutocompleteRequestDto {
+export interface AddressAutocompleteRequestDto extends Readonly<_AddressAutocompleteRequestDto> {
+}
+
+interface _AddressAutocompleteRequestDto {
     value: string;
     caretIndexInValue: number;
     scope?: {
