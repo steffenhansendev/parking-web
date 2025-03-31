@@ -22,14 +22,14 @@ export function createParkingApiClient(): ParkingApiClient {
             return (await response.json()) as ParkingLotsResponseDto[];
         },
         async readOccupancy(requestDto: ParkingOccupancyRequestDto, abortController: AbortController): Promise<ParkingOccupancyResponseDto> {
-            const url: URL = getOccupancyUrl(requestDto);
+            const url: URL = createOccupancyUrl(requestDto);
             const response: Response = await fetch(url, {signal: abortController.signal});
             return (await response.json()) as ParkingOccupancyResponseDto;
         }
     }
 }
 
-function getOccupancyUrl(requestDto: ParkingOccupancyRequestDto): URL {
+function creatOccupancyUrl(requestDto: ParkingOccupancyRequestDto): URL {
     const searchParameters: URLSearchParams = new URLSearchParams({
         "lotid": requestDto.parkingLotId,
         "weeknumber": requestDto.utcWeek.toString(),
