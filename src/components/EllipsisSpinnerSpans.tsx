@@ -1,12 +1,12 @@
 import React, {JSX, RefObject, useEffect, useRef, useState} from "react";
 
 interface Props {
-    numberOfDots: number;
+    dotCount: number;
     intervalInMilliseconds: number
 }
 
-function EllipsisSpinnerSpans({numberOfDots, intervalInMilliseconds}: Props): JSX.Element {
-    const [dotVisibilities, setDotVisibilities] = useState<boolean[]>(Array(numberOfDots).fill(false));
+function EllipsisSpinnerSpans({dotCount, intervalInMilliseconds}: Props): JSX.Element {
+    const [dotVisibilities, setDotVisibilities] = useState<boolean[]>(Array(dotCount).fill(false));
 
     let i: RefObject<number> = useRef<number>(0);
     useEffect((): () => void => {
@@ -26,7 +26,7 @@ function EllipsisSpinnerSpans({numberOfDots, intervalInMilliseconds}: Props): JS
 }
 
 EllipsisSpinnerSpans.defaultProps = {
-    numberOfDots: 3,
+    dotCount: 3,
     intervalInMilliseconds: 250
 }
 

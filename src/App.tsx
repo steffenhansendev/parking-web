@@ -63,7 +63,7 @@ function App(): JSX.Element {
                         <div className="col justify-content-center text-center">
                             {
                                 recommendations.map((recommendation: Recommendation): JSX.Element => {
-                                    if (!(recommendation.numberOfAvailableStalls > 0)) {
+                                    if (!(recommendation.availableStallCount > 0)) {
                                         return <h4>{"Currently, there are no available stalls given the criteria."}</h4>
                                     }
                                     let heading: string | undefined = recommendation.parkingLot?.name ?? recommendation.parkingLot?.id;
@@ -74,7 +74,7 @@ function App(): JSX.Element {
                                         <>
                                             <h4>{heading}</h4>
                                             <h5>{`This lot had `}<span
-                                                className="fw-bold">{recommendation.numberOfAvailableStalls}</span>{` available stalls as of ${recommendation.asOf?.toLocaleString("da-DK", {
+                                                className="fw-bold">{recommendation.availableStallCount}</span>{` available stalls as of ${recommendation.asOf?.toLocaleString("da-DK", {
                                                 hour12: false
                                             })}.`}
                                             </h5>

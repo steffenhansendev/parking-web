@@ -23,7 +23,7 @@ export function useRecommendations(setRecommendations: (recommendations: Recomme
                 const lot: ParkingLot = lots[i];
                 let occupancyDtos: ParkingOccupancyResponseDto[] = await fetchOccupancyDtos([lot], abortController.current);
                 recommendations = calculateRecommendations([lot], stallTypes, occupancyDtos);
-                if (recommendations[0].numberOfAvailableStalls > 0) {
+                if (recommendations[0].availableStallCount > 0) {
                     setRecommendations(recommendations);
                     return;
                 }

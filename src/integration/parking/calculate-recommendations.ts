@@ -62,7 +62,7 @@ export function calculateRecommendations(lots: ParkingLot[], stallTypes: StallTy
     return [{
         parkingLot: lotOfMaximumAvailability,
         asOf: timeOfStalestStallOccupancyInSumForLotOfMaximumAvailability,
-        numberOfAvailableStalls: maximumAvailability
+        availableStallCount: maximumAvailability
     }];
 }
 
@@ -75,7 +75,7 @@ function createNullObject(): Recommendation {
             isIncluded: false,
             location: {latitude: 0, longitude: 0}
         },
-        numberOfAvailableStalls: 0,
+        availableStallCount: 0,
         asOf: BEGINNING_OF_TIME
     }
 }
