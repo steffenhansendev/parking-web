@@ -17,7 +17,7 @@ import {createParkingApiClient} from "../integration/parking/sensade/create-park
 
 export function createDiContainer(): DiContainer {
     return {
-        resolveAddressAutocompleteClient(): AddressAutocompleteApiClient {
+        resolveAddressAutocompleteApiClient(): AddressAutocompleteApiClient {
             return createAddressAutocompleteClient();
         }, resolveAddressAutocompleteOptionProvider(): AddressAutocompleteOptionProvider {
             return createAddressAutocompleteOptionProvider();

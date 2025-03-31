@@ -11,13 +11,13 @@ import {AddressType} from "./AddressType";
 import {useDi} from "../../dependency-injection/DiProvider";
 
 export function createAddressAutocompleteOptionProvider(): AddressAutocompleteOptionProvider {
-    const addressAutocompleteClient: AddressAutocompleteApiClient = useDi().resolveAddressAutocompleteClient();
+    const apiClient: AddressAutocompleteApiClient = useDi().resolveAddressAutocompleteApiClient();
     return {
         getOptions: async (value: string, caretIndexInValue: number): Promise<AddressAutocompleteOption[]> => {
             return await search({
                 value: value,
                 caretIndexInValue: caretIndexInValue,
-            }, addressAutocompleteClient);
+            }, apiClient);
         },
         getMoreSpecificOptions: async (option: AddressAutocompleteOption): Promise<AddressAutocompleteOption[]> => {
             const requestDto: AddressAutocompleteRequestDto = {
@@ -36,7 +36,7 @@ export function createAddressAutocompleteOptionProvider(): AddressAutocompleteOp
                     requestDto.scope!.entranceAddressId = option.entranceAddressId;
                     break;
             }
-            return await search(requestDto, addressAutocompleteClient);
+            return await search(requestDto, apiClient);
         }
     }
 }

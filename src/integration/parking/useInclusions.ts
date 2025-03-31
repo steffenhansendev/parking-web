@@ -15,13 +15,13 @@ const STALL_TYPES_INCLUDED_BY_DEFAULT: string[] = [
 ];
 
 export function useInclusions(setParkingLots: (value: ParkingLot[]) => void, setStallTypes: (value: StallType[]) => void, setIsFetching: (value: boolean) => void): void {
-    const client: ParkingApiClient = useDi().resolveParkingApiClient();
+    const apiClient: ParkingApiClient = useDi().resolveParkingApiClient();
     useEffect((): void => {
         (async (): Promise<void> => {
             try {
                 setIsFetching(true);
-                const organizationDtos: ParkingOrganizationDto[] = await client.readOrganizations();
-                const lotDtos: ParkingLotsResponseDto[] = await client.readLots(organizationDtos[0].id);
+                const organizationDtos: ParkingOrganizationDto[] = await apiClient.readOrganizations();
+                const lotDtos: ParkingLotsResponseDto[] = await apiClient.readLots(organizationDtos[0].id);
                 const nextParkingLots: ParkingLot[] = lotDtos.map((lotDto: ParkingLotsResponseDto): ParkingLot => mapToParkingLot(lotDto));
                 setParkingLots(nextParkingLots);
                 let allTypes: string[] = lotDtos

@@ -12,7 +12,7 @@ export interface DiContainer {
 
     resolveAddressAutocompleteOptionProvider(): AddressAutocompleteOptionProvider;
 
-    resolveAddressAutocompleteClient(): AddressAutocompleteApiClient;
+    resolveAddressAutocompleteApiClient(): AddressAutocompleteApiClient;
 
     resolveParkingApiClient(): ParkingApiClient;
 }
