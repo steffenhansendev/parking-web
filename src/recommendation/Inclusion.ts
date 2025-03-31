@@ -13,6 +13,7 @@ export interface ParkingLot extends Inclusion {
     readonly capacities: StallCount[];
     readonly location: Coordinates;
     distanceFromUserInMeters?: number;
+    occupancyPercentages?: { [atMillisecondsSinceEpoch: number]: Record<StallTypeKey, OccupancyPercentage> }
 }
 
 export interface Coordinates {
@@ -24,3 +25,6 @@ export interface StallCount {
     readonly stallType: string;
     readonly count: number;
 }
+
+export type StallTypeKey = string;
+export type OccupancyPercentage = number;
