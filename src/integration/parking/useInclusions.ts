@@ -2,9 +2,9 @@ import {useEffect} from "react";
 import {ParkingSpaceDto} from "./sensade/ParkingSpaceDto";
 import {ParkingLot, StallType} from "../../recommendation/Inclusion";
 import {ParkingApiClient} from "./sensade/ParkingApiClient";
-import {createParkingApiClient} from "./sensade/create-parking-api-client";
 import {ParkingOrganizationDto} from "./sensade/ParkingOrganizationResponseDto";
 import {ParkingLotsResponseDto} from "./sensade/ParkingLotsResponseDto";
+import {useDi} from "../../dependency-injection/DiProvider";
 
 const STALL_TYPES_INCLUDED_BY_DEFAULT: string[] = [
     "default",
@@ -15,7 +15,7 @@ const STALL_TYPES_INCLUDED_BY_DEFAULT: string[] = [
 ];
 
 export function useInclusions(setParkingLots: (value: ParkingLot[]) => void, setStallTypes: (value: StallType[]) => void, setIsFetching: (value: boolean) => void): void {
-    const client: ParkingApiClient = createParkingApiClient();
+    const client: ParkingApiClient = useDi().resolveParkingApiClient();
     useEffect((): void => {
         (async (): Promise<void> => {
             try {

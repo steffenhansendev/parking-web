@@ -12,6 +12,8 @@ import {AddressAutocompleteApiClient} from "../integration/address/dataforsyning
 import {AddressAutocompleteOptionProvider} from "../integration/address/AddressAutocompleteOptionProvider";
 import {AutocompleteOptionsManager} from "../components/autocomplete-search-bar/AutocompleteOptionsManager";
 import {Address} from "../recommendation/Address";
+import {ParkingApiClient} from "../integration/parking/sensade/ParkingApiClient";
+import {createParkingApiClient} from "../integration/parking/sensade/create-parking-api-client";
 
 export function createDiContainer(): DiContainer {
     return {
@@ -21,6 +23,9 @@ export function createDiContainer(): DiContainer {
             return createAddressAutocompleteOptionProvider();
         }, resolveAddressAutocompleteOptionsManager(): AutocompleteOptionsManager<Address> {
             return createAddressAutocompleteOptionsManager();
+        },
+        resolveParkingApiClient(): ParkingApiClient {
+            return createParkingApiClient();
         }
     }
 }
