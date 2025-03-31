@@ -57,25 +57,11 @@ export function calculateRecommendations(lots: ParkingLot[], stallTypes: StallTy
     }
     maximumAvailability = Math.floor(maximumAvailability);
     if (!lotOfMaximumAvailability) {
-        return [createNullObject()];
+        return [];
     }
     return [{
         parkingLot: lotOfMaximumAvailability,
         asOf: timeOfStalestStallOccupancyInSumForLotOfMaximumAvailability,
         availableStallCount: maximumAvailability
     }];
-}
-
-function createNullObject(): Recommendation {
-    return {
-        parkingLot: {
-            id: "",
-            name: "",
-            capacities: [],
-            isIncluded: false,
-            location: {latitude: 0, longitude: 0}
-        },
-        availableStallCount: 0,
-        asOf: BEGINNING_OF_TIME
-    }
 }
