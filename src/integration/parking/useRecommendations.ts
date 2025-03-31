@@ -1,14 +1,14 @@
-import {OccupancyDataDto} from "./OccupancyDataDto";
 import React, {useRef} from "react";
 import {calculateRecommendations} from "./calculate-recommendations";
 import {Time} from "../../time/time";
-
-
-import {ParkingApiUrlFactory} from "./ParkingApiUrlFactory";
 import {Recommendation} from "../../recommendation/Recommendation";
 import {ParkingLot, StallType} from "../../recommendation/Inclusion";
+import {createParkingClient} from "./sensade/create-parking-client";
+import {ParkingApiClient} from "./sensade/ParkingApiClient";
+import {ParkingOccupancyRequestDto} from "./sensade/ParkingOccupancyRequestDto";
+import {ParkingOccupancyResponseDto} from "./sensade/ParkingOccupancyResponseDto";
 
-export function useRecommendations(setRecommendations: (recommendations: Recommendation[]) => void, setIsFetchingRecommendations: (isFetchingRecommendations: boolean) => void, urlFactory: ParkingApiUrlFactory):
+export function useRecommendations(setRecommendations: (recommendations: Recommendation[]) => void, setIsFetchingRecommendations: (isFetchingRecommendations: boolean) => void):
     (lots: ParkingLot[], stallTypes: StallType[]) => void {
     const abortController: React.RefObject<AbortController> = useRef<AbortController>(new AbortController());
     return async (lots: ParkingLot[], stallTypes: StallType[]): Promise<void> => {
@@ -21,7 +21,7 @@ export function useRecommendations(setRecommendations: (recommendations: Recomme
             let recommendations: Recommendation[] = [];
             for (let i: number = 0; i < lots.length; i++) {
                 const lot: ParkingLot = lots[i];
-                let occupancyDtos: OccupancyDataDto[] = await fetchOccupancyDtos([lot], urlFactory, abortController.current);
+                let occupancyDtos: ParkingOccupancyResponseDto[] = await fetchOccupancyDtos([lot], abortController.current);
                 recommendations = calculateRecommendations([lot], stallTypes, occupancyDtos);
                 if (recommendations[0].numberOfAvailableStalls > 0) {
                     setRecommendations(recommendations);
@@ -46,14 +46,19 @@ export function useRecommendations(setRecommendations: (recommendations: Recomme
     };
 }
 
-async function fetchOccupancyDtos(lots: ParkingLot[], urlFactory: ParkingApiUrlFactory, abortController: AbortController): Promise<OccupancyDataDto[]> {
+async function fetchOccupancyDtos(lots: ParkingLot[], abortController: AbortController): Promise<ParkingOccupancyResponseDto[]> {
+    const client: ParkingApiClient = createParkingClient();
     const now: Date = new Date();
     const year: number = now.getUTCFullYear();
     const weekNumber: number = Time.getIso8601UtcWeekNumber(now);
-    const occupancyDtoPromises: Promise<OccupancyDataDto>[] = lots
-        .map(async (lot: ParkingLot): Promise<OccupancyDataDto> => {
-            const response: Response = await fetch(urlFactory.getOccupancyUrl(lot.id, weekNumber, year), {signal: abortController.signal});
-            return (await response.json()) as OccupancyDataDto;
+    const occupancyDtoPromises: Promise<ParkingOccupancyResponseDto>[] = lots
+        .map(async (lot: ParkingLot): Promise<ParkingOccupancyResponseDto> => {
+            const requestDto: ParkingOccupancyRequestDto = {
+                parkingLotId: lot.id,
+                utcWeek: weekNumber,
+                utcYear: year
+            }
+            return await client.httpGetParkingLotOccupancy(requestDto, abortController);
         });
     return await Promise.all(occupancyDtoPromises);
 }

@@ -1,19 +1,19 @@
-import {OccupancyDataDto} from "./OccupancyDataDto";
 import {Time} from "../../time/time";
 import {Recommendation} from "../../recommendation/Recommendation";
 import {ParkingLot, StallCount, StallType} from "../../recommendation/Inclusion";
 import BEGINNING_OF_TIME = Time.BEGINNING_OF_TIME;
+import {ParkingOccupancyResponseDto} from "./sensade/ParkingOccupancyResponseDto";
 
 // This should not know about DTOs
 // This should be split into smaller functions
 
-export function calculateRecommendations(lots: ParkingLot[], stallTypes: StallType[], occupancyDtos: OccupancyDataDto[]): Recommendation[] {
+export function calculateRecommendations(lots: ParkingLot[], stallTypes: StallType[], occupancyDtos: ParkingOccupancyResponseDto[]): Recommendation[] {
     let maximumAvailability: number = 0;
     let lotOfMaximumAvailability: ParkingLot | undefined;
     let timeOfStalestStallOccupancyInSumForLotOfMaximumAvailability: Date = Time.BEGINNING_OF_TIME;
     for (let i: number = 0; i < lots.length; i++) {
         const lot: ParkingLot = lots[i];
-        const occupancyDto: OccupancyDataDto | undefined = occupancyDtos.find((occupancy: OccupancyDataDto): boolean => occupancy.parkingLotId === lot.id);
+        const occupancyDto: ParkingOccupancyResponseDto | undefined = occupancyDtos.find((occupancy: ParkingOccupancyResponseDto): boolean => occupancy.parkingLotId === lot.id);
         if (!occupancyDto) {
             continue; // API error
         }

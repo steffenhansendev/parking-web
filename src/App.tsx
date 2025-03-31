@@ -1,11 +1,9 @@
-import React, {JSX, useContext, useEffect, useRef, useState} from "react";
+import React, {JSX, useEffect, useState} from "react";
 import "./styles.css";
 import Checkbox from "./components/Checkbox";
 import Button from "./components/Button";
-import {useInclusions} from "./integration/sensade/useInclusions";
-import {useRecommendations} from "./integration/sensade/useRecommendations";
-import {createParkingApiUrlFactory} from "./integration/sensade/create-parking-api-url-factory";
-import {ParkingApiUrlFactory} from "./integration/sensade/ParkingApiUrlFactory";
+import {useInclusions} from "./integration/parking/useInclusions";
+import {useRecommendations} from "./integration/parking/useRecommendations";
 import {Recommendation} from "./recommendation/Recommendation";
 import {Inclusion, ParkingLot, StallType} from "./recommendation/Inclusion";
 import EllipsisSpinnerSpans from "./components/EllipsisSpinnerSpans";
@@ -15,8 +13,6 @@ import {Address} from "./recommendation/Address";
 import {useDi} from "./dependency-injection/DiProvider";
 import {AutocompleteOptionsManager} from "./components/autocomplete-search-bar/AutocompleteOptionsManager";
 
-const apiUrlFactory: ParkingApiUrlFactory = createParkingApiUrlFactory();
-
 function App(): JSX.Element {
     const addressAutocompleteOptionsManager: AutocompleteOptionsManager<Address> = useDi().resolveAddressAutocompleteOptionsManager();
     const [parkingLotInclusions, setParkingLotInclusions] = useState<ParkingLot[]>([]);
@@ -24,8 +20,8 @@ function App(): JSX.Element {
     const [isFetchingInclusions, setIsFetchingInclusions] = useState<boolean>(true);
     const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
     const [isFetchingRecommendations, setIsFetchingRecommendations] = useState<boolean>(false);
-    useInclusions(setParkingLotInclusions, setStallTypeInclusions, setIsFetchingInclusions, apiUrlFactory);
-    const recommend: (lots: ParkingLot[], stallTypes: StallType[]) => void = useRecommendations(setRecommendations, setIsFetchingRecommendations, apiUrlFactory);
+    useInclusions(setParkingLotInclusions, setStallTypeInclusions, setIsFetchingInclusions);
+    const recommend: (lots: ParkingLot[], stallTypes: StallType[]) => void = useRecommendations(setRecommendations, setIsFetchingRecommendations);
     const [address, setAddress] = useState<Address>();
 
     useEffect((): void => {

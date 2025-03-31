@@ -1,9 +1,10 @@
 import {useEffect} from "react";
-import {SparseOrganizationDto} from "./SparseOrganizationDto";
-import {ParkingLotMetadataDto} from "./ParkingLotMetadataDto";
-import {SpaceCountDto} from "./SpaceCountDto";
-import {ParkingApiUrlFactory} from "./ParkingApiUrlFactory";
+import {ParkingSpaceDto} from "./sensade/ParkingSpaceDto";
 import {ParkingLot, StallType} from "../../recommendation/Inclusion";
+import {ParkingApiClient} from "./sensade/ParkingApiClient";
+import {createParkingClient} from "./sensade/create-parking-client";
+import {ParkingOrganizationDto} from "./sensade/ParkingOrganizationResponseDto";
+import {ParkingLotsResponseDto} from "./sensade/ParkingLotsResponseDto";
 
 const STALL_TYPES_INCLUDED_BY_DEFAULT: string[] = [
     "default",
@@ -13,20 +14,18 @@ const STALL_TYPES_INCLUDED_BY_DEFAULT: string[] = [
     // "delivery"
 ];
 
-export function useInclusions(setParkingLots: (value: ParkingLot[]) => void, setStallTypes: (value: StallType[]) => void, setIsFetching: (value: boolean) => void, urlFactory: ParkingApiUrlFactory): void {
+export function useInclusions(setParkingLots: (value: ParkingLot[]) => void, setStallTypes: (value: StallType[]) => void, setIsFetching: (value: boolean) => void): void {
+    const client: ParkingApiClient = createParkingClient();
     useEffect((): void => {
         (async (): Promise<void> => {
-            let lotDtos: ParkingLotMetadataDto[] = [];
             try {
                 setIsFetching(true);
-                const organizationDtosResponse: Response = await fetch(urlFactory.getOrganizationsUrl());
-                const organizationDtos: SparseOrganizationDto[] = (await organizationDtosResponse.json()) as SparseOrganizationDto[];
-                const lotDtoResponses: Response = await fetch(urlFactory.getParkingLotsUrl(organizationDtos[0].id));
-                lotDtos = (await lotDtoResponses.json()) as ParkingLotMetadataDto[];
-                const nextParkingLots: ParkingLot[] = lotDtos.map((lotDto: ParkingLotMetadataDto): ParkingLot => mapToParkingLot(lotDto));
+                const organizationDtos: ParkingOrganizationDto[] = await client.httpGetOrganizations();
+                const lotDtos: ParkingLotsResponseDto[] = await client.httpGetParkingLots(organizationDtos[0].id);
+                const nextParkingLots: ParkingLot[] = lotDtos.map((lotDto: ParkingLotsResponseDto): ParkingLot => mapToParkingLot(lotDto));
                 setParkingLots(nextParkingLots);
                 let allTypes: string[] = lotDtos
-                    .map((dto: ParkingLotMetadataDto) => dto.spaces ?? [])
+                    .map((dto: ParkingLotsResponseDto) => dto.spaces ?? [])
                     .flat(1)
                     .map((s) => s.spaceType?.toLowerCase())
                     .filter((s) => s !== undefined);
@@ -52,13 +51,13 @@ function toDistinct(strings: string[]): string[] {
     return distinctStrings;
 }
 
-function mapToParkingLot(lotDto: ParkingLotMetadataDto): ParkingLot {
+function mapToParkingLot(lotDto: ParkingLotsResponseDto): ParkingLot {
     return {
         id: lotDto.id,
         name: lotDto.name,
         capacities: (lotDto.spaces ?? [])
-            .filter((spaceDto: SpaceCountDto): boolean => !!spaceDto.spaceType)
-            .map((spaceDto: SpaceCountDto): { stallType: string, count: number } =>
+            .filter((spaceDto: ParkingSpaceDto): boolean => !!spaceDto.spaceType)
+            .map((spaceDto: ParkingSpaceDto): { stallType: string, count: number } =>
                 ({
                     stallType: spaceDto.spaceType!.toLowerCase(), // Filtered
                     count: spaceDto.capacity

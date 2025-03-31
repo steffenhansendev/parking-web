@@ -1,7 +1,7 @@
-export interface OccupancyDataDto extends Readonly<_OccupancyDataDto> {
+export interface ParkingOccupancyResponseDto extends Readonly<_ParkingOccupancyResponseDto> {
 }
 
-interface _OccupancyDataDto {
+interface _ParkingOccupancyResponseDto {
     parkingLotId: string;
     data: Record<
         string, // UTC Time
