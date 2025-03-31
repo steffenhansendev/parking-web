@@ -3,7 +3,7 @@ import {calculateRecommendations} from "./calculate-recommendations";
 import {Time} from "../../time/time";
 import {Recommendation} from "../../recommendation/Recommendation";
 import {ParkingLot, StallType} from "../../recommendation/Inclusion";
-import {createParkingClient} from "./sensade/create-parking-client";
+import {createParkingApiClient} from "./sensade/create-parking-api-client";
 import {ParkingApiClient} from "./sensade/ParkingApiClient";
 import {ParkingOccupancyRequestDto} from "./sensade/ParkingOccupancyRequestDto";
 import {ParkingOccupancyResponseDto} from "./sensade/ParkingOccupancyResponseDto";
@@ -47,7 +47,7 @@ export function useRecommendations(setRecommendations: (recommendations: Recomme
 }
 
 async function fetchOccupancyDtos(lots: ParkingLot[], abortController: AbortController): Promise<ParkingOccupancyResponseDto[]> {
-    const client: ParkingApiClient = createParkingClient();
+    const client: ParkingApiClient = createParkingApiClient();
     const now: Date = new Date();
     const year: number = now.getUTCFullYear();
     const weekNumber: number = Time.getIso8601UtcWeekNumber(now);
@@ -58,7 +58,7 @@ async function fetchOccupancyDtos(lots: ParkingLot[], abortController: AbortCont
                 utcWeek: weekNumber,
                 utcYear: year
             }
-            return await client.httpGetParkingLotOccupancy(requestDto, abortController);
+            return await client.readOccupancy(requestDto, abortController);
         });
     return await Promise.all(occupancyDtoPromises);
 }

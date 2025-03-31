@@ -2,7 +2,7 @@ import {useEffect} from "react";
 import {ParkingSpaceDto} from "./sensade/ParkingSpaceDto";
 import {ParkingLot, StallType} from "../../recommendation/Inclusion";
 import {ParkingApiClient} from "./sensade/ParkingApiClient";
-import {createParkingClient} from "./sensade/create-parking-client";
+import {createParkingApiClient} from "./sensade/create-parking-api-client";
 import {ParkingOrganizationDto} from "./sensade/ParkingOrganizationResponseDto";
 import {ParkingLotsResponseDto} from "./sensade/ParkingLotsResponseDto";
 
@@ -15,13 +15,13 @@ const STALL_TYPES_INCLUDED_BY_DEFAULT: string[] = [
 ];
 
 export function useInclusions(setParkingLots: (value: ParkingLot[]) => void, setStallTypes: (value: StallType[]) => void, setIsFetching: (value: boolean) => void): void {
-    const client: ParkingApiClient = createParkingClient();
+    const client: ParkingApiClient = createParkingApiClient();
     useEffect((): void => {
         (async (): Promise<void> => {
             try {
                 setIsFetching(true);
-                const organizationDtos: ParkingOrganizationDto[] = await client.httpGetOrganizations();
-                const lotDtos: ParkingLotsResponseDto[] = await client.httpGetParkingLots(organizationDtos[0].id);
+                const organizationDtos: ParkingOrganizationDto[] = await client.readOrganizations();
+                const lotDtos: ParkingLotsResponseDto[] = await client.readLots(organizationDtos[0].id);
                 const nextParkingLots: ParkingLot[] = lotDtos.map((lotDto: ParkingLotsResponseDto): ParkingLot => mapToParkingLot(lotDto));
                 setParkingLots(nextParkingLots);
                 let allTypes: string[] = lotDtos

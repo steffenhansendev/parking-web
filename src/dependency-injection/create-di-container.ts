@@ -8,14 +8,14 @@ import {
 import {
     createAddressAutocompleteOptionProvider
 } from "../integration/address/create-address-autocomplete-option-provider";
-import {AddressAutocompleteClient} from "../integration/address/dataforsyningen/AddressAutocompleteClient";
+import {AddressAutocompleteApiClient} from "../integration/address/dataforsyningen/AddressAutocompleteApiClient";
 import {AddressAutocompleteOptionProvider} from "../integration/address/AddressAutocompleteOptionProvider";
 import {AutocompleteOptionsManager} from "../components/autocomplete-search-bar/AutocompleteOptionsManager";
 import {Address} from "../recommendation/Address";
 
 export function createDiContainer(): DiContainer {
     return {
-        resolveAddressAutocompleteClient(): AddressAutocompleteClient {
+        resolveAddressAutocompleteClient(): AddressAutocompleteApiClient {
             return createAddressAutocompleteClient();
         }, resolveAddressAutocompleteOptionProvider(): AddressAutocompleteOptionProvider {
             return createAddressAutocompleteOptionProvider();

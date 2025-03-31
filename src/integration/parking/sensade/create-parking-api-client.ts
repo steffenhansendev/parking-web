@@ -9,19 +9,19 @@ const HOST: string = PARKING_API_HOST;
 // @ts-ignore
 const BASE_URI: string = PARKING_API_BASE_URI;
 
-export function createParkingClient(): ParkingApiClient {
+export function createParkingApiClient(): ParkingApiClient {
     return {
-        async httpGetOrganizations(): Promise<ParkingOrganizationDto[]> {
+        async readOrganizations(): Promise<ParkingOrganizationDto[]> {
             const url: URL = new URL(`${BASE_URI}/opendata/organizations`, HOST);
             const response: Response = await fetch(url);
             return (await response.json()) as ParkingOrganizationDto[];
         },
-        async httpGetParkingLots(organizationId: string): Promise<ParkingLotsResponseDto[]> {
+        async readLots(organizationId: string): Promise<ParkingLotsResponseDto[]> {
             const url: URL = new URL(`${BASE_URI}/opendata/organizations/${organizationId}/parkinglots`, HOST);
             const response: Response = await fetch(url);
             return (await response.json()) as ParkingLotsResponseDto[];
         },
-        async httpGetParkingLotOccupancy(requestDto: ParkingOccupancyRequestDto, abortController: AbortController): Promise<ParkingOccupancyResponseDto> {
+        async readOccupancy(requestDto: ParkingOccupancyRequestDto, abortController: AbortController): Promise<ParkingOccupancyResponseDto> {
             const url: URL = getOccupancyUrl(requestDto);
             const response: Response = await fetch(url, {signal: abortController.signal});
             return (await response.json()) as ParkingOccupancyResponseDto;

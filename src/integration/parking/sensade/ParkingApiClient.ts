@@ -4,9 +4,9 @@ import {ParkingOccupancyRequestDto} from "./ParkingOccupancyRequestDto";
 import {ParkingOccupancyResponseDto} from "./ParkingOccupancyResponseDto";
 
 export interface ParkingApiClient {
-    httpGetOrganizations(): Promise<ParkingOrganizationDto []>;
+    readOrganizations(): Promise<ParkingOrganizationDto []>;
 
-    httpGetParkingLots(organizationId: string): Promise<ParkingLotsResponseDto[]>;
+    readLots(organizationId: string): Promise<ParkingLotsResponseDto[]>;
 
-    httpGetParkingLotOccupancy(requestDto: ParkingOccupancyRequestDto, abortController: AbortController): Promise<ParkingOccupancyResponseDto>;
+    readOccupancy(requestDto: ParkingOccupancyRequestDto, abortController: AbortController): Promise<ParkingOccupancyResponseDto>;
 }

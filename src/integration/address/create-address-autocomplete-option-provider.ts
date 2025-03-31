@@ -1,7 +1,7 @@
 import {
     createAddressAutocompleteOption
 } from "./create-address-autocomplete-option";
-import {AddressAutocompleteClient} from "./dataforsyningen/AddressAutocompleteClient";
+import {AddressAutocompleteApiClient} from "./dataforsyningen/AddressAutocompleteApiClient";
 import {AddressAutocompleteResponseDto} from "./dataforsyningen/AddressAutocompleteResponseDto";
 import {AddressAutocompleteAddressTypeDto} from "./dataforsyningen/AddressAutocompleteAddressTypeDto";
 import {AddressAutocompleteRequestDto} from "./dataforsyningen/AddressAutocompleteRequestDto";
@@ -11,7 +11,7 @@ import {AddressType} from "./AddressType";
 import {useDi} from "../../dependency-injection/DiProvider";
 
 export function createAddressAutocompleteOptionProvider(): AddressAutocompleteOptionProvider {
-    const addressAutocompleteClient: AddressAutocompleteClient = useDi().resolveAddressAutocompleteClient();
+    const addressAutocompleteClient: AddressAutocompleteApiClient = useDi().resolveAddressAutocompleteClient();
     return {
         getOptions: async (value: string, caretIndexInValue: number): Promise<AddressAutocompleteOption[]> => {
             return await search({
@@ -41,8 +41,8 @@ export function createAddressAutocompleteOptionProvider(): AddressAutocompleteOp
     }
 }
 
-async function search(requestDto: AddressAutocompleteRequestDto, client: AddressAutocompleteClient): Promise<AddressAutocompleteOption[]> {
-    const results: AddressAutocompleteResponseDto[] = await client.httpGetAutocomplete(requestDto);
+async function search(requestDto: AddressAutocompleteRequestDto, client: AddressAutocompleteApiClient): Promise<AddressAutocompleteOption[]> {
+    const results: AddressAutocompleteResponseDto[] = await client.readAutocomplete(requestDto);
     return results.map((responseDto: AddressAutocompleteResponseDto): AddressAutocompleteOption => createAddressAutocompleteOption(
         responseDto.forslagstekst,
         responseDto.tekst,

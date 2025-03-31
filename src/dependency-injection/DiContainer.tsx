@@ -1,7 +1,7 @@
 import {AutocompleteOptionsManager} from "../components/autocomplete-search-bar/AutocompleteOptionsManager";
 import {Address} from "../recommendation/Address";
 import {AddressAutocompleteOptionProvider} from "../integration/address/AddressAutocompleteOptionProvider";
-import {AddressAutocompleteClient} from "../integration/address/dataforsyningen/AddressAutocompleteClient";
+import {AddressAutocompleteApiClient} from "../integration/address/dataforsyningen/AddressAutocompleteApiClient";
 
 export interface DiContainer {
     // Types are removed at transpilation. Hence, type parameterizing this is not a thing, and
@@ -11,5 +11,5 @@ export interface DiContainer {
 
     resolveAddressAutocompleteOptionProvider(): AddressAutocompleteOptionProvider;
 
-    resolveAddressAutocompleteClient(): AddressAutocompleteClient;
+    resolveAddressAutocompleteClient(): AddressAutocompleteApiClient;
 }

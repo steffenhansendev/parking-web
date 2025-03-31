@@ -1,4 +1,4 @@
-import {AddressAutocompleteClient} from "./AddressAutocompleteClient";
+import {AddressAutocompleteApiClient} from "./AddressAutocompleteApiClient";
 import {AddressAutocompleteResponseDto} from "./AddressAutocompleteResponseDto";
 import {AddressAutocompleteRequestDto} from "./AddressAutocompleteRequestDto";
 
@@ -10,9 +10,9 @@ const HOST: string = ADDRESS_API_HOST;
 const URI: string = ADDRESS_API_BASE_URI;
 const maxNumberOfResults: number = 10;
 
-export function createAddressAutocompleteClient(): AddressAutocompleteClient {
+export function createAddressAutocompleteClient(): AddressAutocompleteApiClient {
     return {
-        httpGetAutocomplete: async (requestDto: AddressAutocompleteRequestDto): Promise<AddressAutocompleteResponseDto[]> => {
+        readAutocomplete: async (requestDto: AddressAutocompleteRequestDto): Promise<AddressAutocompleteResponseDto[]> => {
             const url: URL = getAutocompleteUrl(requestDto);
             const response: Response = await fetch(url);
             return (await response.json()) as AddressAutocompleteResponseDto[];
