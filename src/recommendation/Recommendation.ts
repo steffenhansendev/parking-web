@@ -1,7 +1,9 @@
-import {ParkingLot} from "./Inclusion";
+import {ParkingLot} from "./create-parking-lot";
 
 export interface Recommendation {
-    readonly parkingLot: ParkingLot;
-    readonly asOf: Date;
-    readonly availableStallCount: number;
+    parkingLot: ParkingLot;
+    availability: {
+        asOf: Date;
+        count: number;
+    }
 }

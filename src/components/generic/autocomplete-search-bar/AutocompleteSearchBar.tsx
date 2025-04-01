@@ -1,85 +1,82 @@
 import React, {JSX, useRef, useState} from "react";
 import AutocompleteSearchBarDropdown from "./AutocompleteSearchBarDropdown";
-import {AutocompleteOption} from "./AutocompleteOption";
-import {AutocompleteOptionsManager} from "./AutocompleteOptionsManager";
+import {AutocompleteOptionView} from "./AutocompleteOptionView";
+import {AutocompleteOptionViewsManager} from "./AutocompleteOptionViewsManager";
 
 const INPUT_ELEMENT_VALID_CLASS: string = "is-valid";
 
-interface Props<T> {
+interface Props {
     placeholder: string;
-    setResult: (result: T | undefined) => void;
-    optionsManager: AutocompleteOptionsManager<T>;
+    optionsManager: AutocompleteOptionViewsManager;
     isInFocus: boolean;
 }
 
-function AutocompleteSearchBar<T>({
+function AutocompleteSearchBar({
                                       placeholder,
-                                      setResult,
-                                      optionsManager: {options, setOptions, setMoreSpecificOptions},
+                                      optionsManager: {
+                                          optionViews,
+                                          queryOptionViews,
+                                          specifyOptionViews,
+                                          stagedOptionView,
+                                          commitChoice
+                                      },
                                       isInFocus
-                                  }: Props<T>): JSX.Element {
+                                  }: Props): JSX.Element {
     const inputElementRef = useRef<HTMLInputElement>(null);
     const [inputElementValue, setInputElementValue] = useState<string>("");
     const [isInputElementInFocus, setIsInputElementInFocus] = useState<boolean>(false);
     const [activeLiElementIndex, setActiveLiElementIndex] = useState(-1);
-    const stagedOption = useRef<AutocompleteOption<T>>(undefined);
 
-    const isInputMatchingSingleOption: boolean = options.length === 1 && options[0].isMatch(inputElementValue);
-    const isDroppedDown: boolean = isInputElementInFocus && options.length > 0 && !isInputMatchingSingleOption;
+    const isInputMatchingSingleOption: boolean = optionViews.length === 1 && optionViews[0].isMatch(inputElementValue);
+    const isDroppedDown: boolean = isInputElementInFocus && optionViews.length > 0 && !isInputMatchingSingleOption;
 
     const handleValueChanged =
         async (value: string, selectionStart: number): Promise<void> => {
             setInputElementValue(value);
-            const match: AutocompleteOption<T> | undefined = options.find((option: AutocompleteOption<T>): boolean => option.isMatch(value));
+            const match: AutocompleteOptionView | undefined = optionViews.find((option: AutocompleteOptionView): boolean => option.isMatch(value));
             if (match?.isCommittable()) {
                 await choose(match);
                 return;
             }
-            await setOptions(value, selectionStart ?? value.length);
+            await queryOptionViews(value, selectionStart ?? value.length);
             setActiveLiElementIndex(-1);
         };
 
-    const choose = async (choice: AutocompleteOption<T>): Promise<void> => {
+    const choose = async (choice: AutocompleteOptionView): Promise<void> => {
         setInputElementValue(choice.queryValue);
-        stagedOption.current = undefined;
-        await setMoreSpecificOptions(choice);
+        stagedOptionView.current = undefined;
+        await specifyOptionViews(choice);
         setActiveLiElementIndex(-1);
         if (!choice.isCommittable()) {
             inputElementRef.current?.focus();
             return;
         }
 
-        stagedOption.current = choice;
+        stagedOptionView.current = choice;
         if (choice.isFurtherSpecifiable()) {
             setInputElementValue(choice.viewValue);
         }
-        await commit();
+        await commitChoice();
         inputElementRef.current?.blur();
     }
 
-    const commit = async () => {
-        if (!stagedOption.current) {
-            return;
-        }
-        setResult(stagedOption.current.getResultToCommit());
-    }
 
     const handleInputBlur = async (): Promise<void> => {
         setIsInputElementInFocus(false);
-        if (!stagedOption.current) {
+        if (!stagedOptionView.current) {
             return;
         }
-        setInputElementValue(stagedOption.current.viewValue);
-        await commit();
+        setInputElementValue(stagedOptionView.current.viewValue);
+        await commitChoice();
     }
 
     const handleInputFocus = (): void => {
         setIsInputElementInFocus(true);
-        if (!stagedOption.current) {
+        if (!stagedOptionView.current) {
             return;
         }
-        setInputElementValue(stagedOption.current.queryValue);
-        setCaret(stagedOption.current?.caretIndexInQueryValue);
+        setInputElementValue(stagedOptionView.current.queryValue);
+        setCaret(stagedOptionView.current?.caretIndexInQueryValue);
     }
 
     const setCaret = (index: number): void => {
@@ -93,14 +90,14 @@ function AutocompleteSearchBar<T>({
     }
 
     const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>): Promise<void> => {
-        const length: number = options.length;
+        const length: number = optionViews.length;
         switch (e.key) {
             case "ArrowDown":
                 e.preventDefault(); // Fixates caret
                 if (activeLiElementIndex < length - 1) {
                     const nextActiveLiElementIndex: number = activeLiElementIndex + 1;
                     setActiveLiElementIndex(nextActiveLiElementIndex);
-                    const option: AutocompleteOption<T> = options[nextActiveLiElementIndex];
+                    const option: AutocompleteOptionView = optionViews[nextActiveLiElementIndex];
                     setInputElementValue(option.queryValue);
                     setCaret(option.caretIndexInQueryValue);
                 }
@@ -110,7 +107,7 @@ function AutocompleteSearchBar<T>({
                 if (activeLiElementIndex > -1) {
                     const nextActiveLiElementIndex: number = activeLiElementIndex - 1;
                     setActiveLiElementIndex(nextActiveLiElementIndex);
-                    const option: AutocompleteOption<T> = options[nextActiveLiElementIndex];
+                    const option: AutocompleteOptionView = optionViews[nextActiveLiElementIndex];
                     if (!option) {
                         return;
                     }
@@ -120,8 +117,8 @@ function AutocompleteSearchBar<T>({
                 break;
             case "Enter":
             case "Tab":
-                if (options[activeLiElementIndex]) {
-                    await choose(options[activeLiElementIndex]);
+                if (optionViews[activeLiElementIndex]) {
+                    await choose(optionViews[activeLiElementIndex]);
                     return;
                 }
         }
@@ -138,7 +135,7 @@ function AutocompleteSearchBar<T>({
                     ref={inputElementRef}
                     autoFocus={isInFocus}
                     type="text"
-                    className={"form-control" + (stagedOption.current ? (" " + INPUT_ELEMENT_VALID_CLASS) : "")}
+                    className={"form-control" + (stagedOptionView.current ? (" " + INPUT_ELEMENT_VALID_CLASS) : "")}
                     value={inputElementValue}
                     placeholder={placeholder}
                     onKeyDown={async (e: React.KeyboardEvent<HTMLInputElement>): Promise<void> => {
@@ -151,7 +148,7 @@ function AutocompleteSearchBar<T>({
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}/>
                 {isDroppedDown &&
-                    <AutocompleteSearchBarDropdown options={options}
+                    <AutocompleteSearchBarDropdown options={optionViews}
                                                    activeLiElementIndex={activeLiElementIndex}
                                                    choose={choose}/>
                 }

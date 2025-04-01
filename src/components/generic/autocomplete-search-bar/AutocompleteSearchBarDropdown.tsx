@@ -1,18 +1,18 @@
 import React, {JSX} from "react";
 
-import {AutocompleteOption} from "./AutocompleteOption";
+import {AutocompleteOptionView} from "./AutocompleteOptionView";
 
 const ACTIVE_LI_ELEMENT_CLASS: string = "active";
 const MOUSE_OVER_LI_ELEMENT_CLASS: string = "bg-dark-subtle";
 const UL_ELEMENT_STYLE: React.CSSProperties = {width: "100%", cursor: "default", display: "block"}
 
-interface Props<T> {
-    options: AutocompleteOption<T>[];
+interface Props {
+    options: AutocompleteOptionView[];
     activeLiElementIndex: number,
-    choose: (option: AutocompleteOption<T>) => Promise<void>;
+    choose: (option: AutocompleteOptionView) => Promise<void>;
 }
 
-function AutocompleteSearchBarDropdown<T>({options, activeLiElementIndex, choose}: Props<T>): JSX.Element {
+function AutocompleteSearchBarDropdown({options, activeLiElementIndex, choose}: Props): JSX.Element {
     return (
         <ul
             // Rather than a list of <Option> elements, <li> and <ul> were chosen because:
@@ -20,7 +20,7 @@ function AutocompleteSearchBarDropdown<T>({options, activeLiElementIndex, choose
             // Using <Option> offers no way of distinguishing whether an option was chosen or the <Input>'s value was changed.
             className={"dropdown-menu"}
             style={UL_ELEMENT_STYLE}>
-            {options.map((option: AutocompleteOption<T>, i: number) => {
+            {options.map((option: AutocompleteOptionView, i: number) => {
                 return <li
                     className={activeLiElementIndex === i ? `dropdown-item ${ACTIVE_LI_ELEMENT_CLASS}` : "dropdown-item"}
                     onMouseOver={(e): void => {

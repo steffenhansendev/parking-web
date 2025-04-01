@@ -1,6 +1,6 @@
 import {ParkingApiClient} from "./ParkingApiClient";
 import {ParkingOccupancyRequestDto} from "./ParkingOccupancyRequestDto";
-import {ParkingOrganizationDto} from "./ParkingOrganizationResponseDto";
+import {ParkingOrganizationsResponseDto} from "./ParkingOrganizationResponseDto";
 import {ParkingLotsResponseDto} from "./ParkingLotsResponseDto";
 import {ParkingOccupancyResponseDto} from "./ParkingOccupancyResponseDto";
 
@@ -11,10 +11,10 @@ const BASE_URI: string = PARKING_API_BASE_URI;
 
 export function createParkingApiClient(): ParkingApiClient {
     return {
-        async readOrganizations(): Promise<ParkingOrganizationDto[]> {
+        async readOrganizations(): Promise<ParkingOrganizationsResponseDto[]> {
             const url: URL = new URL(`${BASE_URI}/opendata/organizations`, HOST);
             const response: Response = await fetch(url);
-            return (await response.json()) as ParkingOrganizationDto[];
+            return (await response.json()) as ParkingOrganizationsResponseDto[];
         },
         async readLots(organizationId: string): Promise<ParkingLotsResponseDto[]> {
             const url: URL = new URL(`${BASE_URI}/opendata/organizations/${organizationId}/parkinglots`, HOST);

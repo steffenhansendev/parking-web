@@ -1,4 +1,4 @@
-import {Coordinates} from "./Inclusion";
+import {Coordinates} from "./Coordinates";
 
 export interface Address {
     readonly name: string;

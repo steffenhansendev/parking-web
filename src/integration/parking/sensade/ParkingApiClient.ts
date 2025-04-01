@@ -1,10 +1,10 @@
-import {ParkingOrganizationDto} from "./ParkingOrganizationResponseDto";
+import {ParkingOrganizationsResponseDto} from "./ParkingOrganizationResponseDto";
 import {ParkingLotsResponseDto} from "./ParkingLotsResponseDto";
 import {ParkingOccupancyRequestDto} from "./ParkingOccupancyRequestDto";
 import {ParkingOccupancyResponseDto} from "./ParkingOccupancyResponseDto";
 
 export interface ParkingApiClient {
-    readOrganizations(): Promise<ParkingOrganizationDto []>;
+    readOrganizations(): Promise<ParkingOrganizationsResponseDto []>;
 
     readLots(organizationId: string): Promise<ParkingLotsResponseDto[]>;
 

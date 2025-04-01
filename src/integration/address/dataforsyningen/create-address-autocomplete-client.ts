@@ -13,14 +13,14 @@ const maxResultCount: number = 10;
 export function createAddressAutocompleteClient(): AddressAutocompleteApiClient {
     return {
         async readAutocomplete (requestDto: AddressAutocompleteRequestDto): Promise<AddressAutocompleteResponseDto[]> {
-            const url: URL = getAutocompleteUrl(requestDto);
+            const url: URL = createAutocompleteUrl(requestDto);
             const response: Response = await fetch(url);
             return (await response.json()) as AddressAutocompleteResponseDto[];
         }
     }
 }
 
-function getAutocompleteUrl(requestDto: AddressAutocompleteRequestDto): URL {
+function createAutocompleteUrl(requestDto: AddressAutocompleteRequestDto): URL {
     const searchParameters: URLSearchParams = new URLSearchParams({
         "q": requestDto.value,
         "caretpos": requestDto.caretIndexInValue.toString(),

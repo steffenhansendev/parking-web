@@ -1,8 +1,8 @@
-export interface ParkingOrganizationDto extends Readonly<_ParkingOrganizationDto> {
+export interface ParkingOrganizationsResponseDto extends Readonly<_ParkingOrganizationsResponseDto> {
 
 }
 
-interface _ParkingOrganizationDto {
+interface _ParkingOrganizationsResponseDto {
     id: string,
     name?: string
 }
