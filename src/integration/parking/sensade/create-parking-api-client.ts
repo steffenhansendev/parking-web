@@ -29,7 +29,7 @@ export function createParkingApiClient(): ParkingApiClient {
     }
 }
 
-function creatOccupancyUrl(requestDto: ParkingOccupancyRequestDto): URL {
+function createOccupancyUrl(requestDto: ParkingOccupancyRequestDto): URL {
     const searchParameters: URLSearchParams = new URLSearchParams({
         "lotid": requestDto.parkingLotId,
         "weeknumber": requestDto.utcWeek.toString(),
