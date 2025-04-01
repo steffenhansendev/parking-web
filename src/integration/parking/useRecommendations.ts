@@ -14,6 +14,8 @@ export function useRecommendations(setRecommendations: (recommendations: Recomme
     const abortController: React.RefObject<AbortController> = useRef<AbortController>(new AbortController());
     const apiClient: ParkingApiClient = useDi().resolveParkingApiClient();
     return async (lots: ParkingLot[], stallTypes: StallType[]): Promise<void> => {
+        lots = lots.filter((lot: ParkingLot): boolean => lot.isIncluded);
+        stallTypes = stallTypes.filter((stallType: StallType): boolean => stallType.isIncluded);
         if (stallTypes.length < 1 || lots.length < 1) {
             setRecommendations([createNullObject()]);
             return;
@@ -21,8 +23,6 @@ export function useRecommendations(setRecommendations: (recommendations: Recomme
         setIsFetchingRecommendations(true);
         abortController.current.abort();
         abortController.current = new AbortController();
-        lots = lots.filter((lot: ParkingLot): boolean => lot.isIncluded);
-        stallTypes = stallTypes.filter((stallType: StallType): boolean => stallType.isIncluded);
         try {
             let recommendations: Recommendation[] = [];
             for (let i: number = 0; i < lots.length; i++) {
