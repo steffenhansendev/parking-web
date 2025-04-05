@@ -83,7 +83,8 @@ function Recommender({recommendationManager, addressManager}: Props): JSX.Elemen
                             <h5>{"Fetching lots and stall types "}<EllipsisSpinnerSpans/></h5>
                         </div>
                     </div>
-                    : <>
+                    : !recommendationManager.isGettingParkingLots &&
+                    <>
                         <div className="row mt-md-5 my-3">
                             <div className="col-md m-md-0 my-3">
                                 <h5>{"Stall types included"}</h5>
