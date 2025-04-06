@@ -12,16 +12,18 @@ interface Props {
 }
 
 function AutocompleteSearchBar({
-                                      placeholder,
-                                      optionsManager: {
-                                          optionViews,
-                                          queryOptionViews,
-                                          specifyOptionViews,
-                                          stagedOptionView,
-                                          commitChoice
-                                      },
-                                      isInFocus
-                                  }: Props): JSX.Element {
+                                   placeholder,
+                                   optionsManager: {
+                                       optionViews,
+                                       queryOptionViews,
+                                       specifyOptionViews,
+                                       stage,
+                                       staged,
+                                       unstage,
+                                       commit
+                                   },
+                                   isInFocus
+                               }: Props): JSX.Element {
     const inputElementRef = useRef<HTMLInputElement>(null);
     const [inputElementValue, setInputElementValue] = useState<string>("");
     const [isInputElementInFocus, setIsInputElementInFocus] = useState<boolean>(false);
@@ -44,39 +46,38 @@ function AutocompleteSearchBar({
 
     const choose = async (choice: AutocompleteOptionView): Promise<void> => {
         setInputElementValue(choice.queryValue);
-        stagedOptionView.current = undefined;
+        unstage();
         await specifyOptionViews(choice);
         setActiveLiElementIndex(-1);
         if (!choice.isCommittable()) {
             inputElementRef.current?.focus();
             return;
         }
-
-        stagedOptionView.current = choice;
+        stage(choice);
         if (choice.isFurtherSpecifiable()) {
             setInputElementValue(choice.viewValue);
         }
-        await commitChoice();
+        await commit();
         inputElementRef.current?.blur();
     }
 
 
     const handleInputBlur = async (): Promise<void> => {
         setIsInputElementInFocus(false);
-        if (!stagedOptionView.current) {
+        if (!staged) {
             return;
         }
-        setInputElementValue(stagedOptionView.current.viewValue);
-        await commitChoice();
+        setInputElementValue(staged.viewValue);
+        await commit();
     }
 
     const handleInputFocus = (): void => {
         setIsInputElementInFocus(true);
-        if (!stagedOptionView.current) {
+        if (!staged) {
             return;
         }
-        setInputElementValue(stagedOptionView.current.queryValue);
-        setCaret(stagedOptionView.current?.caretIndexInQueryValue);
+        setInputElementValue(staged.queryValue);
+        setCaret(staged.caretIndexInQueryValue);
     }
 
     const setCaret = (index: number): void => {
@@ -135,7 +136,7 @@ function AutocompleteSearchBar({
                     ref={inputElementRef}
                     autoFocus={isInFocus}
                     type="text"
-                    className={"form-control" + (stagedOptionView.current ? (" " + INPUT_ELEMENT_VALID_CLASS) : "")}
+                    className={"form-control" + (!!staged ? (" " + INPUT_ELEMENT_VALID_CLASS) : "")}
                     value={inputElementValue}
                     placeholder={placeholder}
                     onKeyDown={async (e: React.KeyboardEvent<HTMLInputElement>): Promise<void> => {

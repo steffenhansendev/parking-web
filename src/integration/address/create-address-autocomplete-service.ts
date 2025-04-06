@@ -1,17 +1,20 @@
-import {
-    AddressAutocompleteOptionView,
-    createAddressAutocompleteOptionView
-} from "../../recommendation/create-address-autocomplete-option-view";
 import {AddressAutocompleteApiClient} from "./dataforsyningen/AddressAutocompleteApiClient";
 import {AddressAutocompleteResponseDto} from "./dataforsyningen/AddressAutocompleteResponseDto";
 import {AddressAutocompleteAddressTypeDto} from "./dataforsyningen/AddressAutocompleteAddressTypeDto";
 import {AddressAutocompleteRequestDto} from "./dataforsyningen/AddressAutocompleteRequestDto";
 import {AddressType} from "../../recommendation/AddressType";
+import {Address, createAddress} from "../../recommendation/create-address";
+import {AutocompleteOptionView} from "../../components/generic/autocomplete-search-bar/AutocompleteOptionView";
+
+export interface AddressAutocompleteOptionServiceResult {
+    address: Address[];
+    optionView: AutocompleteOptionView[];
+}
 
 export interface AddressAutocompleteService {
-    getOptions(value: string, caretIndexInValue: number): Promise<AddressAutocompleteOptionView[]>;
+    getOptions(value: string, caretIndexInValue: number): Promise<Map<AutocompleteOptionView, Address | null>>;
 
-    getMoreSpecificOptions(option: AddressAutocompleteOptionView): Promise<AddressAutocompleteOptionView[]>;
+    getMoreSpecificOptions(value: string, caretIndexInValue: number, address: Address): Promise<Map<AutocompleteOptionView, Address | null>>;
 }
 
 /*
@@ -25,55 +28,73 @@ export function createAddressAutocompleteService(apiClient: AddressAutocompleteA
         getMoreSpecificOptions
     }
 
-    async function getOptions(value: string, caretIndexInValue: number): Promise<AddressAutocompleteOptionView[]> {
+    async function getOptions(value: string, caretIndexInValue: number): Promise<Map<AutocompleteOptionView, Address | null>> {
         const requestDto: AddressAutocompleteRequestDto =
             {
                 value: value,
                 caretIndexInValue: caretIndexInValue,
             }
         const addressAutocompleteResponseDtos: AddressAutocompleteResponseDto[] = await _apiClient.readAutocomplete(requestDto);
-        return addressAutocompleteResponseDtos.map((dto: AddressAutocompleteResponseDto): AddressAutocompleteOptionView => mapToView(dto));
+        return mapToMap(addressAutocompleteResponseDtos);
     }
 
-    async function getMoreSpecificOptions(option: AddressAutocompleteOptionView): Promise<AddressAutocompleteOptionView[]> {
-        const requestDto: AddressAutocompleteRequestDto = mapToRequestDto(option);
+    async function getMoreSpecificOptions(value: string, caretIndexValue: number, address: Address): Promise<Map<AutocompleteOptionView, Address | null>> {
+        const requestDto: AddressAutocompleteRequestDto = mapToRequestDto(value, caretIndexValue, address);
         const addressAutocompleteResponseDtos: AddressAutocompleteResponseDto[] = await _apiClient.readAutocomplete(requestDto);
-        return addressAutocompleteResponseDtos.map((dto: AddressAutocompleteResponseDto): AddressAutocompleteOptionView => mapToView(dto));
+        return mapToMap(addressAutocompleteResponseDtos);
     }
 }
 
-function mapToRequestDto(option: AddressAutocompleteOptionView): AddressAutocompleteRequestDto {
+function mapToMap(dtos: AddressAutocompleteResponseDto[]): Map<AutocompleteOptionView, Address | null> {
+    return new Map(dtos.map((dto: AddressAutocompleteResponseDto) => {
+            const address: Address | null = mapToAddress(dto);
+            return [mapToView(dto, address), address]
+        }
+    ));
+}
+
+function mapToAddress(dto: AddressAutocompleteResponseDto): Address | null {
+    if (!dto.data.id) {
+        return null;
+    }
+    return createAddress(dto.data.id, mapToAddressType(dto.type), {latitude: dto.data.y, longitude: dto.data.x}, dto.data.adgangsadresseid);
+}
+
+function mapToRequestDto(value: string, caretIndexValue: number, address: Address): AddressAutocompleteRequestDto {
     const requestDto: AddressAutocompleteRequestDto = {
-        value: option.queryValue,
-        caretIndexInValue: option.caretIndexInQueryValue ?? option.queryValue.length,
+        value: value,
+        caretIndexInValue: caretIndexValue ?? value.length,
         scope: {type: mapToDataforsyningenAddressType(AddressType.Address)}
     }
-    switch (option.type) {
+    switch (address.type) {
         case AddressType.Street:
             requestDto.scope!.leastSpecificity = mapToDataforsyningenAddressType(AddressType.Entrance);
             break;
         case AddressType.Entrance:
-            requestDto.scope!.entranceAddressId = option.id;
+            requestDto.scope!.entranceAddressId = address.id;
             break;
         case AddressType.Address:
-            requestDto.scope!.entranceAddressId = option.entranceAddressId;
+            requestDto.scope!.entranceAddressId = address.entranceAddressId!;
             break;
     }
     return requestDto;
 }
 
-function mapToView(responseDto: AddressAutocompleteResponseDto): AddressAutocompleteOptionView {
-    return createAddressAutocompleteOptionView(
-        responseDto.forslagstekst,
-        responseDto.tekst,
-        responseDto.caretpos,
-        mapToAddressType(responseDto.type),
-        responseDto.data.id,
-        responseDto.data.adgangsadresseid, {
-            latitude: responseDto.data.y,
-            longitude: responseDto.data.x
+function mapToView(dto: AddressAutocompleteResponseDto, address: Address | null): AutocompleteOptionView {
+    return {
+        viewValue: dto.forslagstekst,
+        queryValue: dto.tekst,
+        caretIndexInQueryValue: dto.caretpos,
+        isCommittable(): boolean {
+            return (!!address) && (address.type === AddressType.Entrance || address.type === AddressType.Address);
+        },
+        isMatch(query: string): boolean {
+            return query === this.viewValue || query === this.queryValue;
+        },
+        isFurtherSpecifiable(): boolean {
+            return (!!address) && address.type !== AddressType.Address;
         }
-    );
+    };
 }
 
 function mapToAddressType(typeDto: AddressAutocompleteAddressTypeDto): AddressType {

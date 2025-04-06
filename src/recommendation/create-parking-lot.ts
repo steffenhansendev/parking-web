@@ -3,7 +3,6 @@ import {Time} from "../time/time";
 import BEGINNING_OF_TIME = Time.BEGINNING_OF_TIME;
 import {StallGroup} from "./create-stall-group";
 import geodesic from "geographiclib-geodesic";
-
 import {Availability} from "./Availability";
 
 export interface ParkingLot {

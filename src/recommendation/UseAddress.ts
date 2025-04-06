@@ -1,12 +1,13 @@
 import {useRef, useState} from "react";
-import {Address} from "./Address";
+import {Address} from "./create-address";
 import {AutocompleteOptionView} from "../components/generic/autocomplete-search-bar/AutocompleteOptionView";
 import {
     AutocompleteOptionViewsManager
 } from "../components/generic/autocomplete-search-bar/AutocompleteOptionViewsManager";
 import {useDi} from "../dependency-injection/DiProvider";
-import {AddressAutocompleteOptionView} from "./create-address-autocomplete-option-view";
-import {AddressAutocompleteService} from "../integration/address/create-address-autocomplete-service";
+import {
+    AddressAutocompleteService
+} from "../integration/address/create-address-autocomplete-service";
 
 const PEND_TIME_OF_GET_OPTIONS_IN_MILLISECONDS: number = 50;
 
@@ -16,27 +17,46 @@ export interface AddressViewManager {
 
 export function useAddress(): AutocompleteOptionViewsManager & AddressViewManager {
     const service: AddressAutocompleteService = useDi().resolveAddressAutocompleteOptionService();
-    const [optionViews, setOptionViews] = useState<AddressAutocompleteOptionView[]>([]);
-    const stagedOptionView = useRef<AddressAutocompleteOptionView>(undefined);
+
+    const [addressesByOptionView, setAddressesByOptionView] = useState<Map<AutocompleteOptionView, Address | null>>(new Map());
+    const stagedOptionView = useRef<AutocompleteOptionView | null>(null);
+    const stagedAddress = useRef<Address | null>(null);
+
     const abortController = useRef<AbortController>(new AbortController());
     let _observerFunction: ((address: Address) => void) | undefined = undefined;
 
     return {
-        optionViews: optionViews,
+        optionViews: [...addressesByOptionView.keys()],
         queryOptionViews,
         specifyOptionViews,
-        stagedOptionView,
-        commitChoice,
+        stage,
+        unstage,
+        staged: stagedOptionView.current ?? null,
+        commit: commit,
         registerObserver(observerFunction: (address: Address) => void): void {
             _observerFunction = observerFunction;
         }
     }
 
-    async function commitChoice(): Promise<void> {
-        if (!stagedOptionView.current) {
+    function stage(optionView: AutocompleteOptionView): void {
+        const address = addressesByOptionView.get(optionView);
+        if (!address) {
             return;
         }
-        _observerFunction?.(stagedOptionView.current.asAddress());
+        stagedOptionView.current = optionView;
+        stagedAddress.current = address;
+    }
+
+    function unstage(): void {
+        stagedOptionView.current = null;
+        stagedAddress.current = null;
+    }
+
+    async function commit(): Promise<void> {
+        if (!stagedAddress.current) {
+            return;
+        }
+        _observerFunction?.(stagedAddress.current);
     }
 
     async function queryOptionViews(queryValue: string, caretIndexInQueryValue: number): Promise<void> {
@@ -48,17 +68,17 @@ export function useAddress(): AutocompleteOptionViewsManager & AddressViewManage
                 return;
             }
             // When typing, the user will trigger this faster than can be perceived, and getOptions may invoke integrations.
-            const nextOptions: AddressAutocompleteOptionView[] = await service.getOptions(queryValue, caretIndexInQueryValue);
-            setOptionViews(nextOptions);
+            const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.getOptions(queryValue, caretIndexInQueryValue);
+            setAddressesByOptionView(nextAddressesByOptionView);
         }, PEND_TIME_OF_GET_OPTIONS_IN_MILLISECONDS);
     }
 
-    async function specifyOptionViews(option: AutocompleteOptionView): Promise<void> {
-        const match: AddressAutocompleteOptionView | undefined = optionViews.find((o: AddressAutocompleteOptionView): boolean => o === option);
-        if (!match) {
+    async function specifyOptionViews(optionView: AutocompleteOptionView): Promise<void> {
+        const address = addressesByOptionView.get(optionView);
+        if (!address) {
             return;
         }
-        const nextOptions: AddressAutocompleteOptionView[] = await service.getMoreSpecificOptions(match);
-        setOptionViews(nextOptions);
+        const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.getMoreSpecificOptions(optionView.queryValue, optionView.caretIndexInQueryValue, address);
+        setAddressesByOptionView(nextAddressesByOptionView);
     }
 }

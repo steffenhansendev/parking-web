@@ -11,7 +11,7 @@ import {calculateClosestStallLot} from "./calculate-closest-stall-lot";
 import {calculateMaxAvailabilityLot} from "./calculate-max-availability-lot";
 import {Recommendation} from "./Recommendation";
 import {useDi} from "../dependency-injection/DiProvider";
-import {Address} from "./Address";
+import {Address} from "./create-address";
 import {Coordinates} from "./Coordinates";
 
 const STALL_TYPES_INCLUDED_BY_DEFAULT: string[] = ["default", "curb"];
