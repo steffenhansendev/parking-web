@@ -18,14 +18,15 @@ const STALL_TYPES_INCLUDED_BY_DEFAULT: string[] = ["default", "curb"];
 
 export function useRecommendation(): RecommendationViewsManager & ParkingLotViewsManager & StallTypeViewsManager {
     const service: ParkingService = useDi().resolveParkingService();
-    const [parkingLots, setParkingLots] = useState<ParkingLot[]>([]);
+
+    const parkingLots = useRef<ParkingLot[]>([]);
+
+    const [parkingLotViews, setParkingLotViews] = useState<ParkingLotView[]>([]);
+    const [stallTypeViews, setStallTypeViews] = useState<StallTypeView[]>([]);
+    const [recommendationViews, setRecommendationViews] = useState<RecommendationView[] | null>([]);
 
     const [isGettingParkingLots, setIsGettingParkingLots] = useState<boolean>(false);
     const [isRecommending, setIsRecommending] = useState<boolean>(false);
-
-    const [stallTypeViews, setStallTypeViews] = useState<StallTypeView[]>([]);
-    const [parkingLotViews, setParkingLotViews] = useState<ParkingLotView[]>([]);
-    const [recommendationViews, setRecommendationViews] = useState<RecommendationView[] | null>([]);
 
     const addressRef = useRef<Address | null>(null);
 
@@ -38,120 +39,35 @@ export function useRecommendation(): RecommendationViewsManager & ParkingLotView
             } finally {
                 setIsGettingParkingLots(false);
             }
-            setParkingLots(lots);
+            parkingLots.current = lots;
 
-            setParkingLotViews(lots.map((pl: ParkingLot): ParkingLotView => {
-                return {
-                    parkingLotId: pl.id,
-                    name: pl.name,
-                    isChecked: !!addressRef.current,
-                    distance: undefined,
-                    compareDistanceWith(other: ParkingLotView): number {
-                        return (this.distance?.value ?? Number.MAX_SAFE_INTEGER) - (other.distance?.value ?? Number.MAX_SAFE_INTEGER);
-                    }
-                }
-            }));
-
-            const stallTypes: Set<string> = lots
-                .map((pl: ParkingLot): Set<string> => pl.getDistinctStallTypes())
-                .reduce((p: Set<string>, c: Set<string>): Set<string> => {
-                    return new Set([...p, ...c]);
-                });
-            setStallTypeViews([...stallTypes]
-                .map((st: string): StallTypeView => {
-                    return {isChecked: STALL_TYPES_INCLUDED_BY_DEFAULT.includes(st.toLowerCase()), type: st}
-                }));
+            _updateParkingLotViews();
+            _updateStallTypeViews();
         })();
     }, []);
 
     return {
         parkingLots: parkingLotViews,
-        recommendations: recommendationViews,
-        stallTypes: stallTypeViews,
-        recommendParkingLot,
-        toggleParkingLotCheck,
-        toggleStallTypeCheck,
-        calculateDistances,
         isGettingParkingLots,
+        toggleParkingLotCheck,
+        stallTypes: stallTypeViews,
         isGettingStallTypes: isGettingParkingLots,
+        toggleStallTypeCheck,
+        recommendations: recommendationViews,
+        recommendParkingLot,
         isRecommending,
         addressObserver(address: Address | null): void {
             addressRef.current = address;
-            calculateDistances();
+            _updateParkingLotViews();
         }
     }
 
     async function recommendParkingLot(): Promise<void> {
         if (addressRef.current) {
-            await recommendClosestStallLot(addressRef.current.location);
+            await _recommendClosestStallLot(addressRef.current.location);
             return;
         }
-        await recommendMaxAvailabilityLot();
-    }
-
-    function calculateDistances(): void {
-        const location: Coordinates | undefined = addressRef.current?.location;
-        if (!location) {
-            return
-        }
-        const nextParkingLotViews: ParkingLotView[] = parkingLotViews.map((w: ParkingLotView): ParkingLotView => {
-            const distanceInMeters: number | null = parkingLots
-                .find((p: ParkingLot): boolean => p.id === w.parkingLotId)
-                ?.calculateDistanceInMeters(location.latitude, location.longitude) ?? null;
-            if (!distanceInMeters) {
-                return w;
-            }
-            return {
-                ...w,
-                distance: {
-                    value: distanceInMeters,
-                    unitAbbreviation: "m"
-                },
-                isChecked: true
-            }
-        });
-        nextParkingLotViews.sort((a: ParkingLotView, b: ParkingLotView): number => {
-            return a.compareDistanceWith(b);
-        });
-        setParkingLotViews(nextParkingLotViews);
-    }
-
-    async function recommendMaxAvailabilityLot(): Promise<void> {
-        const includedParkingLots: ParkingLot[] = getIncludedParkingLots();
-        const includedStallTypes: string[] = getIncludedStallTypes();
-        let recommendation: Recommendation | null = null;
-        setIsRecommending(true);
-        try {
-            recommendation = await calculateMaxAvailabilityLot(includedParkingLots, new Set<string>(includedStallTypes));
-        } finally {
-            setIsRecommending(false);
-        }
-        if (!recommendation) {
-            setRecommendationViews(null);
-            return;
-        }
-        setRecommendationViews([
-            mapToRecommendationView(recommendation)
-        ]);
-    }
-
-    async function recommendClosestStallLot(location: Coordinates): Promise<void> {
-        const includedParkingLots: ParkingLot[] = getIncludedParkingLots();
-        const includedStallTypes: string[] = getIncludedStallTypes();
-        let recommendation: Recommendation | null = null;
-        setIsRecommending(true);
-        try {
-            recommendation = await calculateClosestStallLot(includedParkingLots, new Set<string>(includedStallTypes), location.latitude, location.longitude);
-        } finally {
-            setIsRecommending(false);
-        }
-        if (recommendation) {
-            setRecommendationViews([
-                mapToRecommendationView(recommendation, location)
-            ]);
-            return;
-        }
-        setRecommendationViews(null);
+        await _recommendMaxAvailabilityLot();
     }
 
     function toggleStallTypeCheck(i: number): void {
@@ -178,17 +94,94 @@ export function useRecommendation(): RecommendationViewsManager & ParkingLotView
         }));
     }
 
-    function getIncludedParkingLots(): ParkingLot[] {
+    function _updateParkingLotViews(): void {
+        const location: Coordinates | null = addressRef.current?.location ?? null;
+        const nextViews: ParkingLotView[] = parkingLots.current
+            .map((pl: ParkingLot): ParkingLotView => {
+                let isChecked: boolean | null = parkingLotViews.find((w: ParkingLotView): boolean => w.parkingLotId === pl.id)?.isChecked ?? null;
+                isChecked ??= !!addressRef.current;
+                return mapToParkingLotView(pl, isChecked, location);
+            })
+            .sort((viewA: ParkingLotView, viewB: ParkingLotView): number => {
+                    return (viewA.distance?.value ?? Number.MAX_SAFE_INTEGER) - (viewB.distance?.value ?? Number.MAX_SAFE_INTEGER)
+                }
+            );
+        setParkingLotViews(nextViews);
+    }
+
+    function _updateStallTypeViews(): void {
+        const stallTypes: Set<string> = parkingLots.current
+            .map((pl: ParkingLot): Set<string> => pl.getDistinctStallTypes())
+            .reduce((p: Set<string>, c: Set<string>): Set<string> => {
+                return new Set([...p, ...c]);
+            });
+        setStallTypeViews([...stallTypes]
+            .map((st: string): StallTypeView => {
+                return {isChecked: STALL_TYPES_INCLUDED_BY_DEFAULT.includes(st.toLowerCase()), type: st}
+            }));
+    }
+
+    async function _recommendMaxAvailabilityLot(): Promise<void> {
+        const includedParkingLots: ParkingLot[] = _getIncludedParkingLots();
+        const includedStallTypes: string[] = _getIncludedStallTypes();
+        let recommendation: Recommendation | null = null;
+        setIsRecommending(true);
+        try {
+            recommendation = await calculateMaxAvailabilityLot(includedParkingLots, new Set<string>(includedStallTypes));
+        } finally {
+            setIsRecommending(false);
+        }
+        if (!recommendation) {
+            setRecommendationViews(null);
+            return;
+        }
+        setRecommendationViews([
+            mapToRecommendationView(recommendation)
+        ]);
+    }
+
+    async function _recommendClosestStallLot(location: Coordinates): Promise<void> {
+        const includedParkingLots: ParkingLot[] = _getIncludedParkingLots();
+        const includedStallTypes: string[] = _getIncludedStallTypes();
+        let recommendation: Recommendation | null = null;
+        setIsRecommending(true);
+        try {
+            recommendation = await calculateClosestStallLot(includedParkingLots, new Set<string>(includedStallTypes), location.latitude, location.longitude);
+        } finally {
+            setIsRecommending(false);
+        }
+        if (recommendation) {
+            setRecommendationViews([
+                mapToRecommendationView(recommendation, location)
+            ]);
+            return;
+        }
+        setRecommendationViews(null);
+    }
+
+    function _getIncludedParkingLots(): ParkingLot[] {
         const includedIds: string[] = parkingLotViews
             .filter((plw: ParkingLotView): boolean => plw.isChecked)
             .map((plw: ParkingLotView): string => plw.parkingLotId);
-        return parkingLots.filter((pl: ParkingLot): boolean => includedIds.includes(pl.id));
+        return parkingLots.current.filter((pl: ParkingLot): boolean => includedIds.includes(pl.id));
     }
 
-    function getIncludedStallTypes(): string[] {
+    function _getIncludedStallTypes(): string[] {
         return stallTypeViews
             .filter((st: StallTypeView): boolean => st.isChecked)
             .map((st: StallTypeView): string => st.type);
+    }
+}
+
+function mapToParkingLotView(pl: ParkingLot, isChecked: boolean, location: Coordinates | null): ParkingLotView {
+    return {
+        parkingLotId: pl.id,
+        name: pl.name,
+        isChecked: isChecked,
+        distance: !!location ? {
+            value: pl.calculateDistanceInMeters(location.latitude, location.longitude) ?? -1,
+            unitAbbreviation: "m"
+        } : undefined
     }
 }
 

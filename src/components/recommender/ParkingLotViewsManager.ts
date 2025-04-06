@@ -5,6 +5,4 @@ export interface ParkingLotViewsManager {
     readonly isGettingParkingLots: boolean;
 
     toggleParkingLotCheck(i: number): void;
-
-    calculateDistances(latitude: number, longitude: number): void;
 }

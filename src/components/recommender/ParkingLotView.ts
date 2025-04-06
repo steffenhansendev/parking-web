@@ -5,6 +5,4 @@ export interface ParkingLotView {
     readonly isChecked: boolean,
     readonly name: string,
     readonly distance?: DistanceView,
-
-    compareDistanceWith(other: ParkingLotView): number;
 }
