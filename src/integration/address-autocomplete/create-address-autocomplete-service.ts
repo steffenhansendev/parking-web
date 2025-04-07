@@ -1,8 +1,8 @@
 import {AddressAutocompleteApiClient} from "./dataforsyningen/AddressAutocompleteApiClient";
-import {AddressAutocompleteResponseDto} from "./dataforsyningen/AddressAutocompleteResponseDto";
 import {
     AddressAutocompleteEntityTypeDto,
-} from "./dataforsyningen/AddressAutocompleteTypeDto";
+    AddressAutocompleteResponseDto
+} from "./dataforsyningen/AddressAutocompleteResponseDto";
 import {AddressAutocompleteRequestDto} from "./dataforsyningen/AddressAutocompleteRequestDto";
 import {Address, AddressType, createAddress} from "../../recommendation/create-address";
 import {AutocompleteOptionView} from "../../components/generic/autocomplete-search-bar/AutocompleteOptionView";

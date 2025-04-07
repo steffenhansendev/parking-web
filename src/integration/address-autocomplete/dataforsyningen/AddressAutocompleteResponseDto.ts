@@ -1,7 +1,8 @@
-import {AddressAutocompleteTypeDto} from "./AddressAutocompleteTypeDto";
-
 export interface AddressAutocompleteResponseDto extends Readonly<_AddressAutocompleteResponseDto> {
 }
+
+export type AddressAutocompleteValueObjectTypeDto = "vejnavn";
+export type AddressAutocompleteTypeDto = AddressAutocompleteValueObjectTypeDto & AddressAutocompleteEntityTypeDto;
 
 interface _AddressAutocompleteResponseDto {
     type: AddressAutocompleteTypeDto;
@@ -36,3 +37,5 @@ interface _DataDto {
     y: number
     href: string
 }
+
+export type AddressAutocompleteEntityTypeDto = "adgangsadresse" | "adresse";

@@ -1,4 +1,4 @@
-import {AddressAutocompleteEntityTypeDto} from "./AddressAutocompleteTypeDto";
+import {AddressAutocompleteEntityTypeDto} from "./AddressAutocompleteResponseDto";
 
 export interface AddressAutocompleteRequestDto extends Readonly<_AddressAutocompleteRequestDto> {
 }
