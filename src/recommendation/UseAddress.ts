@@ -32,7 +32,7 @@ export function useAddress(): AutocompleteOptionViewsManager & AddressViewManage
         stage,
         unstage,
         staged: stagedAutocompleteOptionView.current ?? null,
-        commit: commit,
+        commit,
         registerObserver(observerFunction: (address: Address) => void): void {
             _observerFunction = observerFunction;
         }
@@ -52,7 +52,7 @@ export function useAddress(): AutocompleteOptionViewsManager & AddressViewManage
         stagedAddress.current = null;
     }
 
-    async function commit(): Promise<void> {
+    function commit(): void {
         if (!stagedAddress.current) {
             return;
         }

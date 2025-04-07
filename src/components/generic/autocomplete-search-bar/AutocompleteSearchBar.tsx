@@ -57,7 +57,7 @@ function AutocompleteSearchBar({
         if (choice.isFurtherSpecifiable()) {
             setInputElementValue(choice.viewValue);
         }
-        await commit();
+        commit();
         inputElementRef.current?.blur();
     }
 
@@ -68,7 +68,7 @@ function AutocompleteSearchBar({
             return;
         }
         setInputElementValue(staged.viewValue);
-        await commit();
+        commit();
     }
 
     const handleInputFocus = (): void => {

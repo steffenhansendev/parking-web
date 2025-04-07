@@ -5,7 +5,7 @@ export interface AutocompleteOptionViewsManager {
     readonly optionViews: AutocompleteOptionView[];
     readonly queryOptionViews: (queryValue: string, caretIndexInQueryValue: number) => Promise<void>;
     readonly specifyOptionViews: (option: AutocompleteOptionView) => Promise<void>;
-    readonly commit: () => Promise<void>;
+    readonly commit: () => void;
     readonly staged: AutocompleteOptionView | null;
 
     unstage(): void;
