@@ -17,14 +17,13 @@ function StallTypeIncluder({manager, isCollapsedAbove}: Props): JSX.Element {
     return <>
         <div className={"card"}>
             <div className={"card-body"}>
-                <div className={"card-title d-flex justify-content-between " + (isCollapsed ? "m-0" : "")}>
+                <div className={"card-title d-flex justify-content-between " + (isCollapsed ? "m-0" : "")}
+                     style={{cursor: "pointer"}}
+                     onClick={(): void => {
+                         setIsCollapsed(!isCollapsed);
+                     }}>
                     <h5 className={"m-0"}>{"Stall types included"}</h5>
-                    <i className={"bi " + (isCollapsed ? "bi-chevron-down" : "bi-chevron-up" + " fw-bold")}
-                       style={{cursor: "pointer"}}
-                       onClick={(): void => {
-                           setIsCollapsed(!isCollapsed);
-                       }
-                       }></i>
+                    <i className={"bi " + (isCollapsed ? "bi-chevron-down" : "bi-chevron-up" + " fw-bold")}/>
                 </div>
                 <div className={"collapse " + (isCollapsed ? "collapsed" : "show")}>
                     {manager.stallTypes.map((stallType: StallTypeView, i: number): JSX.Element => {
