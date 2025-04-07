@@ -1,10 +1,10 @@
-import {AddressAutocompleteAddressTypeDto} from "./AddressAutocompleteAddressTypeDto";
+import {AddressAutocompleteTypeDto} from "./AddressAutocompleteTypeDto";
 
 export interface AddressAutocompleteResponseDto extends Readonly<_AddressAutocompleteResponseDto> {
 }
 
 interface _AddressAutocompleteResponseDto {
-    type: AddressAutocompleteAddressTypeDto;
+    type: AddressAutocompleteTypeDto;
     tekst: string;
     caretpos: number;
     forslagstekst: string;

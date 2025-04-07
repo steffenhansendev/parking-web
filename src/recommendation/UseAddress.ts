@@ -74,10 +74,7 @@ export function useAddress(): AutocompleteOptionViewsManager & AddressViewManage
     }
 
     async function specifyOptionViews(optionView: AutocompleteOptionView): Promise<void> {
-        const address = addressesByOptionView.get(optionView);
-        if (!address) {
-            return;
-        }
+        const address = addressesByOptionView.get(optionView) ?? null;
         const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.getMoreSpecificOptions(optionView.queryValue, optionView.caretIndexInQueryValue, address);
         setAddressesByOptionView(nextAddressesByOptionView);
     }

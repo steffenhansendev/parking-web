@@ -1,20 +1,16 @@
 import {AddressAutocompleteApiClient} from "./dataforsyningen/AddressAutocompleteApiClient";
 import {AddressAutocompleteResponseDto} from "./dataforsyningen/AddressAutocompleteResponseDto";
-import {AddressAutocompleteAddressTypeDto} from "./dataforsyningen/AddressAutocompleteAddressTypeDto";
+import {
+    AddressAutocompleteEntityTypeDto,
+} from "./dataforsyningen/AddressAutocompleteTypeDto";
 import {AddressAutocompleteRequestDto} from "./dataforsyningen/AddressAutocompleteRequestDto";
-import {AddressType} from "../../recommendation/AddressType";
-import {Address, createAddress} from "../../recommendation/create-address";
+import {Address, AddressType, createAddress} from "../../recommendation/create-address";
 import {AutocompleteOptionView} from "../../components/generic/autocomplete-search-bar/AutocompleteOptionView";
-
-export interface AddressAutocompleteOptionServiceResult {
-    address: Address[];
-    optionView: AutocompleteOptionView[];
-}
 
 export interface AddressAutocompleteService {
     getOptions(value: string, caretIndexInValue: number): Promise<Map<AutocompleteOptionView, Address | null>>;
 
-    getMoreSpecificOptions(value: string, caretIndexInValue: number, address: Address): Promise<Map<AutocompleteOptionView, Address | null>>;
+    getMoreSpecificOptions(value: string, caretIndexInValue: number, address: Address | null): Promise<Map<AutocompleteOptionView, Address | null>>;
 }
 
 /*
@@ -54,10 +50,13 @@ function mapToMap(dtos: AddressAutocompleteResponseDto[]): Map<AutocompleteOptio
 }
 
 function mapToAddress(dto: AddressAutocompleteResponseDto): Address | null {
-    if (!dto.data.id) {
-        return null;
+    if (!dto.data.id || dto.type === "vejnavn") {
+        return null; // Address is an entity; not a value object
     }
-    return createAddress(dto.data.id, mapToAddressType(dto.type), {latitude: dto.data.y, longitude: dto.data.x}, dto.data.adgangsadresseid);
+    return createAddress(dto.data.id, mapToAddressType(dto.type), {
+        latitude: dto.data.y,
+        longitude: dto.data.x
+    }, dto.data.adgangsadresseid);
 }
 
 function mapToRequestDto(value: string, caretIndexValue: number, address: Address): AddressAutocompleteRequestDto {
@@ -66,10 +65,10 @@ function mapToRequestDto(value: string, caretIndexValue: number, address: Addres
         caretIndexInValue: caretIndexValue ?? value.length,
         scope: {type: mapToDataforsyningenAddressType(AddressType.Address)}
     }
-    switch (address.type) {
-        case AddressType.Street:
-            requestDto.scope!.leastSpecificity = mapToDataforsyningenAddressType(AddressType.Entrance);
-            break;
+    if (null === address) {
+        requestDto.scope!.leastSpecificity = mapToDataforsyningenAddressType(AddressType.Entrance);
+    }
+    switch (address?.type) {
         case AddressType.Entrance:
             requestDto.scope!.entranceAddressId = address.id;
             break;
@@ -97,10 +96,8 @@ function mapToView(dto: AddressAutocompleteResponseDto, address: Address | null)
     };
 }
 
-function mapToAddressType(typeDto: AddressAutocompleteAddressTypeDto): AddressType {
+function mapToAddressType(typeDto: AddressAutocompleteEntityTypeDto): AddressType {
     switch (typeDto) {
-        case "vejnavn":
-            return AddressType.Street;
         case "adgangsadresse":
             return AddressType.Entrance;
         case "adresse":
@@ -108,10 +105,8 @@ function mapToAddressType(typeDto: AddressAutocompleteAddressTypeDto): AddressTy
     }
 }
 
-function mapToDataforsyningenAddressType(type: AddressType): AddressAutocompleteAddressTypeDto {
+function mapToDataforsyningenAddressType(type: AddressType): AddressAutocompleteEntityTypeDto {
     switch (type) {
-        case AddressType.Street:
-            return "vejnavn";
         case AddressType.Entrance:
             return "adgangsadresse"
         case AddressType.Address:
