@@ -43,9 +43,9 @@ export function createParkingService(apiClient: ParkingApiClient): ParkingServic
     }
 
     function mapToParkingLot(dto: ParkingLotsResponseDto): ParkingLot {
-        let lotStallsCollection: StallGroup[] = [];
+        let lotStallGroups: StallGroup[] = [];
         if (dto.spaces) {
-            lotStallsCollection = dto.spaces
+            lotStallGroups = dto.spaces
                 .map((space: ParkingSpaceDto): StallGroup => {
                     const stallType: string = filterStallType(space.spaceType);
                     return createStallGroup(stallType, space.capacity);
@@ -54,7 +54,7 @@ export function createParkingService(apiClient: ParkingApiClient): ParkingServic
         return createParkingLot(
             dto.id,
             dto.name!,
-            lotStallsCollection,
+            lotStallGroups,
             async (): Promise<Map<string, Map<number, number>>> => {
                 return await getOccupancy(dto.id);
             },
