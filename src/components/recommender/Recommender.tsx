@@ -1,7 +1,6 @@
-import React, {JSX, useEffect, useState} from "react";
+import React, {JSX} from "react";
 import AutocompleteSearchBar from "../generic/autocomplete-search-bar/AutocompleteSearchBar";
 import EllipsisSpinnerSpans from "../generic/EllipsisSpinnerSpans";
-import {RecommendationView} from "./RecommendationView";
 import Button from "../generic/Button";
 import {RecommendationViewsManager} from "./RecommendationViewsManager";
 import {AutocompleteOptionViewsManager} from "../generic/autocomplete-search-bar/AutocompleteOptionViewsManager";
@@ -27,7 +26,7 @@ function Recommender({recommendationManager, addressManager}: Props): JSX.Elemen
             </div>
             <div className="row my-3">
                 <h5>{"Closest to"}</h5>
-                <AutocompleteSearchBar placeholder={"Search for Danish autocomplete-address"}
+                <AutocompleteSearchBar placeholder={"Search for Danish address"}
                                        isInFocus={true}
                                        optionsManager={addressManager}/>
             </div>
