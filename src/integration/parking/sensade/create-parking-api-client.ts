@@ -16,7 +16,7 @@ export function createParkingApiClient(): ParkingApiClient {
             const response: Response = await fetch(url);
             return (await response.json()) as ParkingOrganizationsResponseDto[];
         },
-        async readLots(organizationId: string): Promise<ParkingLotsResponseDto[]> {
+        async readParkingLots(organizationId: string): Promise<ParkingLotsResponseDto[]> {
             const url: URL = new URL(`${BASE_URI}/opendata/organizations/${organizationId}/parkinglots`, HOST);
             const response: Response = await fetch(url);
             return (await response.json()) as ParkingLotsResponseDto[];

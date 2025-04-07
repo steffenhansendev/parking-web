@@ -21,7 +21,7 @@ export function createParkingService(apiClient: ParkingApiClient): ParkingServic
 
     async function getParkingLots(): Promise<ParkingLot[]> {
         const organizationDtos: ParkingOrganizationsResponseDto[] = await _apiClient.readOrganizations();
-        const parkingLotDtos: ParkingLotsResponseDto[] = await _apiClient.readLots(organizationDtos[0].id);
+        const parkingLotDtos: ParkingLotsResponseDto[] = await _apiClient.readParkingLots(organizationDtos[0].id);
         return parkingLotDtos
             .filter((dto: ParkingLotsResponseDto): boolean => !!dto.name)
             .map((dto: ParkingLotsResponseDto): ParkingLot => mapToParkingLot(dto));

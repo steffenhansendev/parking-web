@@ -6,7 +6,7 @@ import {ParkingOccupancyResponseDto} from "./ParkingOccupancyResponseDto";
 export interface ParkingApiClient {
     readOrganizations(): Promise<ParkingOrganizationsResponseDto []>;
 
-    readLots(organizationId: string): Promise<ParkingLotsResponseDto[]>;
+    readParkingLots(organizationId: string): Promise<ParkingLotsResponseDto[]>;
 
     readOccupancy(requestDto: ParkingOccupancyRequestDto, abortController: AbortController): Promise<ParkingOccupancyResponseDto>;
 }
