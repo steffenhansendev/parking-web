@@ -64,11 +64,15 @@ function AutocompleteSearchBar({
 
     const handleInputBlur = async (): Promise<void> => {
         setIsInputElementInFocus(false);
-        if (!staged) {
+        if (staged) {
+            setInputElementValue(staged.viewValue);
+            commit();
             return;
         }
-        setInputElementValue(staged.viewValue);
-        commit();
+        if (optionViews[activeLiElementIndex]) {
+            await choose(optionViews[activeLiElementIndex]);
+            return;
+        }
     }
 
     const handleInputFocus = (): void => {
