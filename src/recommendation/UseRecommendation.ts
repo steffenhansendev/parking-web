@@ -30,6 +30,8 @@ export function useRecommendation(): RecommendationViewsManager & ParkingLotView
 
     const addressRef = useRef<Address | null>(null);
 
+    const [isParkingLotCheckToggled, setIsParkingLotCheckToggled] = useState<boolean>(false);
+
     useEffect((): void => {
         (async (): Promise<void> => {
             let lots: ParkingLot[] = []
@@ -92,14 +94,17 @@ export function useRecommendation(): RecommendationViewsManager & ParkingLotView
             }
             return view;
         }));
+        setIsParkingLotCheckToggled(true);
     }
 
     function _updateParkingLotViews(): void {
         const location: Coordinates | null = addressRef.current?.location ?? null;
         const nextViews: ParkingLotView[] = parkingLots.current
             .map((pl: ParkingLot): ParkingLotView => {
-                let isChecked: boolean | null = parkingLotViews.find((w: ParkingLotView): boolean => w.parkingLotId === pl.id)?.isChecked ?? null;
-                isChecked ??= !!addressRef.current;
+                let isChecked: boolean = !!addressRef.current;
+                if(isParkingLotCheckToggled){
+                    isChecked = (parkingLotViews.find((w: ParkingLotView): boolean => w.parkingLotId === pl.id)?.isChecked ?? isChecked);
+                }
                 return mapToParkingLotView(pl, isChecked, location);
             })
             .sort((viewA: ParkingLotView, viewB: ParkingLotView): number => {
