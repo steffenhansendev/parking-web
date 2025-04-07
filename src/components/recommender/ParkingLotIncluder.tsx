@@ -18,7 +18,7 @@ function ParkingLotsIncluder({manager, isCollapsedAbove}: Props): JSX.Element {
         <div className={"card"}>
             <div className={"card-body"}>
                 <div className={"card-title d-flex justify-content-between " + (isCollapsed ? "m-0" : "")}>
-                    <h5>{"Lots included"}</h5>
+                    <h5 className={"m-0"}>{"Lots included"}</h5>
                     <i className={"bi " + (isCollapsed ? "bi-chevron-down" : "bi-chevron-up" + " fw-bold align-middle")}
                        style={{cursor: "pointer"}}
                        onClick={(): void => {
