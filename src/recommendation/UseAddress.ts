@@ -7,7 +7,7 @@ import {
 import {useDi} from "../dependency-injection/DiProvider";
 import {
     AddressAutocompleteService
-} from "../integration/address/create-address-autocomplete-service";
+} from "../integration/address-autocomplete/create-address-autocomplete-service";
 
 const THROTTLE_TIME_IN_MILLISECONDS: number = 50;
 

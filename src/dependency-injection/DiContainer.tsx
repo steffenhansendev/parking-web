@@ -4,7 +4,7 @@ import {
 import {RecommendationViewsManager} from "../components/recommender/RecommendationViewsManager";
 import {ParkingLotViewsManager} from "../components/recommender/ParkingLotViewsManager";
 import {StallTypeViewsManager} from "../components/recommender/StallTypeViewsManager";
-import {AddressAutocompleteService} from "../integration/address/create-address-autocomplete-service";
+import {AddressAutocompleteService} from "../integration/address-autocomplete/create-address-autocomplete-service";
 import {ParkingService} from "../integration/parking/create-parking-service";
 import {AddressManager} from "../recommendation/UseAddress";
 

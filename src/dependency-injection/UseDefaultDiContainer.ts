@@ -7,10 +7,10 @@ import {createParkingApiClient} from "../integration/parking/sensade/create-park
 import {
     AddressAutocompleteService,
     createAddressAutocompleteService
-} from "../integration/address/create-address-autocomplete-service";
+} from "../integration/address-autocomplete/create-address-autocomplete-service";
 import {
     createAddressAutocompleteClient
-} from "../integration/address/dataforsyningen/create-address-autocomplete-client";
+} from "../integration/address-autocomplete/dataforsyningen/create-address-autocomplete-client";
 import {
     AutocompleteOptionViewsManager
 } from "../components/generic/autocomplete-search-bar/AutocompleteOptionViewsManager";
