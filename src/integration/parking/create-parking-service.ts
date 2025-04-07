@@ -47,7 +47,7 @@ export function createParkingService(apiClient: ParkingApiClient): ParkingServic
         if (dto.spaces) {
             lotStallsCollection = dto.spaces
                 .map((space: ParkingSpaceDto): StallGroup => {
-                    const stallType: string = space.spaceType?.toLowerCase() ?? "undefined";
+                    const stallType: string = filterStallType(space.spaceType);
                     return createStallGroup(stallType, space.capacity);
                 });
         }
@@ -64,11 +64,22 @@ export function createParkingService(apiClient: ParkingApiClient): ParkingServic
     }
 }
 
+function filterStallType(stallType: string | undefined): string {
+    if (!stallType) {
+        return "undefined";
+    }
+    stallType = stallType.toLowerCase();
+    if (stallType === "handicap") {
+        stallType = "disability";
+    }
+    return stallType;
+}
+
 function mapToOccupancyByTimestampByStallType(occupancyByStallTypeByDateTime: Record<string, Record<string, number>>): Map<string, Map<number, number>> {
     return Object.entries(occupancyByStallTypeByDateTime)
         .reduce<Map<string, Map<number, number>>>((accumulator: Map<string, Map<number, number>>, [dateTimeString, occupancyByStallType]: [string, Record<string, number>]): Map<string, Map<number, number>> => {
             Object.entries(occupancyByStallType).forEach(([stallType, occupancyPercentage]: [string, number]): void => {
-                stallType = stallType.toLowerCase();
+                stallType = filterStallType(stallType);
                 if (!accumulator.get(stallType)) {
                     accumulator.set(stallType, new Map());
                 }

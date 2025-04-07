@@ -28,7 +28,7 @@ function StallTypeIncluder({manager, isCollapsedAbove}: Props): JSX.Element {
                 </div>
                 <div className={"collapse " + (isCollapsed ? "collapsed" : "show")}>
                     {manager.stallTypes.map((stallType: StallTypeView, i: number): JSX.Element => {
-                        let label: string = stallType.type === "handicap" ? "Disability" : stallType.type;
+                        let label: string = stallType.type;
                         label = label.substring(0, 1).toUpperCase() + label.substring(1);
                         return <Checkbox key={stallType.type} label={label}
                                          isChecked={stallType.isChecked}
