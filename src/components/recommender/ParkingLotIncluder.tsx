@@ -7,7 +7,6 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 export interface Props {
     manager: ParkingLotViewsManager;
     isCollapsedAbove: boolean;
-
 }
 
 function ParkingLotsIncluder({manager, isCollapsedAbove}: Props): JSX.Element {
