@@ -1,11 +1,8 @@
-import React, {JSX} from "react";
+import React, {JSX, useEffect, useState} from "react";
 import AutocompleteSearchBar from "../generic/autocomplete-search-bar/AutocompleteSearchBar";
 import EllipsisSpinnerSpans from "../generic/EllipsisSpinnerSpans";
 import {RecommendationView} from "./RecommendationView";
 import Button from "../generic/Button";
-import {StallTypeView} from "./StallTypeView";
-import Checkbox from "../generic/Checkbox";
-import {ParkingLotView} from "./ParkingLotView";
 import {RecommendationViewsManager} from "./RecommendationViewsManager";
 import {AutocompleteOptionViewsManager} from "../generic/autocomplete-search-bar/AutocompleteOptionViewsManager";
 import {ParkingLotViewsManager} from "./ParkingLotViewsManager";
@@ -20,6 +17,7 @@ interface Props {
 }
 
 function Recommender({recommendationManager, addressManager}: Props): JSX.Element {
+    const isCollapsed: boolean = (recommendationManager.recommendations?.length ?? 0) > 0;
     return (
         <div className="container">
             <div className="row my-3">
@@ -69,10 +67,12 @@ function Recommender({recommendationManager, addressManager}: Props): JSX.Elemen
                     <>
                         <div className="row mt-md-5 my-3">
                             <div className="col-md m-md-0 my-3">
-                                <StallTypeIncluder manager={recommendationManager}/>
+                                <StallTypeIncluder manager={recommendationManager}
+                                                   isCollapsedAbove={isCollapsed}/>
                             </div>
                             <div className="col-md m-md-0 my-3">
-                                <ParkingLotIncluder manager={recommendationManager}/>
+                                <ParkingLotIncluder manager={recommendationManager}
+                                                    isCollapsedAbove={isCollapsed}/>
                             </div>
                         </div>
                     </>
