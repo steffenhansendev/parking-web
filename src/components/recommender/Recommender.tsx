@@ -10,6 +10,8 @@ import {RecommendationViewsManager} from "./RecommendationViewsManager";
 import {AutocompleteOptionViewsManager} from "../generic/autocomplete-search-bar/AutocompleteOptionViewsManager";
 import {ParkingLotViewsManager} from "./ParkingLotViewsManager";
 import {StallTypeViewsManager} from "./StallTypeViewsManager";
+import ParkingLotIncluder from "./ParkingLotIncluder";
+import StallTypeIncluder from "./StallTypeIncluder";
 
 interface Props {
     recommendationManager: RecommendationViewsManager & ParkingLotViewsManager & StallTypeViewsManager;
@@ -86,29 +88,10 @@ function Recommender({recommendationManager, addressManager}: Props): JSX.Elemen
                     <>
                         <div className="row mt-md-5 my-3">
                             <div className="col-md m-md-0 my-3">
-                                <h5>{"Stall types included"}</h5>
-                                {recommendationManager.stallTypes.map((stallType: StallTypeView, i: number): JSX.Element => {
-                                    let label: string = stallType.type === "handicap" ? "Disability" : stallType.type;
-                                    label = label.substring(0, 1).toUpperCase() + label.substring(1);
-                                    return <Checkbox key={stallType.type} label={label}
-                                                     isChecked={stallType.isChecked}
-                                                     handleOnChange={(): void => {
-                                                         recommendationManager.toggleStallTypeCheck(i);
-                                                     }}/>;
-                                })}
+                                <StallTypeIncluder manager={recommendationManager}/>
                             </div>
                             <div className="col-md m-md-0 my-3">
-                                <h5>{"Lots included"}</h5>
-                                {recommendationManager.parkingLots.map((lot: ParkingLotView, i: number): JSX.Element => {
-                                    let label: string | undefined = lot.name;
-                                    if (lot.distance) {
-                                        label += " (" + lot.distance.value.toFixed(0) + " " + lot.distance.unitAbbreviation + ")";
-                                    }
-                                    return <Checkbox key={lot.parkingLotId} label={label
-                                    } isChecked={lot.isChecked} handleOnChange={(): void => {
-                                        recommendationManager.toggleParkingLotCheck(i);
-                                    }}/>
-                                })}
+                                <ParkingLotIncluder manager={recommendationManager}/>
                             </div>
                         </div>
                     </>
@@ -116,5 +99,6 @@ function Recommender({recommendationManager, addressManager}: Props): JSX.Elemen
         </div>
     );
 }
+
 
 export default Recommender;
