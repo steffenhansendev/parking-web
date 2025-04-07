@@ -18,20 +18,20 @@ export interface AddressViewManager {
 export function useAddress(): AutocompleteOptionViewsManager & AddressViewManager {
     const service: AddressAutocompleteService = useDi().resolveAddressAutocompleteOptionService();
 
-    const [addressesByOptionView, setAddressesByOptionView] = useState<Map<AutocompleteOptionView, Address | null>>(new Map());
-    const stagedOptionView = useRef<AutocompleteOptionView | null>(null);
+    const [addressesByAutocompleteOptionView, setAddressesByAutocompleteOptionView] = useState<Map<AutocompleteOptionView, Address | null>>(new Map());
+    const stagedAutocompleteOptionView = useRef<AutocompleteOptionView | null>(null);
     const stagedAddress = useRef<Address | null>(null);
 
     const abortController = useRef<AbortController>(new AbortController());
     let _observerFunction: ((address: Address) => void) | undefined = undefined;
 
     return {
-        optionViews: [...addressesByOptionView.keys()],
+        optionViews: [...addressesByAutocompleteOptionView.keys()],
         queryOptionViews,
         specifyOptionViews,
         stage,
         unstage,
-        staged: stagedOptionView.current ?? null,
+        staged: stagedAutocompleteOptionView.current ?? null,
         commit: commit,
         registerObserver(observerFunction: (address: Address) => void): void {
             _observerFunction = observerFunction;
@@ -39,16 +39,16 @@ export function useAddress(): AutocompleteOptionViewsManager & AddressViewManage
     }
 
     function stage(optionView: AutocompleteOptionView): void {
-        const address = addressesByOptionView.get(optionView);
+        const address: Address | null = addressesByAutocompleteOptionView.get(optionView) ?? null;
         if (!address) {
             return;
         }
-        stagedOptionView.current = optionView;
+        stagedAutocompleteOptionView.current = optionView;
         stagedAddress.current = address;
     }
 
     function unstage(): void {
-        stagedOptionView.current = null;
+        stagedAutocompleteOptionView.current = null;
         stagedAddress.current = null;
     }
 
@@ -69,13 +69,13 @@ export function useAddress(): AutocompleteOptionViewsManager & AddressViewManage
             }
             // When typing, the user will trigger this faster than can be perceived, and getOptions may invoke integrations.
             const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.getOptions(queryValue, caretIndexInQueryValue);
-            setAddressesByOptionView(nextAddressesByOptionView);
+            setAddressesByAutocompleteOptionView(nextAddressesByOptionView);
         }, PEND_TIME_OF_GET_OPTIONS_IN_MILLISECONDS);
     }
 
     async function specifyOptionViews(optionView: AutocompleteOptionView): Promise<void> {
-        const address = addressesByOptionView.get(optionView) ?? null;
+        const address: Address | null = addressesByAutocompleteOptionView.get(optionView) ?? null;
         const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.getMoreSpecificOptions(optionView.queryValue, optionView.caretIndexInQueryValue, address);
-        setAddressesByOptionView(nextAddressesByOptionView);
+        setAddressesByAutocompleteOptionView(nextAddressesByOptionView);
     }
 }
