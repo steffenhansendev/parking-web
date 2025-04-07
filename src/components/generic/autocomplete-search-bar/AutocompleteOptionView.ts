@@ -3,9 +3,9 @@ export interface AutocompleteOptionView {
     readonly caretIndexInQueryValue: number;
     readonly viewValue: string;
 
-    isCommittable(): boolean;
+    isCommittablyComplete(): boolean;
 
-    isFurtherSpecifiable(): boolean;
+    isEntirelyComplete(): boolean;
 
     isMatch(query: string): boolean;
 }

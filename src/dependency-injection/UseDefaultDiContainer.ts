@@ -5,12 +5,12 @@ import {RecommendationViewsManager} from "../components/recommender/Recommendati
 import {useRecommendation} from "../recommendation/UseRecommendation";
 import {createParkingApiClient} from "../integration/parking/sensade/create-parking-api-client";
 import {
-    AddressAutocompleteService,
-    createAddressAutocompleteService
-} from "../integration/address-autocomplete/create-address-autocomplete-service";
+    AutocompleteAddressService,
+    createAutocompleteAddressService
+} from "../integration/autocomplete-address/create-autocomplete-address-service";
 import {
-    createAddressAutocompleteApiClient
-} from "../integration/address-autocomplete/dataforsyningen/create-address-autocomplete-api-client";
+    createAutocompleteAddressApiClient
+} from "../integration/autocomplete-address/dataforsyningen/create-autocomplete-address-api-client";
 import {
     AutocompleteOptionViewsManager
 } from "../components/generic/autocomplete-search-bar/AutocompleteOptionViewsManager";
@@ -25,8 +25,8 @@ export function useDefaultDiContainer(): DiContainer {
         resolveAddressManager(): AutocompleteOptionViewsManager & AddressManager {
             return useAddress();
         },
-        resolveAddressAutocompleteOptionService(): AddressAutocompleteService {
-            return createAddressAutocompleteService(createAddressAutocompleteApiClient());
+        resolveAddressAutocompleteOptionService(): AutocompleteAddressService {
+            return createAutocompleteAddressService(createAutocompleteAddressApiClient());
         },
         resolveRecommendationManager(): RecommendationViewsManager & ParkingLotViewsManager & StallTypeViewsManager {
             return useRecommendation();

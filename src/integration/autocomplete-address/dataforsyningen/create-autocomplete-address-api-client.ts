@@ -1,6 +1,6 @@
-import {AddressAutocompleteApiClient} from "./AddressAutocompleteApiClient";
-import {AddressAutocompleteResponseDto} from "./AddressAutocompleteResponseDto";
-import {AddressAutocompleteRequestDto} from "./AddressAutocompleteRequestDto";
+import {AutocompleteAddressApiClient} from "./AutocompleteAddressApiClient";
+import {AutocompleteAddressResponseDto} from "./AutocompleteAddressResponseDto";
+import {AutocompleteAddressRequestDto} from "./AutocompleteAddressRequestDto";
 
 // @ts-ignore
 // Webpack
@@ -10,17 +10,17 @@ const HOST: string = ADDRESS_API_HOST;
 const URI: string = ADDRESS_API_BASE_URI;
 const maxResultCount: number = 10;
 
-export function createAddressAutocompleteApiClient(): AddressAutocompleteApiClient {
+export function createAutocompleteAddressApiClient(): AutocompleteAddressApiClient {
     return {
-        async readAutocomplete (requestDto: AddressAutocompleteRequestDto): Promise<AddressAutocompleteResponseDto[]> {
+        async readAutocomplete (requestDto: AutocompleteAddressRequestDto): Promise<AutocompleteAddressResponseDto[]> {
             const url: URL = createAutocompleteUrl(requestDto);
             const response: Response = await fetch(url);
-            return (await response.json()) as AddressAutocompleteResponseDto[];
+            return (await response.json()) as AutocompleteAddressResponseDto[];
         }
     }
 }
 
-function createAutocompleteUrl(requestDto: AddressAutocompleteRequestDto): URL {
+function createAutocompleteUrl(requestDto: AutocompleteAddressRequestDto): URL {
     const searchParameters: URLSearchParams = new URLSearchParams({
         "q": requestDto.value,
         "caretpos": requestDto.caretIndexInValue.toString(),

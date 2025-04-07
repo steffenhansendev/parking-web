@@ -27,7 +27,7 @@ function Recommender({recommendationManager, addressManager}: Props): JSX.Elemen
             </div>
             <div className="row my-3">
                 <h5>{"Closest to"}</h5>
-                <AutocompleteSearchBar placeholder={"Search for Danish address-autocomplete"}
+                <AutocompleteSearchBar placeholder={"Search for Danish autocomplete-address"}
                                        isInFocus={true}
                                        optionsManager={addressManager}/>
             </div>

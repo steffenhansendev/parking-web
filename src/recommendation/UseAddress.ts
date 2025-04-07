@@ -6,8 +6,8 @@ import {
 } from "../components/generic/autocomplete-search-bar/AutocompleteOptionViewsManager";
 import {useDi} from "../dependency-injection/DiProvider";
 import {
-    AddressAutocompleteService
-} from "../integration/address-autocomplete/create-address-autocomplete-service";
+    AutocompleteAddressService
+} from "../integration/autocomplete-address/create-autocomplete-address-service";
 
 const THROTTLE_TIME_IN_MILLISECONDS: number = 50;
 
@@ -16,7 +16,7 @@ export interface AddressManager {
 }
 
 export function useAddress(): AutocompleteOptionViewsManager & AddressManager {
-    const service: AddressAutocompleteService = useDi().resolveAddressAutocompleteOptionService();
+    const service: AutocompleteAddressService = useDi().resolveAddressAutocompleteOptionService();
 
     const [addressesByAutocompleteOptionView, setAddressesByAutocompleteOptionView] = useState<Map<AutocompleteOptionView, Address | null>>(new Map());
     const stagedAutocompleteOptionView = useRef<AutocompleteOptionView | null>(null);
@@ -27,8 +27,8 @@ export function useAddress(): AutocompleteOptionViewsManager & AddressManager {
 
     return {
         optionViews: [...addressesByAutocompleteOptionView.keys()],
-        queryOptionViews,
-        specifyOptionViews,
+        autocompleteValue,
+        autocompleteOption,
         stage,
         unstage,
         staged: stagedAutocompleteOptionView.current ?? null,
@@ -59,7 +59,7 @@ export function useAddress(): AutocompleteOptionViewsManager & AddressManager {
         _observerFunction?.(stagedAddress.current);
     }
 
-    async function queryOptionViews(queryValue: string, caretIndexInQueryValue: number): Promise<void> {
+    async function autocompleteValue(queryValue: string, caretIndexInQueryValue: number): Promise<void> {
         abortController.current.abort();
         abortController.current = new AbortController();
         const abort: AbortController = abortController.current;
@@ -68,14 +68,14 @@ export function useAddress(): AutocompleteOptionViewsManager & AddressManager {
                 return;
             }
             // When typing, the user will trigger this faster than can be perceived, and getOptions may invoke integrations.
-            const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.getOptions(queryValue, caretIndexInQueryValue);
+            const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.autocompleteValue(queryValue, caretIndexInQueryValue);
             setAddressesByAutocompleteOptionView(nextAddressesByOptionView);
         }, THROTTLE_TIME_IN_MILLISECONDS);
     }
 
-    async function specifyOptionViews(optionView: AutocompleteOptionView): Promise<void> {
+    async function autocompleteOption(optionView: AutocompleteOptionView): Promise<void> {
         const address: Address | null = addressesByAutocompleteOptionView.get(optionView) ?? null;
-        const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.getMoreSpecificOptions(optionView.queryValue, optionView.caretIndexInQueryValue, address);
+        const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.autocompleteOption(optionView.queryValue, optionView.caretIndexInQueryValue, address);
         setAddressesByAutocompleteOptionView(nextAddressesByOptionView);
     }
 }

@@ -3,8 +3,8 @@ import {RefObject} from "react";
 
 export interface AutocompleteOptionViewsManager {
     readonly optionViews: AutocompleteOptionView[];
-    readonly queryOptionViews: (queryValue: string, caretIndexInQueryValue: number) => Promise<void>;
-    readonly specifyOptionViews: (option: AutocompleteOptionView) => Promise<void>;
+    readonly autocompleteValue: (queryValue: string, caretIndexInQueryValue: number) => Promise<void>;
+    readonly autocompleteOption: (option: AutocompleteOptionView) => Promise<void>;
     readonly commit: () => void;
     readonly staged: AutocompleteOptionView | null;
 

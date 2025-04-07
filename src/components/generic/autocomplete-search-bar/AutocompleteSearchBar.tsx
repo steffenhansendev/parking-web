@@ -15,8 +15,8 @@ function AutocompleteSearchBar({
                                    placeholder,
                                    optionsManager: {
                                        optionViews,
-                                       queryOptionViews,
-                                       specifyOptionViews,
+                                       autocompleteValue,
+                                       autocompleteOption,
                                        stage,
                                        staged,
                                        unstage,
@@ -36,25 +36,25 @@ function AutocompleteSearchBar({
         async (value: string, selectionStart: number): Promise<void> => {
             setInputElementValue(value);
             const match: AutocompleteOptionView | undefined = optionViews.find((option: AutocompleteOptionView): boolean => option.isMatch(value));
-            if (match?.isCommittable()) {
+            if (match?.isCommittablyComplete()) {
                 await choose(match);
                 return;
             }
-            await queryOptionViews(value, selectionStart ?? value.length);
+            await autocompleteValue(value, selectionStart ?? value.length);
             setActiveLiElementIndex(-1);
         };
 
     const choose = async (choice: AutocompleteOptionView): Promise<void> => {
         setInputElementValue(choice.queryValue);
         unstage();
-        await specifyOptionViews(choice);
+        await autocompleteOption(choice);
         setActiveLiElementIndex(-1);
-        if (!choice.isCommittable()) {
+        if (!choice.isCommittablyComplete()) {
             inputElementRef.current?.focus();
             return;
         }
         stage(choice);
-        if (choice.isFurtherSpecifiable()) {
+        if (!choice.isEntirelyComplete()) {
             setInputElementValue(choice.viewValue);
         }
         commit();

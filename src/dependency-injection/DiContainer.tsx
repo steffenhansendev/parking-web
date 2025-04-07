@@ -4,7 +4,7 @@ import {
 import {RecommendationViewsManager} from "../components/recommender/RecommendationViewsManager";
 import {ParkingLotViewsManager} from "../components/recommender/ParkingLotViewsManager";
 import {StallTypeViewsManager} from "../components/recommender/StallTypeViewsManager";
-import {AddressAutocompleteService} from "../integration/address-autocomplete/create-address-autocomplete-service";
+import {AutocompleteAddressService} from "../integration/autocomplete-address/create-autocomplete-address-service";
 import {ParkingService} from "../integration/parking/create-parking-service";
 import {AddressManager} from "../recommendation/UseAddress";
 
@@ -14,7 +14,7 @@ export interface DiContainer {
     // do it.
     resolveAddressManager(): AutocompleteOptionViewsManager & AddressManager;
 
-    resolveAddressAutocompleteOptionService(): AddressAutocompleteService;
+    resolveAddressAutocompleteOptionService(): AutocompleteAddressService;
 
     resolveRecommendationManager(): RecommendationViewsManager & ParkingLotViewsManager & StallTypeViewsManager;
 
