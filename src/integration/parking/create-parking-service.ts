@@ -84,7 +84,7 @@ function mapToOccupancyByTimestampByStallType(occupancyByStallTypeByDateTime: Re
                 let timestamp: number = dateTime.valueOf();
 
                 const offset: number = dateTime.getTimezoneOffset();
-                const isDaylightSavingTimeInDenmark: boolean = offset === 2;
+                const isDaylightSavingTimeInDenmark: boolean = offset === -120;
                 if (isDaylightSavingTimeInDenmark) {
                     timestamp = compensateForObservedApiDiscrepancy(timestamp);
                 }
