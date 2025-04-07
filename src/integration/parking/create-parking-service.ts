@@ -12,10 +12,6 @@ export interface ParkingService {
     getParkingLots(): Promise<ParkingLot[]>;
 }
 
-/*
-This maps between DTOs and domain objects since encapsulating domain logic in pertaining objects is necessary.
- */
-
 export function createParkingService(apiClient: ParkingApiClient): ParkingService {
     const _apiClient: ParkingApiClient = apiClient;
 

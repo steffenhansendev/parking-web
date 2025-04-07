@@ -13,9 +13,6 @@ export interface AutocompleteAddressService {
     autocompleteOption(value: string, caretIndexInValue: number, address: Address | null): Promise<Map<AutocompleteOptionView, Address | null>>;
 }
 
-/*
-This maps directly between DTOs and view objects since encapsulating domain logic in pertaining objects is unnecessary.
- */
 export function createAutocompleteAddressService(apiClient: AutocompleteAddressApiClient): AutocompleteAddressService {
     const _apiClient: AutocompleteAddressApiClient = apiClient;
 
