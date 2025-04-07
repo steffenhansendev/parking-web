@@ -59,26 +59,6 @@ function mapToAddress(dto: AutocompleteAddressResponseDto): Address | null {
     }, dto.data.adgangsadresseid);
 }
 
-function mapToRequestDto(value: string, caretIndexValue: number, address: Address): AutocompleteAddressRequestDto {
-    const requestDto: AutocompleteAddressRequestDto = {
-        value: value,
-        caretIndexInValue: caretIndexValue ?? value.length,
-        scope: {type: mapToDataforsyningenAddressType(AddressType.Address)}
-    }
-    if (null === address) {
-        requestDto.scope!.leastSpecificity = mapToDataforsyningenAddressType(AddressType.Entrance);
-    }
-    switch (address?.type) {
-        case AddressType.Entrance:
-            requestDto.scope!.entranceAddressId = address.id;
-            break;
-        case AddressType.Address:
-            requestDto.scope!.entranceAddressId = address.entranceAddressId!;
-            break;
-    }
-    return requestDto;
-}
-
 function mapToView(dto: AutocompleteAddressResponseDto, address: Address | null): AutocompleteOptionView {
     return {
         viewValue: dto.forslagstekst,
@@ -103,6 +83,26 @@ function mapToAddressType(typeDto: AutocompleteAddressEntityTypeDto): AddressTyp
         case "adresse":
             return AddressType.Address;
     }
+}
+
+function mapToRequestDto(value: string, caretIndexValue: number, address: Address): AutocompleteAddressRequestDto {
+    const requestDto: AutocompleteAddressRequestDto = {
+        value: value,
+        caretIndexInValue: caretIndexValue ?? value.length,
+        scope: {type: mapToDataforsyningenAddressType(AddressType.Address)}
+    }
+    if (null === address) {
+        requestDto.scope!.leastSpecificity = mapToDataforsyningenAddressType(AddressType.Entrance);
+    }
+    switch (address?.type) {
+        case AddressType.Entrance:
+            requestDto.scope!.entranceAddressId = address.id;
+            break;
+        case AddressType.Address:
+            requestDto.scope!.entranceAddressId = address.entranceAddressId!;
+            break;
+    }
+    return requestDto;
 }
 
 function mapToDataforsyningenAddressType(type: AddressType): AutocompleteAddressEntityTypeDto {
