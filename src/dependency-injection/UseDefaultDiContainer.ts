@@ -15,14 +15,14 @@ import {
     AutocompleteOptionViewsManager
 } from "../components/generic/autocomplete-search-bar/AutocompleteOptionViewsManager";
 import {
-    AddressViewManager,
+    AddressManager,
     useAddress
 } from "../recommendation/UseAddress";
 import {createParkingService, ParkingService} from "../integration/parking/create-parking-service";
 
 export function useDefaultDiContainer(): DiContainer {
     return {
-        resolveAddressManager(): AutocompleteOptionViewsManager & AddressViewManager {
+        resolveAddressManager(): AutocompleteOptionViewsManager & AddressManager {
             return useAddress();
         },
         resolveAddressAutocompleteOptionService(): AddressAutocompleteService {

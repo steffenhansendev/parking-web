@@ -9,13 +9,13 @@ import {
     AddressAutocompleteService
 } from "../integration/address/create-address-autocomplete-service";
 
-const PEND_TIME_OF_GET_OPTIONS_IN_MILLISECONDS: number = 50;
+const THROTTLE_TIME_IN_MILLISECONDS: number = 50;
 
-export interface AddressViewManager {
+export interface AddressManager {
     registerObserver(observerFunction: (address: Address) => void): void;
 }
 
-export function useAddress(): AutocompleteOptionViewsManager & AddressViewManager {
+export function useAddress(): AutocompleteOptionViewsManager & AddressManager {
     const service: AddressAutocompleteService = useDi().resolveAddressAutocompleteOptionService();
 
     const [addressesByAutocompleteOptionView, setAddressesByAutocompleteOptionView] = useState<Map<AutocompleteOptionView, Address | null>>(new Map());
@@ -70,7 +70,7 @@ export function useAddress(): AutocompleteOptionViewsManager & AddressViewManage
             // When typing, the user will trigger this faster than can be perceived, and getOptions may invoke integrations.
             const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.getOptions(queryValue, caretIndexInQueryValue);
             setAddressesByAutocompleteOptionView(nextAddressesByOptionView);
-        }, PEND_TIME_OF_GET_OPTIONS_IN_MILLISECONDS);
+        }, THROTTLE_TIME_IN_MILLISECONDS);
     }
 
     async function specifyOptionViews(optionView: AutocompleteOptionView): Promise<void> {

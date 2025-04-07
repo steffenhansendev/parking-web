@@ -8,12 +8,12 @@ import {StallTypeViewsManager} from "./components/recommender/StallTypeViewsMana
 import {RecommendationViewsManager} from "./components/recommender/RecommendationViewsManager";
 import {useDi} from "./dependency-injection/DiProvider";
 import {DiContainer} from "./dependency-injection/DiContainer";
-import {AddressViewManager} from "./recommendation/UseAddress";
+import {AddressManager} from "./recommendation/UseAddress";
 import Recommender from "./components/recommender/Recommender";
 
 function App(): JSX.Element {
     const diContainer: DiContainer = useDi();
-    const addressManager: AutocompleteOptionViewsManager & AddressViewManager = diContainer.resolveAddressManager();
+    const addressManager: AutocompleteOptionViewsManager & AddressManager = diContainer.resolveAddressManager();
     const recommendationManager: RecommendationViewsManager & ParkingLotViewsManager & StallTypeViewsManager = diContainer.resolveRecommendationManager();
     addressManager.registerObserver(recommendationManager.addressObserver);
     return <Recommender recommendationManager={recommendationManager} addressManager={addressManager}></Recommender>

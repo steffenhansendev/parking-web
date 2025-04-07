@@ -7,14 +7,14 @@ import {StallTypeView} from "./StallTypeView";
 import Checkbox from "../generic/Checkbox";
 import {ParkingLotView} from "./ParkingLotView";
 import {RecommendationViewsManager} from "./RecommendationViewsManager";
-import {AddressViewManager} from "../../recommendation/UseAddress";
+import {AddressManager} from "../../recommendation/UseAddress";
 import {AutocompleteOptionViewsManager} from "../generic/autocomplete-search-bar/AutocompleteOptionViewsManager";
 import {ParkingLotViewsManager} from "./ParkingLotViewsManager";
 import {StallTypeViewsManager} from "./StallTypeViewsManager";
 
 interface Props {
     recommendationManager: RecommendationViewsManager & ParkingLotViewsManager & StallTypeViewsManager;
-    addressManager: AddressViewManager & AutocompleteOptionViewsManager;
+    addressManager: AddressManager & AutocompleteOptionViewsManager;
 }
 
 function Recommender({recommendationManager, addressManager}: Props): JSX.Element {
