@@ -9,8 +9,8 @@ import {
     createAddressAutocompleteService
 } from "../integration/address-autocomplete/create-address-autocomplete-service";
 import {
-    createAddressAutocompleteClient
-} from "../integration/address-autocomplete/dataforsyningen/create-address-autocomplete-client";
+    createAddressAutocompleteApiClient
+} from "../integration/address-autocomplete/dataforsyningen/create-address-autocomplete-api-client";
 import {
     AutocompleteOptionViewsManager
 } from "../components/generic/autocomplete-search-bar/AutocompleteOptionViewsManager";
@@ -26,7 +26,7 @@ export function useDefaultDiContainer(): DiContainer {
             return useAddress();
         },
         resolveAddressAutocompleteOptionService(): AddressAutocompleteService {
-            return createAddressAutocompleteService(createAddressAutocompleteClient());
+            return createAddressAutocompleteService(createAddressAutocompleteApiClient());
         },
         resolveRecommendationManager(): RecommendationViewsManager & ParkingLotViewsManager & StallTypeViewsManager {
             return useRecommendation();

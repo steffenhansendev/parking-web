@@ -10,7 +10,7 @@ const HOST: string = ADDRESS_API_HOST;
 const URI: string = ADDRESS_API_BASE_URI;
 const maxResultCount: number = 10;
 
-export function createAddressAutocompleteClient(): AddressAutocompleteApiClient {
+export function createAddressAutocompleteApiClient(): AddressAutocompleteApiClient {
     return {
         async readAutocomplete (requestDto: AddressAutocompleteRequestDto): Promise<AddressAutocompleteResponseDto[]> {
             const url: URL = createAutocompleteUrl(requestDto);
