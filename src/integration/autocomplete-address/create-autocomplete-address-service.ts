@@ -22,19 +22,19 @@ export function createAutocompleteAddressService(apiClient: AutocompleteAddressA
     }
 
     async function getOptions(value: string, caretIndexInValue: number): Promise<Map<AutocompleteOptionView, Address | null>> {
-        const requestDto: AutocompleteAddressRequestDto =
+        const request: AutocompleteAddressRequestDto =
             {
                 value: value,
                 caretIndexInValue: caretIndexInValue,
             }
-        const addressAutocompleteResponseDtos: AutocompleteAddressResponseDto[] = await _apiClient.readAutocomplete(requestDto);
-        return mapToMap(addressAutocompleteResponseDtos);
+        const response: AutocompleteAddressResponseDto[] = await _apiClient.readAutocompleteAddresses(request);
+        return mapToMap(response);
     }
 
     async function getMoreSpecificOptions(value: string, caretIndexValue: number, address: Address): Promise<Map<AutocompleteOptionView, Address | null>> {
-        const requestDto: AutocompleteAddressRequestDto = mapToRequestDto(value, caretIndexValue, address);
-        const addressAutocompleteResponseDtos: AutocompleteAddressResponseDto[] = await _apiClient.readAutocomplete(requestDto);
-        return mapToMap(addressAutocompleteResponseDtos);
+        const request: AutocompleteAddressRequestDto = mapToRequestDto(value, caretIndexValue, address);
+        const response: AutocompleteAddressResponseDto[] = await _apiClient.readAutocompleteAddresses(request);
+        return mapToMap(response);
     }
 }
 

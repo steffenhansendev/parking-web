@@ -12,7 +12,7 @@ const maxResultCount: number = 10;
 
 export function createAutocompleteAddressApiClient(): AutocompleteAddressApiClient {
     return {
-        async readAutocomplete (requestDto: AutocompleteAddressRequestDto): Promise<AutocompleteAddressResponseDto[]> {
+        async readAutocompleteAddresses (requestDto: AutocompleteAddressRequestDto): Promise<AutocompleteAddressResponseDto[]> {
             const url: URL = createAutocompleteUrl(requestDto);
             const response: Response = await fetch(url);
             return (await response.json()) as AutocompleteAddressResponseDto[];

@@ -7,5 +7,5 @@ export interface AutocompleteOptionView {
 
     isEntirelyComplete(): boolean;
 
-    isMatch(query: string): boolean;
+    isMatch(value: string): boolean;
 }
