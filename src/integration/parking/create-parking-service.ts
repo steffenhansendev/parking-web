@@ -79,29 +79,10 @@ function mapToOccupancyByTimestampByStallType(occupancyByStallTypeByDateTime: Re
                 if (!accumulator.get(stallType)) {
                     accumulator.set(stallType, new Map());
                 }
-
                 const dateTime: Date = new Date(Date.parse(dateTimeString));
                 let timestamp: number = dateTime.valueOf();
-
-                const offset: number = dateTime.getTimezoneOffset();
-                const isDaylightSavingTimeInDenmark: boolean = offset === -120;
-                if (isDaylightSavingTimeInDenmark) {
-                    timestamp = compensateForObservedApiDiscrepancy(timestamp);
-                }
                 accumulator.get(stallType)!.set(timestamp, occupancyPercentage);
             });
             return accumulator;
         }, new Map());
-}
-
-const ONE_HOUR_IN_MILLISECONDS: number = 60 * 60 * 1000;
-
-function compensateForObservedApiDiscrepancy(timestamp: number): number {
-    // As soon as daylight saving time was implemented in Denmark, it was observed that occupancy was consistently
-    // one hour less fresh.
-    // I.e., before the data would be at most one hour stale, but after it would be at most two hours stale.
-    // Hence, it is more likely that the server has not implemented daylight saving time rather than the coincidence
-    // that the data permanently became exactly one hour more stale in correlation with the one-hour extra offset in
-    // daylight saving time.
-    return timestamp + ONE_HOUR_IN_MILLISECONDS;
 }
