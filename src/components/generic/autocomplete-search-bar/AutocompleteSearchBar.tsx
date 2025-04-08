@@ -8,7 +8,7 @@ const INPUT_ELEMENT_VALID_CLASS: string = "is-valid";
 interface Props {
     placeholder: string;
     optionsManager: AutocompleteOptionViewsManager;
-    isInFocus: boolean;
+    isAutoFocus: boolean;
 }
 
 function AutocompleteSearchBar({
@@ -22,7 +22,7 @@ function AutocompleteSearchBar({
                                        unstage,
                                        commit
                                    },
-                                   isInFocus
+                                   isAutoFocus
                                }: Props): JSX.Element {
     const inputElementRef = useRef<HTMLInputElement>(null);
     const [inputElementValue, setInputElementValue] = useState<string>("");
@@ -138,7 +138,7 @@ function AutocompleteSearchBar({
             <div className={"dropdown"}>
                 <input
                     ref={inputElementRef}
-                    autoFocus={isInFocus}
+                    autoFocus={isAutoFocus}
                     type="text"
                     className={"form-control" + (!!staged ? (" " + INPUT_ELEMENT_VALID_CLASS) : "")}
                     value={inputElementValue}
