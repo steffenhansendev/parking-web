@@ -34,17 +34,16 @@ function AutocompleteSearchBar({
     const isInputMatchingSingleOption: boolean = optionViews.length === 1 && optionViews[0].isMatch(inputElementValue);
     const isDroppedDown: boolean = isInputElementInFocus && optionViews.length > 0 && !isInputMatchingSingleOption;
 
-    const handleValueChanged =
-        async (value: string, selectionStart: number): Promise<void> => {
-            setInputElementValue(value);
-            const matchingOption: AutocompleteOptionView | undefined = optionViews.find((option: AutocompleteOptionView): boolean => option.isMatch(value));
-            if (matchingOption?.isCommittablyComplete()) {
-                await chooseOption(matchingOption);
-                return;
-            }
-            await autocompleteValue(value, selectionStart ?? value.length);
-            setActiveLiElementIndex(-1);
-        };
+    const handleValueChanged = async (value: string, selectionStart: number): Promise<void> => {
+        setInputElementValue(value);
+        const matchingOption: AutocompleteOptionView | undefined = optionViews.find((option: AutocompleteOptionView): boolean => option.isMatch(value));
+        if (matchingOption?.isCommittablyComplete()) {
+            await chooseOption(matchingOption);
+            return;
+        }
+        await autocompleteValue(value, selectionStart ?? value.length);
+        setActiveLiElementIndex(-1);
+    };
 
     const chooseOption = async (choice: AutocompleteOptionView): Promise<void> => {
         setInputElementValue(choice.queryValue);
@@ -61,7 +60,7 @@ function AutocompleteSearchBar({
         }
         commitOption();
         inputElementRef.current?.blur();
-    }
+    };
 
 
     const handleInputBlur = async (): Promise<void> => {
@@ -75,7 +74,7 @@ function AutocompleteSearchBar({
             await chooseOption(optionViews[activeLiElementIndex]);
             return;
         }
-    }
+    };
 
     const handleInputFocus = (): void => {
         setIsInputElementInFocus(true);
@@ -84,7 +83,7 @@ function AutocompleteSearchBar({
         }
         setInputElementValue(stagedOption.queryValue);
         setCaret(stagedOption.caretIndexInQueryValue);
-    }
+    };
 
     const setCaret = (index: number): void => {
         setTimeout(() => {
@@ -94,7 +93,7 @@ function AutocompleteSearchBar({
             inputElementRef.current.selectionStart = index;
             inputElementRef.current.selectionEnd = index;
         }, 0);
-    }
+    };
 
     const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>): Promise<void> => {
         const length: number = optionViews.length;
@@ -129,7 +128,7 @@ function AutocompleteSearchBar({
                     return;
                 }
         }
-    }
+    };
 
     return (
         <form
