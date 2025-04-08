@@ -31,9 +31,6 @@ function AutocompleteSearchBar({
     const [isInputElementInFocus, setIsInputElementInFocus] = useState<boolean>(false);
     const [activeLiElementIndex, setActiveLiElementIndex] = useState(-1);
 
-    const isInputMatchingSingleOption: boolean = optionViews.length === 1 && optionViews[0].isMatch(inputElementValue);
-    const isDroppedDown: boolean = isInputElementInFocus && optionViews.length > 0 && !isInputMatchingSingleOption;
-
     const handleValueChanged = async (value: string, selectionStart: number): Promise<void> => {
         setInputElementValue(value);
         const matchingOption: AutocompleteOptionView | undefined = optionViews.find((option: AutocompleteOptionView): boolean => option.isMatch(value));
@@ -130,18 +127,27 @@ function AutocompleteSearchBar({
         }
     };
 
+    const isInputMatchingSingleOption: boolean = optionViews.length === 1 && optionViews[0].isMatch(inputElementValue);
+    const isDroppedDown: boolean = isInputElementInFocus && optionViews.length > 0 && !isInputMatchingSingleOption;
+
+    const getInputElementClassNames = (): string => {
+        let inputElementClassNames: string[] = INPUT_ELEMENT_CLASS_NAMES;
+        if (stagedOption) {
+            inputElementClassNames = inputElementClassNames.concat(INPUT_ELEMENT_VALID_CLASS_NAMES);
+        }
+        return inputElementClassNames.join(" ");
+    };
+
     return (
-        <form
-            onSubmit={(e: React.FormEvent<HTMLFormElement>): void => {
-                e.preventDefault();
-            }}
-        >
+        <form onSubmit={(e: React.FormEvent<HTMLFormElement>): void => {
+            e.preventDefault();
+        }}>
             <div className={DIV_ELEMENT_CLASS_NAMES.join(" ")}>
                 <input
                     ref={inputElementRef}
                     autoFocus={isAutoFocus}
                     type="text"
-                    className={INPUT_ELEMENT_CLASS_NAMES.join(" ") + (!!stagedOption ? (" " + INPUT_ELEMENT_VALID_CLASS_NAMES.join(" ")) : "")}
+                    className={getInputElementClassNames()}
                     value={inputElementValue}
                     placeholder={placeholder}
                     onKeyDown={async (e: React.KeyboardEvent<HTMLInputElement>): Promise<void> => {
@@ -152,7 +158,8 @@ function AutocompleteSearchBar({
                         await handleValueChanged(e.target.value, e.target.selectionStart ?? e.target.value.length);
                     }}
                     onFocus={handleInputFocus}
-                    onBlur={handleInputBlur}/>
+                    onBlur={handleInputBlur}
+                />
                 {isDroppedDown &&
                     <AutocompleteSearchBarDropdown options={optionViews}
                                                    activeLiElementIndex={activeLiElementIndex}
