@@ -11,20 +11,20 @@ import {
 } from "../../components/generic/autocomplete-search-bar/AutocompleteOptionView";
 
 export interface AutocompleteAddressService {
-    autocompleteValue(query: AutocompleteQuery): Promise<Map<AutocompleteOptionView, Address | null>>;
+    getAddressesByOptionView(query: AutocompleteQuery): Promise<Map<AutocompleteOptionView, Address | null>>;
 
-    autocompleteOption(query: AutocompleteQuery, address: Address | null): Promise<Map<AutocompleteOptionView, Address | null>>;
+    getAddressesByOptionViewWithAddress(query: AutocompleteQuery, address: Address | null): Promise<Map<AutocompleteOptionView, Address | null>>;
 }
 
 export function createAutocompleteAddressService(apiClient: AutocompleteAddressApiClient): AutocompleteAddressService {
     const _apiClient: AutocompleteAddressApiClient = apiClient;
 
     return {
-        autocompleteValue: getOptions,
-        autocompleteOption: getMoreSpecificOptions
+        getAddressesByOptionView,
+        getAddressesByOptionViewWithAddress
     }
 
-    async function getOptions(query: AutocompleteQuery): Promise<Map<AutocompleteOptionView, Address | null>> {
+    async function getAddressesByOptionView(query: AutocompleteQuery): Promise<Map<AutocompleteOptionView, Address | null>> {
         const request: AutocompleteAddressRequestDto =
             {
                 value: query.value,
@@ -34,7 +34,7 @@ export function createAutocompleteAddressService(apiClient: AutocompleteAddressA
         return mapToMap(response);
     }
 
-    async function getMoreSpecificOptions(query: AutocompleteQuery, address: Address): Promise<Map<AutocompleteOptionView, Address | null>> {
+    async function getAddressesByOptionViewWithAddress(query: AutocompleteQuery, address: Address): Promise<Map<AutocompleteOptionView, Address | null>> {
         const request: AutocompleteAddressRequestDto = mapToRequestDto(query, address);
         const response: AutocompleteAddressResponseDto[] = await _apiClient.readAutocompleteAddresses(request);
         return mapToMap(response);

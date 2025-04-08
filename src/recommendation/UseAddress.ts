@@ -71,14 +71,14 @@ export function useAddress(): AutocompleteOptionViewsManager & AddressManager {
                 return;
             }
             // When typing, the user will trigger this faster than can be perceived, and getOptions may invoke integrations.
-            const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.autocompleteValue(query);
+            const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.getAddressesByOptionView(query);
             setAddressesByAutocompleteOptionView(nextAddressesByOptionView);
         }, THROTTLE_TIME_IN_MILLISECONDS);
     }
 
     async function autocompleteOption(optionView: AutocompleteOptionView): Promise<void> {
         const address: Address | null = addressesByAutocompleteOptionView.get(optionView) ?? null;
-        const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.autocompleteOption(optionView.query, address);
+        const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.getAddressesByOptionViewWithAddress(optionView.query, address);
         setAddressesByAutocompleteOptionView(nextAddressesByOptionView);
     }
 }
