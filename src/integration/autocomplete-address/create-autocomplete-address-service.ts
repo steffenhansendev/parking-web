@@ -5,12 +5,15 @@ import {
 } from "./dataforsyningen/AutocompleteAddressResponseDto";
 import {AutocompleteAddressRequestDto} from "./dataforsyningen/AutocompleteAddressRequestDto";
 import {Address, AddressType, createAddress} from "../../recommendation/create-address";
-import {AutocompleteOptionView} from "../../components/generic/autocomplete-search-bar/AutocompleteOptionView";
+import {
+    AutocompleteOptionView,
+    AutocompleteQuery
+} from "../../components/generic/autocomplete-search-bar/AutocompleteOptionView";
 
 export interface AutocompleteAddressService {
-    autocompleteValue(value: string, caretIndexInValue: number): Promise<Map<AutocompleteOptionView, Address | null>>;
+    autocompleteValue(query: AutocompleteQuery): Promise<Map<AutocompleteOptionView, Address | null>>;
 
-    autocompleteOption(value: string, caretIndexInValue: number, address: Address | null): Promise<Map<AutocompleteOptionView, Address | null>>;
+    autocompleteOption(query: AutocompleteQuery, address: Address | null): Promise<Map<AutocompleteOptionView, Address | null>>;
 }
 
 export function createAutocompleteAddressService(apiClient: AutocompleteAddressApiClient): AutocompleteAddressService {
@@ -21,18 +24,18 @@ export function createAutocompleteAddressService(apiClient: AutocompleteAddressA
         autocompleteOption: getMoreSpecificOptions
     }
 
-    async function getOptions(value: string, caretIndexInValue: number): Promise<Map<AutocompleteOptionView, Address | null>> {
+    async function getOptions(query: AutocompleteQuery): Promise<Map<AutocompleteOptionView, Address | null>> {
         const request: AutocompleteAddressRequestDto =
             {
-                value: value,
-                caretIndexInValue: caretIndexInValue,
+                value: query.value,
+                caretIndexInValue: query.caretIndex,
             }
         const response: AutocompleteAddressResponseDto[] = await _apiClient.readAutocompleteAddresses(request);
         return mapToMap(response);
     }
 
-    async function getMoreSpecificOptions(value: string, caretIndexValue: number, address: Address): Promise<Map<AutocompleteOptionView, Address | null>> {
-        const request: AutocompleteAddressRequestDto = mapToRequestDto(value, caretIndexValue, address);
+    async function getMoreSpecificOptions(query: AutocompleteQuery, address: Address): Promise<Map<AutocompleteOptionView, Address | null>> {
+        const request: AutocompleteAddressRequestDto = mapToRequestDto(query, address);
         const response: AutocompleteAddressResponseDto[] = await _apiClient.readAutocompleteAddresses(request);
         return mapToMap(response);
     }
@@ -58,11 +61,13 @@ function mapToAddress(dto: AutocompleteAddressResponseDto): Address | null {
 
 function mapToView(dto: AutocompleteAddressResponseDto, address: Address | null): AutocompleteOptionView {
     return {
+        query: {
+            value: dto.tekst,
+            caretIndex: dto.caretpos,
+        },
         viewValue: dto.forslagstekst,
-        queryValue: dto.tekst,
-        caretIndexInQueryValue: dto.caretpos,
         isMatch(query: string): boolean {
-            return query === this.viewValue || query === this.queryValue;
+            return query === this.viewValue || query === this.query.value;
         },
         isCommittablyComplete(): boolean {
             return (!!address) && (address.type === AddressType.Entrance || address.type === AddressType.Address);
@@ -82,10 +87,10 @@ function mapToAddressType(typeDto: AutocompleteAddressEntityTypeDto): AddressTyp
     }
 }
 
-function mapToRequestDto(value: string, caretIndexValue: number, address: Address): AutocompleteAddressRequestDto {
+function mapToRequestDto(query: AutocompleteQuery, address: Address): AutocompleteAddressRequestDto {
     const requestDto: AutocompleteAddressRequestDto = {
-        value: value,
-        caretIndexInValue: caretIndexValue ?? value.length,
+        value: query.value,
+        caretIndexInValue: query.caretIndex,
         scope: {type: mapToDataforsyningenAddressType(AddressType.Address)}
     }
     if (null === address) {

@@ -1,6 +1,6 @@
 import React, {JSX, useRef, useState} from "react";
 import AutocompleteSearchBarDropdown from "./AutocompleteSearchBarDropdown";
-import {AutocompleteOptionView} from "./AutocompleteOptionView";
+import {AutocompleteOptionView, AutocompleteQuery} from "./AutocompleteOptionView";
 import {AutocompleteOptionViewsManager} from "./AutocompleteOptionViewsManager";
 
 const DIV_ELEMENT_CLASS_NAMES: string[] = ["dropdown", "autocomplete-search-bar-container"];
@@ -18,7 +18,7 @@ function AutocompleteSearchBar({
                                    placeholder,
                                    optionsManager: {
                                        optionViews,
-                                       autocompleteValue,
+                                       autocompleteQuery,
                                        autocompleteOption,
                                        stageOption,
                                        stagedOption,
@@ -39,12 +39,12 @@ function AutocompleteSearchBar({
             await chooseOption(matchingOption);
             return;
         }
-        await autocompleteValue(value, selectionStart ?? value.length);
+        await autocompleteQuery({value: value, caretIndex: selectionStart ?? value.length});
         setActiveLiElementIndex(-1);
     };
 
     const chooseOption = async (choice: AutocompleteOptionView): Promise<void> => {
-        setInputElementValue(choice.queryValue);
+        setInputElementValue(choice.query.value);
         unstageOption();
         await autocompleteOption(choice);
         setActiveLiElementIndex(-1);
@@ -79,8 +79,7 @@ function AutocompleteSearchBar({
         if (!stagedOption) {
             return;
         }
-        setInputElementValue(stagedOption.queryValue);
-        setCaret(stagedOption.caretIndexInQueryValue);
+        setQuery(stagedOption.query);
     };
 
     const setCaret = (index: number): void => {
@@ -102,8 +101,7 @@ function AutocompleteSearchBar({
                     const nextActiveLiElementIndex: number = activeLiElementIndex + 1;
                     setActiveLiElementIndex(nextActiveLiElementIndex);
                     const option: AutocompleteOptionView = optionViews[nextActiveLiElementIndex];
-                    setInputElementValue(option.queryValue);
-                    setCaret(option.caretIndexInQueryValue);
+                    setQuery(option.query);
                 }
                 break;
             case "ArrowUp":
@@ -115,8 +113,7 @@ function AutocompleteSearchBar({
                     if (!option) {
                         return;
                     }
-                    setInputElementValue(option.queryValue);
-                    setCaret(option.caretIndexInQueryValue);
+                    setQuery(option.query);
                 }
                 break;
             case "Enter":
@@ -126,6 +123,11 @@ function AutocompleteSearchBar({
                     return;
                 }
         }
+    };
+
+    const setQuery = (query: AutocompleteQuery): void => {
+        setInputElementValue(query.value);
+        setCaret(query.caretIndex);
     };
 
     const isInputMatchingSingleOption: boolean = optionViews.length === 1 && optionViews[0].isMatch(inputElementValue);

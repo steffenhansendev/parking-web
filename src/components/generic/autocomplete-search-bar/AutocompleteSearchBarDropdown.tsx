@@ -43,7 +43,7 @@ function AutocompleteSearchBarDropdown({options, activeLiElementIndex, chooseOpt
                     onMouseDown={async () => {
                         await chooseOption(option);
                     }}
-                    key={option.queryValue}
+                    key={option.query.value}
                 >
                     {option.viewValue}
                 </li>;

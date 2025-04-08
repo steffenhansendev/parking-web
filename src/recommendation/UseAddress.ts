@@ -1,6 +1,9 @@
 import {useRef, useState} from "react";
 import {Address} from "./create-address";
-import {AutocompleteOptionView} from "../components/generic/autocomplete-search-bar/AutocompleteOptionView";
+import {
+    AutocompleteOptionView,
+    AutocompleteQuery
+} from "../components/generic/autocomplete-search-bar/AutocompleteOptionView";
 import {
     AutocompleteOptionViewsManager
 } from "../components/generic/autocomplete-search-bar/AutocompleteOptionViewsManager";
@@ -27,18 +30,18 @@ export function useAddress(): AutocompleteOptionViewsManager & AddressManager {
 
     return {
         optionViews: [...addressesByAutocompleteOptionView.keys()],
-        autocompleteValue,
+        autocompleteQuery,
         autocompleteOption,
-        stageOption: stage,
-        unstageOption: unstage,
+        stageOption,
+        unstageOption,
         stagedOption: stagedAutocompleteOptionView.current ?? null,
-        commitOption: commit,
+        commitOption,
         registerObserver(observerFunction: (address: Address) => void): void {
             _observerFunction = observerFunction;
         }
     }
 
-    function stage(optionView: AutocompleteOptionView): void {
+    function stageOption(optionView: AutocompleteOptionView): void {
         const address: Address | null = addressesByAutocompleteOptionView.get(optionView) ?? null;
         if (!address) {
             return;
@@ -47,19 +50,19 @@ export function useAddress(): AutocompleteOptionViewsManager & AddressManager {
         stagedAddress.current = address;
     }
 
-    function unstage(): void {
+    function unstageOption(): void {
         stagedAutocompleteOptionView.current = null;
         stagedAddress.current = null;
     }
 
-    function commit(): void {
+    function commitOption(): void {
         if (!stagedAddress.current) {
             return;
         }
         _observerFunction?.(stagedAddress.current);
     }
 
-    async function autocompleteValue(queryValue: string, caretIndexInQueryValue: number): Promise<void> {
+    async function autocompleteQuery(query: AutocompleteQuery): Promise<void> {
         abortController.current.abort();
         abortController.current = new AbortController();
         const abort: AbortController = abortController.current;
@@ -68,14 +71,14 @@ export function useAddress(): AutocompleteOptionViewsManager & AddressManager {
                 return;
             }
             // When typing, the user will trigger this faster than can be perceived, and getOptions may invoke integrations.
-            const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.autocompleteValue(queryValue, caretIndexInQueryValue);
+            const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.autocompleteValue(query);
             setAddressesByAutocompleteOptionView(nextAddressesByOptionView);
         }, THROTTLE_TIME_IN_MILLISECONDS);
     }
 
     async function autocompleteOption(optionView: AutocompleteOptionView): Promise<void> {
         const address: Address | null = addressesByAutocompleteOptionView.get(optionView) ?? null;
-        const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.autocompleteOption(optionView.queryValue, optionView.caretIndexInQueryValue, address);
+        const nextAddressesByOptionView: Map<AutocompleteOptionView, Address | null> = await service.autocompleteOption(optionView.query, address);
         setAddressesByAutocompleteOptionView(nextAddressesByOptionView);
     }
 }

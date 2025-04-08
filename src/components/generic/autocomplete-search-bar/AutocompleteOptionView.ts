@@ -1,6 +1,5 @@
 export interface AutocompleteOptionView {
-    readonly queryValue: string;
-    readonly caretIndexInQueryValue: number;
+    readonly query: AutocompleteQuery;
     readonly viewValue: string;
 
     isCommittablyComplete(): boolean;
@@ -8,4 +7,10 @@ export interface AutocompleteOptionView {
     isEntirelyComplete(): boolean;
 
     isMatch(value: string): boolean;
+}
+
+
+export interface AutocompleteQuery {
+    readonly value: string;
+    readonly caretIndex: number;
 }
