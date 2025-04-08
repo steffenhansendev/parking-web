@@ -18,26 +18,21 @@ export interface AutocompleteAddressService {
 
 export function createAutocompleteAddressService(apiClient: AutocompleteAddressApiClient): AutocompleteAddressService {
     const _apiClient: AutocompleteAddressApiClient = apiClient;
-
     return {
-        getAddressesByOptionView,
-        getAddressesByOptionViewWithAddress
-    }
-
-    async function getAddressesByOptionView(query: AutocompleteQuery): Promise<Map<AutocompleteOptionView, Address | null>> {
-        const request: AutocompleteAddressRequestDto =
-            {
-                value: query.value,
-                caretIndexInValue: query.caretIndex,
-            }
-        const response: AutocompleteAddressResponseDto[] = await _apiClient.readAutocompleteAddresses(request);
-        return mapToMap(response);
-    }
-
-    async function getAddressesByOptionViewWithAddress(query: AutocompleteQuery, address: Address): Promise<Map<AutocompleteOptionView, Address | null>> {
-        const request: AutocompleteAddressRequestDto = mapToRequestDto(query, address);
-        const response: AutocompleteAddressResponseDto[] = await _apiClient.readAutocompleteAddresses(request);
-        return mapToMap(response);
+        async getAddressesByOptionView(query: AutocompleteQuery): Promise<Map<AutocompleteOptionView, Address | null>> {
+            const request: AutocompleteAddressRequestDto =
+                {
+                    value: query.value,
+                    caretIndexInValue: query.caretIndex,
+                }
+            const response: AutocompleteAddressResponseDto[] = await _apiClient.readAutocompleteAddresses(request);
+            return mapToMap(response);
+        },
+        async getAddressesByOptionViewWithAddress(query: AutocompleteQuery, address: Address): Promise<Map<AutocompleteOptionView, Address | null>> {
+            const request: AutocompleteAddressRequestDto = mapToRequestDto(query, address);
+            const response: AutocompleteAddressResponseDto[] = await _apiClient.readAutocompleteAddresses(request);
+            return mapToMap(response);
+        }
     }
 }
 
