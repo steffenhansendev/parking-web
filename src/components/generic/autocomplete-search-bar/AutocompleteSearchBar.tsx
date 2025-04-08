@@ -37,14 +37,14 @@ function AutocompleteSearchBar({
             setInputElementValue(value);
             const matchingOption: AutocompleteOptionView | undefined = optionViews.find((option: AutocompleteOptionView): boolean => option.isMatch(value));
             if (matchingOption?.isCommittablyComplete()) {
-                await choose(matchingOption);
+                await chooseOption(matchingOption);
                 return;
             }
             await autocompleteValue(value, selectionStart ?? value.length);
             setActiveLiElementIndex(-1);
         };
 
-    const choose = async (choice: AutocompleteOptionView): Promise<void> => {
+    const chooseOption = async (choice: AutocompleteOptionView): Promise<void> => {
         setInputElementValue(choice.queryValue);
         unstageOption();
         await autocompleteOption(choice);
@@ -70,7 +70,7 @@ function AutocompleteSearchBar({
             return;
         }
         if (optionViews[activeLiElementIndex]) {
-            await choose(optionViews[activeLiElementIndex]);
+            await chooseOption(optionViews[activeLiElementIndex]);
             return;
         }
     }
@@ -123,7 +123,7 @@ function AutocompleteSearchBar({
             case "Enter":
             case "Tab":
                 if (optionViews[activeLiElementIndex]) {
-                    await choose(optionViews[activeLiElementIndex]);
+                    await chooseOption(optionViews[activeLiElementIndex]);
                     return;
                 }
         }
@@ -155,7 +155,7 @@ function AutocompleteSearchBar({
                 {isDroppedDown &&
                     <AutocompleteSearchBarDropdown options={optionViews}
                                                    activeLiElementIndex={activeLiElementIndex}
-                                                   choose={choose}/>
+                                                   chooseOption={chooseOption}/>
                 }
             </div>
         </form>

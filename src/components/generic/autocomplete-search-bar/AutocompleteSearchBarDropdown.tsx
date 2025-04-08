@@ -9,10 +9,10 @@ const UL_ELEMENT_STYLE: React.CSSProperties = {width: "100%", cursor: "default",
 interface Props {
     options: AutocompleteOptionView[];
     activeLiElementIndex: number,
-    choose: (option: AutocompleteOptionView) => Promise<void>;
+    chooseOption: (option: AutocompleteOptionView) => Promise<void>;
 }
 
-function AutocompleteSearchBarDropdown({options, activeLiElementIndex, choose}: Props): JSX.Element {
+function AutocompleteSearchBarDropdown({options, activeLiElementIndex, chooseOption}: Props): JSX.Element {
     return (
         <ul
             // Rather than a list of <Option> elements, <li> and <ul> were chosen because:
@@ -30,7 +30,7 @@ function AutocompleteSearchBarDropdown({options, activeLiElementIndex, choose}: 
                         e.currentTarget.classList.remove(MOUSE_OVER_LI_ELEMENT_CLASS);
                     }}
                     onMouseDown={async () => {
-                        await choose(option);
+                        await chooseOption(option);
                     }}
                     key={option.queryValue}
                 >
