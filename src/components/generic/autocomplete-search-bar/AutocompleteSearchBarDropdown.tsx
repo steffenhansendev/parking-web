@@ -1,11 +1,11 @@
 import React, {JSX} from "react";
 import {AutocompleteOptionView} from "./AutocompleteOptionView";
 
-const LI_ELEMENT_CLASS_NAMES: string[] = ["dropdown-item"];
+const LI_ELEMENT_CLASS_NAMES: string[] = ["dropdown-item", "autocomplete-option-item"];
 const ACTIVE_LI_ELEMENT_CLASS_NAMES: string[] = ["active"];
 const MOUSE_OVER_LI_ELEMENT_CLASS_NAMES: string[] = ["bg-dark-subtle"];
 
-const UL_ELEMENT_CLASS_NAMES: string[] = ["dropdown-menu"];
+const UL_ELEMENT_CLASS_NAMES: string[] = ["dropdown-menu", "autocomplete-option-list"];
 const UL_ELEMENT_STYLE: React.CSSProperties = {width: "100%", cursor: "default", display: "block"};
 
 interface Props {

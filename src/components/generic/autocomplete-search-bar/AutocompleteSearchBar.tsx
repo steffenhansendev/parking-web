@@ -3,9 +3,10 @@ import AutocompleteSearchBarDropdown from "./AutocompleteSearchBarDropdown";
 import {AutocompleteOptionView} from "./AutocompleteOptionView";
 import {AutocompleteOptionViewsManager} from "./AutocompleteOptionViewsManager";
 
+const DIV_ELEMENT_CLASS_NAMES: string[] = ["dropdown", "autocomplete-search-bar-container"];
+
 const INPUT_ELEMENT_VALID_CLASS_NAMES: string[] = ["is-valid"];
-const DIV_ELEMENT_CLASS_NAMES: string[] = ["dropdown"];
-const INPUT_ELEMENT_CLASS_NAMES: string [] = ["form-control"];
+const INPUT_ELEMENT_CLASS_NAMES: string [] = ["form-control", "autocomplete-search-bar-input"];
 
 interface Props {
     placeholder: string;
