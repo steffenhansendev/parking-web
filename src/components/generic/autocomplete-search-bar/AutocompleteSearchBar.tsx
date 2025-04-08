@@ -17,10 +17,10 @@ function AutocompleteSearchBar({
                                        optionViews,
                                        autocompleteValue,
                                        autocompleteOption,
-                                       stage,
-                                       staged,
-                                       unstage,
-                                       commit
+                                       stageOption,
+                                       stagedOption,
+                                       unstageOption,
+                                       commitOption
                                    },
                                    isAutoFocus
                                }: Props): JSX.Element {
@@ -35,9 +35,9 @@ function AutocompleteSearchBar({
     const handleValueChanged =
         async (value: string, selectionStart: number): Promise<void> => {
             setInputElementValue(value);
-            const match: AutocompleteOptionView | undefined = optionViews.find((option: AutocompleteOptionView): boolean => option.isMatch(value));
-            if (match?.isCommittablyComplete()) {
-                await choose(match);
+            const matchingOption: AutocompleteOptionView | undefined = optionViews.find((option: AutocompleteOptionView): boolean => option.isMatch(value));
+            if (matchingOption?.isCommittablyComplete()) {
+                await choose(matchingOption);
                 return;
             }
             await autocompleteValue(value, selectionStart ?? value.length);
@@ -46,27 +46,27 @@ function AutocompleteSearchBar({
 
     const choose = async (choice: AutocompleteOptionView): Promise<void> => {
         setInputElementValue(choice.queryValue);
-        unstage();
+        unstageOption();
         await autocompleteOption(choice);
         setActiveLiElementIndex(-1);
         if (!choice.isCommittablyComplete()) {
             inputElementRef.current?.focus();
             return;
         }
-        stage(choice);
+        stageOption(choice);
         if (!choice.isEntirelyComplete()) {
             setInputElementValue(choice.viewValue);
         }
-        commit();
+        commitOption();
         inputElementRef.current?.blur();
     }
 
 
     const handleInputBlur = async (): Promise<void> => {
         setIsInputElementInFocus(false);
-        if (staged) {
-            setInputElementValue(staged.viewValue);
-            commit();
+        if (stagedOption) {
+            setInputElementValue(stagedOption.viewValue);
+            commitOption();
             return;
         }
         if (optionViews[activeLiElementIndex]) {
@@ -77,11 +77,11 @@ function AutocompleteSearchBar({
 
     const handleInputFocus = (): void => {
         setIsInputElementInFocus(true);
-        if (!staged) {
+        if (!stagedOption) {
             return;
         }
-        setInputElementValue(staged.queryValue);
-        setCaret(staged.caretIndexInQueryValue);
+        setInputElementValue(stagedOption.queryValue);
+        setCaret(stagedOption.caretIndexInQueryValue);
     }
 
     const setCaret = (index: number): void => {
@@ -140,7 +140,7 @@ function AutocompleteSearchBar({
                     ref={inputElementRef}
                     autoFocus={isAutoFocus}
                     type="text"
-                    className={"form-control" + (!!staged ? (" " + INPUT_ELEMENT_VALID_CLASS) : "")}
+                    className={"form-control" + (!!stagedOption ? (" " + INPUT_ELEMENT_VALID_CLASS) : "")}
                     value={inputElementValue}
                     placeholder={placeholder}
                     onKeyDown={async (e: React.KeyboardEvent<HTMLInputElement>): Promise<void> => {

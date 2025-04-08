@@ -29,10 +29,10 @@ export function useAddress(): AutocompleteOptionViewsManager & AddressManager {
         optionViews: [...addressesByAutocompleteOptionView.keys()],
         autocompleteValue,
         autocompleteOption,
-        stage,
-        unstage,
-        staged: stagedAutocompleteOptionView.current ?? null,
-        commit,
+        stageOption: stage,
+        unstageOption: unstage,
+        stagedOption: stagedAutocompleteOptionView.current ?? null,
+        commitOption: commit,
         registerObserver(observerFunction: (address: Address) => void): void {
             _observerFunction = observerFunction;
         }

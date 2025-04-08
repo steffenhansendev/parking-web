@@ -5,10 +5,10 @@ export interface AutocompleteOptionViewsManager {
     readonly optionViews: AutocompleteOptionView[];
     readonly autocompleteValue: (queryValue: string, caretIndexInQueryValue: number) => Promise<void>;
     readonly autocompleteOption: (option: AutocompleteOptionView) => Promise<void>;
-    readonly staged: AutocompleteOptionView | null;
+    readonly stagedOption: AutocompleteOptionView | null;
 
 
-    stage(option: AutocompleteOptionView): void;
-    unstage(): void;
-    commit(): void;
+    stageOption(option: AutocompleteOptionView): void;
+    unstageOption(): void;
+    commitOption(): void;
 }
