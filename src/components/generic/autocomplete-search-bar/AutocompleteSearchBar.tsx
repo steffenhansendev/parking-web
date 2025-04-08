@@ -3,7 +3,9 @@ import AutocompleteSearchBarDropdown from "./AutocompleteSearchBarDropdown";
 import {AutocompleteOptionView} from "./AutocompleteOptionView";
 import {AutocompleteOptionViewsManager} from "./AutocompleteOptionViewsManager";
 
-const INPUT_ELEMENT_VALID_CLASS: string = "is-valid";
+const INPUT_ELEMENT_VALID_CLASS_NAMES: string[] = ["is-valid"];
+const DIV_ELEMENT_CLASS_NAMES: string[] = ["dropdown"];
+const INPUT_ELEMENT_CLASS_NAMES: string [] = ["form-control"];
 
 interface Props {
     placeholder: string;
@@ -135,12 +137,12 @@ function AutocompleteSearchBar({
                 e.preventDefault();
             }}
         >
-            <div className={"dropdown"}>
+            <div className={DIV_ELEMENT_CLASS_NAMES.join(" ")}>
                 <input
                     ref={inputElementRef}
                     autoFocus={isAutoFocus}
                     type="text"
-                    className={"form-control" + (!!stagedOption ? (" " + INPUT_ELEMENT_VALID_CLASS) : "")}
+                    className={INPUT_ELEMENT_CLASS_NAMES.join(" ") + (!!stagedOption ? (" " + INPUT_ELEMENT_VALID_CLASS_NAMES.join(" ")) : "")}
                     value={inputElementValue}
                     placeholder={placeholder}
                     onKeyDown={async (e: React.KeyboardEvent<HTMLInputElement>): Promise<void> => {
