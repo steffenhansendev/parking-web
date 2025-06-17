@@ -44,6 +44,6 @@ export function createStallGroup(stallType: string, capacityCount: number): Stal
     }
 
     function calculateAvailability(occupancy: number): number {
-        return _capacity * occupancy / 100;
+        return _capacity - (_capacity * (occupancy / 100));
     }
 }
