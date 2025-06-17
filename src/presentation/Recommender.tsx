@@ -38,7 +38,7 @@ function Recommender({recommendationManager}: Props): JSX.Element {
                 ?
                 <div className="row my-3">
                     <div className="col justify-content-center text-center">
-                        <h5>{"Fetching core "}<EllipsisSpinnerSpans/></h5>
+                        <h5>{"Calculating recommendation "}<EllipsisSpinnerSpans/></h5>
                     </div>
                 </div>
                 : <>
