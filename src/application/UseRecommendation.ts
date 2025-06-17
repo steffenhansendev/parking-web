@@ -60,6 +60,9 @@ export function useRecommendation(service: ParkingService): RecommendationViewsM
     }
 
     async function recommendParkingLot(): Promise<void> {
+        if(_getIncludedStallTypes().length < 1) {
+            return;
+        }
         if (addressRef.current) {
             await _recommendClosestStallLot(addressRef.current.location);
             return;
